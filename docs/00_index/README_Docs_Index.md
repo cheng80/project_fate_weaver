@@ -4,7 +4,29 @@
 
 이 문서는 `docs/` 폴더의 역할별 구조와 현재 문서 목록을 정리한다.
 
-현재 단계는 PRD 작성 전이며, Console Simulator 구현 검수 PASS 이후 콘텐츠 확장 준비와 Ontology-lite 유지 관리 기준을 명확히 하는 것이다.
+현재 단계는 PRD 작성 전이며, Console Simulator 구현 검수 PASS 이후 콘텐츠 확장 준비와 Ontology-lite 유지 관리 기준을 명확히 하는 단계에서, **실게임형 텍스트 모험 시뮬레이터 구조 재정의**를 추가로 반영한다.
+
+새로운 상위 목표는 FateWeaver를 단순 로그 검증기나 YAML/schema 검증 도구가 아니라, **Quest Layer, Expedition Clock, Ontology Director, 3-Card Choice UI, Multi-Select Resolver 기반의 DM형 텍스트 모험 게임 구조**로 확장하는 것이다.
+
+---
+
+## 현재 최상위 기준
+
+현재 FateWeaver의 최신 게임 구조 기준은 다음 문서에서 시작한다.
+
+- `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`
+
+Gameplay Replan 관련 새 작업을 시작할 때는 위 문서를 먼저 읽고, 다음 문서들을 순서대로 확인한다.
+
+1. `docs/01_foundation/03_Game_Structure_Replan_v0.1.md`
+2. `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
+3. `docs/03_specs/13_Text_MUD_Gameplay_Simulator_Spec_v0.1.md`
+4. `docs/04_codex/14_Codex_Gameplay_Replan_Brief_v0.1.md`
+5. `docs/05_validation/15_Gameplay_Replan_Checklist_v0.1.md`
+6. `docs/06_plans/03_Playable_Text_Adventure_Replan_v0.1.md`
+
+기존 Console Validation 문서는 과거 기준선으로 유지한다.  
+새 구현/기획 작업의 최상위 기준은 Gameplay Replan 문서들을 따른다.
 
 ---
 
@@ -35,6 +57,7 @@ docs/
 문서:
 
 - `docs/00_index/README_Docs_Index.md`
+  - 전체 문서 구조와 문서별 책임을 정리한다.
 
 ---
 
@@ -46,6 +69,7 @@ docs/
 - 최상위 구조
 - 데이터 아키텍처
 - Flutter 이전 전제
+- 실게임형 텍스트 모험 구조 재정의
 
 문서:
 
@@ -55,6 +79,8 @@ docs/
   - `docs/`, `data/`, `src/`, `tools/`, `logs/`, `archive/`, 향후 `fate_weaver/`의 역할을 정의한다.
 - `docs/01_foundation/02_Data_Architecture_v0.7.md`
   - `data/core`, `data/content`, `data/scenarios` 구조와 장기 데이터 원칙을 정의한다.
+- `docs/01_foundation/03_Game_Structure_Replan_v0.1.md`
+  - FateWeaver를 Quest Layer, Expedition Clock, Ontology Director, 3-Card Choice UI, Multi-Select Resolver 기반의 실게임형 텍스트 모험 구조로 재정의한다.
 
 ---
 
@@ -66,6 +92,7 @@ docs/
 - fixture 데이터 기준
 - Flutter export 계약
 - 콘텐츠 관계 분석을 위한 Ontology-lite 계약
+- Quest / Expedition / Card 기반 게임 구조 데이터 계약
 
 문서:
 
@@ -81,6 +108,8 @@ docs/
   - TRPG 리서치에서 추출한 이벤트, 선택지, 위험, 보상, 단서, 아이템 상호작용 표본 추출 기준을 정의한다.
 - `docs/02_schema/11_Entity_Sampling_Catalog_v0.1.md`
   - Phase 3 entity 후보와 Ontology-lite v0.2 trial entity/relation 채택 기준을 정의한다.
+- `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
+  - Quest, Expedition Clock, Storylet, Card Candidate, Multi-Select, Result, Score, Quest Report를 데이터 계약으로 정의한다.
 
 ---
 
@@ -91,11 +120,14 @@ docs/
 - 실제 실행 사양
 - 콘솔 시뮬레이터 동작 계약
 - 로그 출력 계약
+- 실게임형 텍스트 모험 시뮬레이터 실행 계약
 
 문서:
 
 - `docs/03_specs/04_Console_Simulator_Spec_v0.7.md`
   - Console Validation 시뮬레이터의 로드, 선택, 로그, 분석, 금지 구현 범위를 정의한다.
+- `docs/03_specs/13_Text_MUD_Gameplay_Simulator_Spec_v0.1.md`
+  - Console Simulator가 단순 로그 검증기가 아니라 텍스트 기반 실게임 프로토타입으로 작동하기 위한 실행 사양을 정의한다.
 
 ---
 
@@ -106,11 +138,16 @@ docs/
 - Codex 구현 지시 기준
 - 허용/금지 작업 범위
 - 구현 전후 응답 형식
+- 게임 구조 재정의 후속 구현 브리프
 
 문서:
 
+- `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`
+  - Codex가 Gameplay Replan 관련 작업을 시작하기 전에 반드시 먼저 읽어야 하는 최신 기준 문서다.
 - `docs/04_codex/05_Codex_Console_Prototype_Brief_v0.6.md`
   - Codex가 Console Validation 프로토타입을 만들 때 따라야 할 작업 브리프다.
+- `docs/04_codex/14_Codex_Gameplay_Replan_Brief_v0.1.md`
+  - Codex가 기존 구조를 해치지 않고 게임 구조 재정의와 후속 구현 계획을 수행하기 위한 작업 브리프다.
 
 ---
 
@@ -122,6 +159,7 @@ docs/
 - 검증 게이트
 - P0/P1 반영 확인
 - 콘텐츠 확장 readiness 기준
+- Quest / Day-Turn / 3-Card UI / Multi-Select / 경제·점수·평판 연결 검증
 
 문서:
 
@@ -131,6 +169,8 @@ docs/
   - Console Simulator PASS 이후 콘텐츠 확장 전에 확인해야 할 이벤트, 아이템, 상태, 팩, 시나리오, Ontology-lite 체크리스트다.
 - `docs/05_validation/09_Content_Expansion_Review_Checklist_v0.1.md`
   - Content Expansion 구현 후 새 이벤트, 아이템, status/result_rules, pack/scenario, ontology relation, validator/simulator/analyzer 통과 여부를 검수한다.
+- `docs/05_validation/15_Gameplay_Replan_Checklist_v0.1.md`
+  - Quest, Day/Turn, 3-Card UI, Multi-Select, 경제/점수/평판/후속 사건 연결 검증 체크리스트다.
 
 ---
 
@@ -140,8 +180,9 @@ docs/
 
 - 향후 계획 문서 보관
 - 구현 계획 문서 보관
+- Console Validation 이후 실게임형 텍스트 모험 구조 전환 계획 보관
 
-현재 문서:
+문서:
 
 - `docs/06_plans/00_Console_Simulator_Implementation_Plan_v0.1.md`
   - 완료된 Console Simulator 구현 계획이다.
@@ -149,6 +190,8 @@ docs/
   - Console Simulator PASS 이후 콘텐츠 확장을 구현할 때 따라야 할 이벤트, 아이템, 상태, pack, scenario, Ontology-lite 검증 계획이다.
 - `docs/06_plans/02_Content_Expansion_Phase3_Sampling_Plan_v0.1.md`
   - TRPG 리서치와 콘텐츠 샘플링 가이드를 기준으로 Phase 3 이벤트, 아이템, entity 표본 추출 계획을 정의한다.
+- `docs/06_plans/03_Playable_Text_Adventure_Replan_v0.1.md`
+  - 현재 Console Validation 중심 구조에서 실게임형 텍스트 모험 시뮬레이터로 전환하기 위한 단계별 계획이다.
 
 ---
 
@@ -159,6 +202,7 @@ docs/
 - Office Hour, Brainstorming, Commit Summary 등 리뷰성 문서
 - 구현 전후 판단 근거 보관
 - 완료된 구현 검수 결과 보관
+- 콘텐츠 볼륨, 카드 후보, Quest, Storylet, Economy/Score 연결 감사 결과 보관
 
 문서:
 
@@ -172,3 +216,16 @@ docs/
   - CoC, D&D, 공개 TRPG 설계 자료를 FateWeaver용 추상 콘텐츠 샘플링 원칙으로 변환한 리서치 노트를 보관한다.
 - `docs/07_reviews/13_Entity_Sampling_Review_v0.1.md`
   - Entity Sampling Review와 Ontology-lite v0.2 trial extension 판단 결과를 보관한다.
+- `docs/07_reviews/14_Content_Volume_Audit_Template_v0.1.md`
+  - 현재 이벤트, 선택지, 아이템, 단서, 징조, 퀘스트, 엔딩 볼륨을 감사하기 위한 리뷰 템플릿이다.
+
+---
+
+# 10. 신규 게임 구조 재정의 문서 적용 원칙
+
+- 기존 Console Validation 문서는 과거 기준선으로 유지한다.
+- 신규 문서는 v0.1로 추가한다.
+- 기존 문서를 즉시 덮어쓰기보다 신규 문서 기준으로 후속 정렬 작업을 수행한다.
+- 새 문서는 “실게임형 텍스트 모험 시뮬레이터” 목표를 정의하는 상위 재정렬 문서로 사용한다.
+- FateWeaver의 중심은 저주가 아니라 Quest, Expedition, 3-Card Choice, 선택 합성, 경제/평판/점수, 후속 사건 변화다.
+- 저주는 여러 상태/위험 요소 중 하나로만 다룬다.
