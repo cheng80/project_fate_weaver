@@ -296,3 +296,78 @@ NEEDS_SCORING_TUNING
 - Reason log readability: PARTIAL PASS
 
 다음 단계는 PRD/Flutter가 아니라 scoring tuning과 소규모 content tuning이다.
+
+---
+
+## 13. Scoring Tuning Result
+
+정리 일자:
+
+```text
+2026-06-30
+```
+
+이번 조정 범위:
+
+- profile weight preset은 크게 변경하지 않았다.
+- 동일 run에서 같은 item-based choice를 반복하면 `item_usage_score` 보너스가 점진적으로 줄어들게 했다.
+- `selected_choice_reason`에 runner-up, runner-up score, score gap, top factors를 추가했다.
+- analyzer에 profile별 choice diversity와 repeated choice bias metric을 추가했다.
+
+검증 조건:
+
+```text
+scenario: data/scenarios/content_expansion_test.yaml
+profiles: balanced, safe_leaning, greedy_leaning, curious_leaning, desperate
+seed: 42
+runs: 3 per profile
+```
+
+조정 후 5 profiles x 3 runs 결과:
+
+| Profile | Meaningful Choices | Item-unlocked Choices | Bad Tradeoffs | Choice Diversity | Most Repeated Choice | Repeat Bias Ratio |
+|---|---:|---:|---:|---:|---|---:|
+| balanced | 30 | 18 | 0 | 8 | `blow_signal_whistle` x9 | 0.25 |
+| safe_leaning | 29 | 17 | 0 | 7 | `blow_signal_whistle` x8 | 0.22 |
+| greedy_leaning | 30 | 18 | 4 | 8 | `blow_signal_whistle` x9 | 0.25 |
+| curious_leaning | 32 | 20 | 0 | 9 | `blow_signal_whistle` x11 | 0.31 |
+| desperate | 29 | 17 | 4 | 9 | `blow_signal_whistle` x9 | 0.25 |
+
+주요 선택 분포:
+
+| Profile | Top Choices |
+|---|---|
+| balanced | `blow_signal_whistle` 9, `mark_trail` 6, `inspect_marker` 5 |
+| safe_leaning | `blow_signal_whistle` 8, `retreat` 8, `mark_trail` 7 |
+| greedy_leaning | `blow_signal_whistle` 9, `mark_trail` 6, `inspect_marker` 5 |
+| curious_leaning | `blow_signal_whistle` 11, `inspect_marker` 5, `retreat` 5 |
+| desperate | `blow_signal_whistle` 9, `shortcut` 6, `answer_echo` 4 |
+
+확인:
+
+- `unavailable_selected = 0`
+- item 선택은 계속 발생한다. 전체 `item_unlocked_choice_count = 90`.
+- `blow_signal_whistle` 반복은 줄었지만 여전히 최다 반복 choice다.
+- profile별 `choice_diversity_count`, `most_repeated_choice_id`, `most_repeated_choice_count`, `repeat_bias_ratio`를 analyzer output에서 직접 비교할 수 있다.
+- `bad_tradeoff_count`는 `greedy_leaning`, `desperate` 쪽에서만 4회 발생했다.
+- 선택 이유는 `runner_up`, `runner_up_score`, `score_gap`, `top_factors`를 포함한다.
+- `balanced`와 `curious_leaning` 차이는 콘텐츠 풀이 좁은 현재 slice에서는 확정 판단하지 않는다.
+
+선택 이유 예:
+
+```text
+profile=balanced: selected_score=9.15 final_score=9.15 runner_up=leave runner_up_score=4.0 score_gap=5.15 top_factors=safety:4.0,item:4.0,novelty:0.7 (safety=4.0, reward=0.0, item=4.0, risk=1.0, survival=0.0, novelty=1.0, curse_penalty=0.0)
+```
+
+조정 후 판정:
+
+```text
+SCORING_OBSERVABILITY_READY
+```
+
+남은 리스크:
+
+- 현재 이벤트 수가 적어 profile별 선택 차이를 완전히 검증하기 어렵다.
+- scoring weight 확정 튜닝은 Content Expansion 2차 이후 다시 해야 한다.
+- `blow_signal_whistle`은 반복 완화 이후에도 최다 반복 choice로 남아 있다. 이는 현재 content slice에서 item choice와 경쟁할 동급 선택지가 부족하기 때문이다.
+- 다음 개선은 weight 정밀 튜닝보다 Content Expansion 2차와 그 이후의 재검증이 더 효율적이다.

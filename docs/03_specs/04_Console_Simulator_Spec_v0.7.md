@@ -155,12 +155,23 @@ curse_penalty
 final_score
 ```
 
+같은 run에서 동일한 item-based choice가 반복 선택되면 `item_usage_score` 보너스는 점진적으로 줄어든다. 반복 완화는 available choice 후보 안에서만 적용되며, unavailable choice를 선택 가능하게 만들지 않는다.
+
 동점은 seed, turn, profile, choice_id 기반 deterministic tie-break로 고른다.
 
 ## 로그 분석
 
 ```bash
 .venv/bin/python tools/analyze_logs.py --logs logs
+```
+
+profile별 비교를 위해 analyzer는 `profile_metrics` 아래에 아래 반복/다양성 metric을 포함한다.
+
+```text
+choice_diversity_count
+most_repeated_choice_id
+most_repeated_choice_count
+repeat_bias_ratio
 ```
 
 ---
@@ -241,6 +252,17 @@ result:
 state_after:
 regret_score:
 notes:
+```
+
+`selected_choice_reason`은 최소 아래 정보를 사람이 읽을 수 있는 문자열로 포함한다.
+
+```text
+profile
+selected_score / final_score
+runner_up choice id
+runner_up_score
+score_gap
+top_factors
 ```
 
 ---

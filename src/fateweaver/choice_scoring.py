@@ -44,24 +44,34 @@ class ChoiceScorer:
     state: StatusMap
     seed: int
     turn: int
+    selected_choice_history: tuple[str, ...] = ()
 
     def score_choice(self, choice: ChoiceSeen) -> JsonMap:
         weights = self._weights()
         safety_score = _safety_score(choice)
         reward_score = _reward_score(choice)
-        item_usage_score = _item_usage_score(choice)
+        item_usage_score = _item_usage_score(choice, self.selected_choice_history)
         risk_score = float(_risk_rank(choice))
         survival_need_score = _survival_need_score(choice, self.state)
         novelty_score = _novelty_score(choice)
         curse_penalty = _curse_penalty(choice)
+        factor_scores = {
+            "safety": round(safety_score * weights.safety_weight, 3),
+            "reward": round(reward_score * weights.reward_weight, 3),
+            "item": round(item_usage_score * weights.item_weight, 3),
+            "risk": round(risk_score * weights.risk_weight, 3),
+            "survival": round(survival_need_score * weights.survival_weight, 3),
+            "novelty": round(novelty_score * weights.novelty_weight, 3),
+            "curse": round(-curse_penalty * weights.curse_avoidance_weight, 3),
+        }
         final_score = (
-            safety_score * weights.safety_weight
-            + reward_score * weights.reward_weight
-            + item_usage_score * weights.item_weight
-            + risk_score * weights.risk_weight
-            + survival_need_score * weights.survival_weight
-            + novelty_score * weights.novelty_weight
-            - curse_penalty * weights.curse_avoidance_weight
+            factor_scores["safety"]
+            + factor_scores["reward"]
+            + factor_scores["item"]
+            + factor_scores["risk"]
+            + factor_scores["survival"]
+            + factor_scores["novelty"]
+            + factor_scores["curse"]
         )
         return {
             "choice_id": choice.choice_id,
@@ -73,6 +83,8 @@ class ChoiceScorer:
             "novelty_score": round(novelty_score, 3),
             "curse_penalty": round(curse_penalty, 3),
             "final_score": round(final_score, 3),
+            "factor_scores": factor_scores,
+            "top_factors": _top_factors(factor_scores),
             "tie_breaker": _tie_breaker(self.seed, self.turn, self.profile, choice.choice_id),
         }
 
@@ -81,9 +93,11 @@ class ChoiceScorer:
         if not eligible:
             raise ValueError("No available choices")
         choice_scores = tuple(self.score_choice(choice) for choice in eligible)
-        selected_score = max(choice_scores, key=lambda score: (float(score["final_score"]), int(score["tie_breaker"])))
+        ranked_scores = sorted(choice_scores, key=lambda score: (float(score["final_score"]), int(score["tie_breaker"])), reverse=True)
+        selected_score = ranked_scores[0]
+        runner_up_score = ranked_scores[1] if len(ranked_scores) > 1 else None
         selected = _choice_by_id(eligible, str(selected_score["choice_id"]))
-        return ChoiceSelection(selected, _selection_reason(self.profile, selected_score), selected_score, choice_scores)
+        return ChoiceSelection(selected, _selection_reason(self.profile, selected_score, runner_up_score), selected_score, choice_scores)
 
     def _weights(self) -> ScoreWeights:
         weights = _base_weights(self.profile)
@@ -109,6 +123,7 @@ def select_weighted_choice(
     state: StatusMap | None = None,
     seed: int = 0,
     turn: int = 0,
+    selected_choice_history: tuple[str, ...] = (),
 ) -> ChoiceSelection:
     if policy != "auto":
         raise ValueError(f"Unsupported choice policy: {policy}")
@@ -120,11 +135,11 @@ def select_weighted_choice(
     match profile:
         case "first_available":
             selected = eligible[0]
-            score = ChoiceScorer("balanced", state or {}, seed, turn).score_choice(selected)
+            score = ChoiceScorer("balanced", state or {}, seed, turn, selected_choice_history).score_choice(selected)
             score["profile"] = "first_available"
             return ChoiceSelection(selected, "profile=first_available: selected first available non-hidden choice", score, (score,))
         case "balanced" | "safe_leaning" | "greedy_leaning" | "curious_leaning" | "desperate":
-            return ChoiceScorer(profile, state or {}, seed, turn).select(choices_seen)
+            return ChoiceScorer(profile, state or {}, seed, turn, selected_choice_history).select(choices_seen)
         case unreachable:
             raise ValueError(f"Unsupported autoplayer profile: {unreachable}")
 
@@ -147,10 +162,11 @@ def _reward_score(choice: ChoiceSeen) -> float:
     return float(max(0, _status_delta(choice, "money")) * 2 + max(0, _status_delta(choice, "food")) + max(0, _status_delta(choice, "reputation")) + _added_item_count(choice) * 2)
 
 
-def _item_usage_score(choice: ChoiceSeen) -> float:
+def _item_usage_score(choice: ChoiceSeen, selected_choice_history: tuple[str, ...]) -> float:
     score = 0.0
     if _has_influence(choice, "item:"):
-        score += 4.0
+        repeat_count = selected_choice_history.count(choice.choice_id)
+        score += max(-2.0, 4.0 - repeat_count * 1.75)
     if _has_influence(choice, "status:") or _has_influence(choice, "run_tag:"):
         score += 1.0
     return score
@@ -208,13 +224,29 @@ def _added_item_count(choice: ChoiceSeen) -> int:
     return 0
 
 
-def _selection_reason(profile: str, score: JsonMap) -> str:
+def _selection_reason(profile: str, score: JsonMap, runner_up_score: JsonMap | None) -> str:
+    selected = float(score["final_score"])
+    runner_id = "none"
+    runner_value = 0.0
+    if runner_up_score is not None:
+        runner_id = str(runner_up_score["choice_id"])
+        runner_value = float(runner_up_score["final_score"])
+    gap = round(selected - runner_value, 3)
     return (
-        f"profile={profile}: final_score={score['final_score']} "
+        f"profile={profile}: selected_score={score['final_score']} "
+        f"final_score={score['final_score']} "
+        f"runner_up={runner_id} runner_up_score={round(runner_value, 3)} score_gap={gap} "
+        f"top_factors={','.join(_string_list(score.get('top_factors', [])))} "
         f"(safety={score['safety_score']}, reward={score['reward_score']}, item={score['item_usage_score']}, "
         f"risk={score['risk_score']}, survival={score['survival_need_score']}, novelty={score['novelty_score']}, "
         f"curse_penalty={score['curse_penalty']})"
     )
+
+
+def _top_factors(factor_scores: JsonMap) -> list[str]:
+    positive = [(key, float(value)) for key, value in factor_scores.items() if float(value) > 0]
+    ranked = sorted(positive, key=lambda item: item[1], reverse=True)
+    return [f"{key}:{round(value, 3)}" for key, value in ranked[:3]]
 
 
 def _choice_by_id(choices: tuple[ChoiceSeen, ...], choice_id: str) -> ChoiceSeen:

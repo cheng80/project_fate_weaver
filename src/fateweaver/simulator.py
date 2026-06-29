@@ -55,11 +55,12 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
     inventory = tuple(scenario.initial_items)
     run_tags: tuple[str, ...] = ()
     recent_event_ids: tuple[str, ...] = ()
+    selected_choice_history: tuple[str, ...] = ()
     turns: list[JsonMap] = []
     for turn in range(1, scenario.target_turns + 1):
         event = select_event(events, state, inventory, run_tags, rng, recent_event_ids)
         choices_seen = build_choices_seen(event, state, inventory, run_tags)
-        selection = _choose(choices_seen, stdin, stdout, profile, state, seed, turn)
+        selection = _choose(choices_seen, stdin, stdout, profile, state, seed, turn, selected_choice_history)
         selected = selection.choice
         feedback = _choice_feedback(selected, selection.reason, stdin, stdout)
         influenced_by = _influenced_by(selected, event.event_tags, choices_seen)
@@ -96,6 +97,7 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
             }
         )
         recent_event_ids = (*recent_event_ids, event.id)
+        selected_choice_history = (*selected_choice_history, selected.choice_id)
         if is_failed(state, bundle.statuses):
             break
     run_feedback = _run_feedback(turns, is_failed(state, bundle.statuses), stdin, stdout)
@@ -105,9 +107,18 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
     return save_run_log(log, logs_dir, filename)
 
 
-def _choose(choices_seen: tuple[ChoiceSeen, ...], stdin: InputPort, stdout: OutputPort, profile: str, state, seed: int, turn: int) -> ChoiceSelection:
+def _choose(
+    choices_seen: tuple[ChoiceSeen, ...],
+    stdin: InputPort,
+    stdout: OutputPort,
+    profile: str,
+    state,
+    seed: int,
+    turn: int,
+    selected_choice_history: tuple[str, ...],
+) -> ChoiceSelection:
     if not stdin.isatty():
-        return select_choice(choices_seen, profile=profile, state=state, seed=seed, turn=turn)
+        return select_choice(choices_seen, profile=profile, state=state, seed=seed, turn=turn, selected_choice_history=selected_choice_history)
     for choice in choices_seen:
         status = "available" if choice.available else f"unavailable: {choice.unavailable_reason}"
         stdout.write(f"{choice.choice_id}: {status}\n")

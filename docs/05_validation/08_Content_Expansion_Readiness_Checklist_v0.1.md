@@ -143,3 +143,5 @@ NEEDS_SCORING_TUNING
 
 - Content Expansion Readiness 자체는 유지된다.
 - 실제 플레이 감각 검수에서는 profile별 차이가 일부 확인됐지만, `balanced`와 `curious_leaning` 결과가 동일하고 item-based choice가 과도하게 강해 scoring tuning이 필요하다.
+- 후속 Weighted AutoPlayer Scoring Tuning에서는 profile weight를 크게 흔들지 않고, 반복 item-based choice 감쇠와 runner-up/gap/top_factors reason 출력, profile별 choice diversity/repeat bias 분석을 추가했다.
+- 현재 이벤트 수가 적어 profile별 선택 차이는 Content Expansion 2차 이후 다시 검증해야 한다.

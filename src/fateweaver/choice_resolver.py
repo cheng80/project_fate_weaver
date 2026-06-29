@@ -38,8 +38,9 @@ def select_available_choice(
     state: StatusMap | None = None,
     seed: int = 0,
     turn: int = 0,
+    selected_choice_history: tuple[str, ...] = (),
 ) -> ChoiceSeen:
-    return select_choice(choices_seen, policy, profile, state, seed, turn).choice
+    return select_choice(choices_seen, policy, profile, state, seed, turn, selected_choice_history).choice
 
 
 def select_choice(
@@ -49,8 +50,9 @@ def select_choice(
     state: StatusMap | None = None,
     seed: int = 0,
     turn: int = 0,
+    selected_choice_history: tuple[str, ...] = (),
 ) -> ChoiceSelection:
-    return select_weighted_choice(choices_seen, policy, profile, state, seed, turn)
+    return select_weighted_choice(choices_seen, policy, profile, state, seed, turn, selected_choice_history)
 
 
 def selected_choice_from_seen(choices_seen: tuple[ChoiceSeen, ...], choice_id: str) -> ChoiceSeen:
