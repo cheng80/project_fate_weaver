@@ -1,6 +1,8 @@
-# Console Simulator Review Checklist
+# Console Simulator Review Result
 
-이 체크리스트는 `docs/06_plans/00_Console_Simulator_Implementation_Plan_v0.1.md` 구현 후 PRD/Flutter 이전에 통과해야 하는 차단 검수 기준이다.
+이 문서는 `docs/06_plans/00_Console_Simulator_Implementation_Plan_v0.1.md` 구현 후 PRD/Flutter 이전에 통과한 Console Simulator 구현 검수 결과다.
+
+완료된 검수 기록으로 보관하며, 다음 작업 체크리스트는 `docs/05_validation/08_Content_Expansion_Readiness_Checklist_v0.1.md`를 기준으로 한다.
 
 ## 검수 상태
 

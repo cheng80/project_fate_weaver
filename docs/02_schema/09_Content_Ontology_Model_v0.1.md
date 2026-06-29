@@ -6,6 +6,14 @@
 
 현재 목표는 온톨로지 엔진을 만드는 것이 아니라, 기존 YAML 데이터가 어떤 entity와 relation으로 해석될 수 있는지 고정하는 것이다.
 
+현재 상태:
+
+```text
+Console Simulator implementation: PASS
+Ontology-lite: READY
+Next focus: Content Expansion Readiness
+```
+
 최종 기준:
 
 ```text
@@ -189,3 +197,23 @@ GraphDB를 지금 도입하면 아래 비용이 먼저 생긴다.
 - Flutter export, balance analyzer, content generator가 같은 관계 그래프를 실시간으로 공유해야 한다.
 
 그 전까지는 `data/core/ontology.yaml`과 파일 기반 분석으로 유지한다.
+
+---
+
+## 12. 콘텐츠 확장 준비와의 관계
+
+Ontology-lite는 콘텐츠 확장 전에 관계 누락을 찾기 위한 기준으로 사용한다.
+
+다음 단계 체크리스트:
+
+```text
+docs/05_validation/08_Content_Expansion_Readiness_Checklist_v0.1.md
+```
+
+확장할 콘텐츠는 최소한 아래 질문에 답할 수 있어야 한다.
+
+- 새 이벤트는 어떤 region/event/danger tag를 가지는가?
+- 새 선택지는 어떤 item/status를 요구하는가?
+- 새 아이템은 어떤 tag에 대응하거나 어떤 choice를 여는가?
+- 새 result는 어떤 status 또는 event weight를 바꾸는가?
+- 새 scenario는 어떤 source file과 event pool을 포함하는가?

@@ -15,7 +15,7 @@ Status: PASS
 
 근거:
 
-- `docs/06_plans/01_Review_Checklist_v0.1.md`
+- `docs/07_reviews/10_Console_Simulator_Review_Result_v0.1.md`
 - `.omo/ulw-loop/019f1277-b56b-7563-9d98-8ea17d567042/evidence/C001-validate-data.txt`
 - `.omo/ulw-loop/019f1277-b56b-7563-9d98-8ea17d567042/evidence/C002-console-simulator.txt`
 - `.omo/ulw-loop/019f1277-b56b-7563-9d98-8ea17d567042/evidence/C003-analyze-logs.txt`

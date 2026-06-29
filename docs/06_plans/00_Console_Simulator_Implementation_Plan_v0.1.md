@@ -532,7 +532,7 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 - No Python implementation exists outside `src/fateweaver/` and `tools/`.
 - No Flutter/Dart project exists.
 - No event-specific branch appears in Python source.
-- Review checklist in `docs/06_plans/01_Review_Checklist_v0.1.md` passes.
+- Review result in `docs/07_reviews/10_Console_Simulator_Review_Result_v0.1.md` passes.
 
 ## 13. Self-Review
 

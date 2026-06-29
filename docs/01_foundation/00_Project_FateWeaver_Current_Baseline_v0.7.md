@@ -24,15 +24,17 @@ Project FateWeaver의 장르는 다음으로 유지한다.
 
 현재는 Flutter 앱 제작 단계도 아니다.
 
-현재 목표는:
+현재 구현/검수 상태는:
 
 ```text
-Console Validation
+Console Simulator implementation: PASS
+Ontology-lite: READY
+Next focus: Content Expansion Readiness
 ```
 
 이다.
 
-즉, Python 콘솔 환경에서 이벤트-선택-상태 변화 루프가 재미있는지 검증한다.
+즉, Python 콘솔 환경에서 이벤트-선택-상태 변화 루프의 실행 가능성과 로그 분석 가능성은 검수 통과했고, 다음에는 콘텐츠 확장과 관계 검증 기준을 강화한다.
 
 ---
 
@@ -153,20 +155,18 @@ data/mvp0/ 폴더 생성
 
 # 6. 현재 목표
 
-현재 목표는 Codex가 아래를 만들 수 있는 상태로 문서를 정리하는 것이다.
+현재 목표는 Codex가 만든 Console Simulator 검수 결과를 기준으로, 콘텐츠 확장 준비 상태를 문서와 데이터 계약으로 정리하는 것이다.
 
 ```text
-Python 콘솔 시뮬레이터
-YAML validator
-Event selector
-Choice resolver
-Run logger
-Log analyzer
+Console Simulator PASS 상태 유지
+Ontology-lite 계약 유지
+콘텐츠 확장 readiness 검수
+이벤트/아이템/상태/팩/시나리오 관계 검증
 ```
 
 한 줄 요약:
 
-> **지금은 게임 앱을 만드는 단계가 아니라, 게임 루프가 재미있는지 검증하는 Python 실험 엔진을 만드는 단계다.**
+> **지금은 게임 앱을 만드는 단계가 아니라, 검수 통과한 Python 실험 엔진 위에서 콘텐츠 확장 가능성을 검증하는 단계다.**
 
 
 ---
@@ -177,3 +177,6 @@ Log analyzer
 - Python YAML 처리를 위해 requirements.txt를 사용한다.
 - Flutter 이전 경로는 `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.
 - `regret_score`와 `player_woven_score`의 위치를 분리한다.
+- Console Simulator 구현/검수는 PASS 상태다.
+- Ontology-lite 계약은 `data/core/ontology.yaml`과 `docs/02_schema/09_Content_Ontology_Model_v0.1.md`에 추가됐다.
+- 다음 단계는 `docs/05_validation/08_Content_Expansion_Readiness_Checklist_v0.1.md` 기준의 콘텐츠 확장 준비 검수다.
