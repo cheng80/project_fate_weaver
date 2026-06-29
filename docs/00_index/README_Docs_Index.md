@@ -77,6 +77,8 @@ docs/
   - YAML에서 Flutter JSON artifact로 이전하는 계약을 정의한다.
 - `docs/02_schema/09_Content_Ontology_Model_v0.1.md`
   - `data/core/ontology.yaml` 기반의 최소 콘텐츠 관계 모델을 정의한다.
+- `docs/02_schema/10_Content_Sampling_Guide_v0.1.md`
+  - TRPG 리서치에서 추출한 이벤트, 선택지, 위험, 보상, 단서, 아이템 상호작용 표본 추출 기준을 정의한다.
 
 ---
 
@@ -143,6 +145,8 @@ docs/
   - 완료된 Console Simulator 구현 계획이다.
 - `docs/06_plans/01_Content_Expansion_Implementation_Plan_v0.1.md`
   - Console Simulator PASS 이후 콘텐츠 확장을 구현할 때 따라야 할 이벤트, 아이템, 상태, pack, scenario, Ontology-lite 검증 계획이다.
+- `docs/06_plans/02_Content_Expansion_Phase3_Sampling_Plan_v0.1.md`
+  - TRPG 리서치와 콘텐츠 샘플링 가이드를 기준으로 Phase 3 이벤트, 아이템, entity 표본 추출 계획을 정의한다.
 
 ---
 
@@ -162,3 +166,5 @@ docs/
   - Console Simulator 구현 후 검수 PASS와 최종 재리뷰 승인 결과를 보관한다.
 - `docs/07_reviews/11_Playtest_Review_Result_v0.1.md`
   - Weighted AutoPlayer Scoring과 Content Expansion slice의 실제 플레이 감각, profile 차이, 선택/로그 품질 리뷰 결과를 보관한다.
+- `docs/07_reviews/12_TRPG_Content_Research_Notes_v0.1.md`
+  - CoC, D&D, 공개 TRPG 설계 자료를 FateWeaver용 추상 콘텐츠 샘플링 원칙으로 변환한 리서치 노트를 보관한다.

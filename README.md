@@ -85,6 +85,7 @@ docs/
     06_Fixture_Data_Plan_v0.3.md
     08_Flutter_Data_Export_Contract_v0.1.md
     09_Content_Ontology_Model_v0.1.md
+    10_Content_Sampling_Guide_v0.1.md
 
   03_specs/
     04_Console_Simulator_Spec_v0.7.md
@@ -100,10 +101,13 @@ docs/
   06_plans/
     00_Console_Simulator_Implementation_Plan_v0.1.md
     01_Content_Expansion_Implementation_Plan_v0.1.md
+    02_Content_Expansion_Phase3_Sampling_Plan_v0.1.md
 
   07_reviews/
     09_Commit_Summary_v0.1.md
     10_Console_Simulator_Review_Result_v0.1.md
+    11_Playtest_Review_Result_v0.1.md
+    12_TRPG_Content_Research_Notes_v0.1.md
 ```
 
 문서 탐색은 먼저 아래 파일을 본다.
