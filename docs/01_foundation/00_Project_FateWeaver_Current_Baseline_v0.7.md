@@ -6,6 +6,8 @@
 
 v0.7의 핵심은 **프로젝트 최상위 구조를 명확히 고정**하는 것이다.
 
+> 기준 구분: 이 문서는 Console Validation PASS 시점의 기준선 기록이다. Gameplay Replan 관련 새 작업의 최상위 기준은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`에서 시작한다.
+
 ---
 
 # 1. 프로젝트 정체성
@@ -155,7 +157,7 @@ data/mvp0/ 폴더 생성
 
 # 6. 현재 목표
 
-현재 목표는 Codex가 만든 Console Simulator 검수 결과를 기준으로, 콘텐츠 확장 준비 상태를 문서와 데이터 계약으로 정리하는 것이다.
+이 v0.7 기준선의 현재 목표는 Codex가 만든 Console Simulator 검수 결과를 기준으로, 콘텐츠 확장 준비 상태를 문서와 데이터 계약으로 정리하는 것이다. 최신 Gameplay Replan 작업에서는 Quest Layer, Expedition Clock, 3-Card Choice UI, Multi-Select, Economy/Reputation/Score 기준을 우선한다.
 
 ```text
 Console Simulator PASS 상태 유지

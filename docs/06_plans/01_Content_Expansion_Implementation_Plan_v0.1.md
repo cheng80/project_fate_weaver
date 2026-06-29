@@ -4,6 +4,8 @@
 
 **Goal:** Expand FateWeaver content safely while preserving the Console Simulator PASS baseline and Ontology-lite relationship contract.
 
+> 기준 구분: 이 계획은 Console Simulator PASS 이후 콘텐츠 확장 계획이다. Gameplay Replan 관련 새 구현/기획에서는 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`와 `docs/06_plans/03_Playable_Text_Adventure_Replan_v0.1.md`를 우선한다.
+
 **Architecture:** Content remains YAML-first: `data/core/` owns enums and rules, `data/content/` owns reusable event/item packs, and `data/scenarios/` owns validation slices. The Python Console Simulator is a verifier, not a content authoring target, so expansion work must be validated through existing CLI commands instead of changing `src/` or `tools/`.
 
 **Tech Stack:** YAML content contracts, Python 3.12 Console Validation CLI, `PyYAML`, `unittest`, Ontology-lite via `data/core/ontology.yaml`.

@@ -6,6 +6,8 @@
 
 이번 커밋의 목적은 Flutter 앱 구현이 아니라, **Console Validation 프로토타입 제작 직전의 기준선**을 저장하는 것이다.
 
+> 기준 구분: 이 문서는 과거 커밋 요약 기록이다. 최신 Gameplay Replan 작업의 시작점은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`다.
+
 ---
 
 # 1. 커밋 요약

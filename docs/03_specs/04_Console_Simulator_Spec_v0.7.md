@@ -6,6 +6,8 @@
 
 v0.7에서는 scenario filter, unavailable choice, 로그 metric, 재미 검증 지표, combat policy 계약을 명시한다.
 
+> 기준 구분: 이 문서는 기존 Console Validation 실행 사양이다. Gameplay Replan 작업의 완료 기준은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`와 `docs/03_specs/13_Text_MUD_Gameplay_Simulator_Spec_v0.1.md`를 우선한다.
+
 ---
 
 # 1. 실행 목표
