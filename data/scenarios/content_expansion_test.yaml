@@ -21,6 +21,15 @@ include_event_ids:
   - bandit_signal_post
   - echoing_clearing
   - quiet_marker_camp
+  - whispering_bark_marks
+  - abandoned_watch_post
+  - mist_guide_call
+  - survivor_tracks
+  - false_rescue_signal
+  - cursed_tree_ward
+  - old_hunter_cache
+  - glowing_insect_swarm
+  - crossroads_flags
 
 exclude_event_ids: []
 exclude_event_tags: []
@@ -37,12 +46,16 @@ initial_items:
   - torch
   - signal_whistle
   - flare_powder
+  - signal_mirror
+  - forest_charm
+  - trail_ribbon
+  - smoke_pellet
 
-target_turns: 12
+target_turns: 18
 seed: 4242
 
 validation_targets:
-  min_events: 4
-  min_combat_events: 1
-  min_curse_events: 1
-  min_item_count: 7
+  min_events: 12
+  min_combat_events: 2
+  min_curse_events: 4
+  min_item_count: 11

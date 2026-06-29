@@ -131,3 +131,304 @@ events:
         result:
           status: {food: +1, health: -1}
           message: 먹을 뿌리를 찾았지만 가시에 손을 베였다.
+
+  - id: whispering_bark_marks
+    name: 속삭이는 나무 표식
+    description: 젖은 나무껍질에 새긴 화살표들이 바람도 없는데 서로 다른 방향을 가리킨다.
+    region_tags: [forest, ruin]
+    event_tags: [exploration, magic, curse]
+    danger_tags: [lost, curse, ancient]
+    base_weight: 5
+    choices:
+      - id: trace_bark_pattern
+        text: 표식의 반복 규칙을 추적한다
+        type: investigate
+        risk_level: low
+        result:
+          event_weight: {lost: -1, magic: +1}
+          message: 화살표는 길이 아니라 같은 장소를 피하는 순서를 알려주고 있었다.
+      - id: cut_counter_mark
+        text: 반대 표식을 새겨 길을 고정한다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          event_weight: {lost: -2}
+          message: 시간이 들었지만 돌아오는 표식 하나를 끊어냈다.
+      - id: follow_hungry_arrow
+        text: 가장 선명한 화살표를 따라간다
+        type: gamble
+        risk_level: high
+        result:
+          status: {curse: +1, money: +2}
+          event_weight: {curse: +1}
+          message: 화살표 끝의 뿌리 아래에서 은화를 찾았지만 손목의 맥박이 차갑게 변했다.
+
+  - id: abandoned_watch_post
+    name: 버려진 감시 초소
+    description: 비스듬히 선 목제 초소 위에 깨진 렌즈와 낡은 깃발이 남아 있다.
+    region_tags: [forest, village]
+    event_tags: [exploration, combat, trade]
+    danger_tags: [bandit, physical, trap]
+    base_weight: 5
+    cooldown_turns: 2
+    choices:
+      - id: watch_from_underbrush
+        text: 덤불 아래에서 초소를 관찰한다
+        type: safe
+        risk_level: low
+        result:
+          event_weight: {bandit: -1}
+          message: 숨어 지켜보자 산적의 순찰 간격이 드러났다.
+      - id: climb_watch_ladder
+        text: 삐걱대는 사다리를 오른다
+        type: risky
+        risk_level: medium
+        result:
+          status: {health: -1, reputation: +1}
+          event_weight: {village: +1}
+          message: 사다리가 무너져 팔을 긁었지만 멀리 마을 연기 방향을 확인했다.
+      - id: sweep_with_signal_mirror
+        text: 신호 거울로 숲 가장자리를 훑는다
+        type: item_based
+        risk_level: low
+        requires_item: signal_mirror
+        result:
+          status: {reputation: +1}
+          event_weight: {bandit: -2, village: +1}
+          message: 거울빛이 초소의 감시 구멍을 비추자 숨어 있던 그림자가 물러났다.
+
+  - id: mist_guide_call
+    name: 안개 속 길잡이 소리
+    description: 안개 안쪽에서 낮은 종소리가 들리고, 발밑의 이끼가 박자에 맞춰 눌린다.
+    region_tags: [forest, ruin]
+    event_tags: [magic, curse, survival, exploration]
+    danger_tags: [lost, curse]
+    base_weight: 6
+    choices:
+      - id: listen_between_chimes
+        text: 종소리 사이의 침묵을 듣는다
+        type: investigate
+        risk_level: low
+        result:
+          event_weight: {lost: -1, magic: +1}
+          message: 종소리보다 침묵이 안전한 발판의 간격을 알려주었다.
+      - id: chase_bright_chime
+        text: 가장 맑은 종소리를 쫓는다
+        type: gamble
+        risk_level: high
+        result:
+          status: {curse: +1, food: +2}
+          event_weight: {curse: +1}
+          message: 소리는 먹을 수 있는 열매가 열린 곳으로 이끌었지만 안개가 이름 하나를 가져갔다.
+      - id: anchor_forest_charm
+        text: 숲 부적을 이끼에 눌러 길을 붙든다
+        type: item_based
+        risk_level: low
+        requires_item: forest_charm
+        result:
+          status: {curse: -1}
+          event_weight: {lost: -2}
+          message: 부적의 실이 젖은 이끼에 붙자 안개가 한 걸음 물러났다.
+
+  - id: survivor_tracks
+    name: 조난자의 흔적
+    description: 진흙 위에 끊어진 발자국과 반쯤 묻힌 천 조각이 남아 있다.
+    region_tags: [forest]
+    event_tags: [survival, rest, exploration]
+    danger_tags: [hunger, physical, lost]
+    base_weight: 6
+    choices:
+      - id: bind_left_bandage
+        text: 남은 천으로 상처를 묶고 흔적을 정리한다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1, health: +1}
+          message: 식량을 조금 쓰며 숨을 골랐고, 발자국의 주인도 같은 방식으로 버틴 듯했다.
+      - id: read_track_pressure
+        text: 발자국 깊이로 이동 방향을 읽는다
+        type: investigate
+        risk_level: low
+        result:
+          event_weight: {survival: +1, lost: -1}
+          message: 무거운 발은 물가가 아니라 마른 능선을 향하고 있었다.
+      - id: strip_hidden_ration
+        text: 묻힌 꾸러미에서 식량을 챙긴다
+        type: risky
+        risk_level: medium
+        result:
+          status: {food: +2, reputation: -1}
+          event_weight: {survival: +1}
+          message: 꾸러미는 아직 쓸 만했지만 누군가 돌아올 자리를 비워버렸다.
+
+  - id: false_rescue_signal
+    name: 도적의 가짜 구조 신호
+    description: 구조 신호처럼 보이는 연기가 낮게 깔리지만, 바람 반대편에서 금속이 스친다.
+    region_tags: [forest, village]
+    event_tags: [combat, trade, exploration]
+    danger_tags: [bandit, trap, physical]
+    base_weight: 6
+    choices:
+      - id: test_smoke_pattern
+        text: 연기 간격이 구조 신호와 맞는지 센다
+        type: investigate
+        risk_level: low
+        result:
+          event_weight: {bandit: -1}
+          message: 연기 간격은 구조 신호보다 빠르다. 누군가 조급하게 흉내 내고 있다.
+      - id: rush_to_rescue_smoke
+        text: 구조 신호라 믿고 달려간다
+        type: gamble
+        risk_level: high
+        result:
+          status: {health: -2, money: +2}
+          event_weight: {bandit: +1}
+          message: 덫을 밟았지만 도적들이 놓친 주머니를 붙잡고 빠져나왔다.
+      - id: break_line_with_smoke_pellet
+        text: 연막 구슬로 시야를 끊고 접근한다
+        type: item_based
+        risk_level: low
+        requires_item: smoke_pellet
+        consume_item: true
+        result:
+          status: {reputation: +1}
+          remove_item: [smoke_pellet]
+          event_weight: {bandit: -2, combat: -1}
+          message: 연막이 가짜 신호를 삼키자 숲길에 숨어 있던 발소리가 흩어졌다.
+
+  - id: cursed_tree_ward
+    name: 저주받은 나무 표식
+    description: 검은 수액으로 그린 원형 표식이 나무둥치마다 조금씩 다르게 번져 있다.
+    region_tags: [forest, ruin]
+    event_tags: [curse, magic, exploration]
+    danger_tags: [curse, ancient, forbidden]
+    base_weight: 5
+    choices:
+      - id: map_ward_variation
+        text: 표식의 차이를 기록한다
+        type: investigate
+        risk_level: medium
+        result:
+          status: {curse: +1, reputation: +2}
+          event_weight: {ancient: +1, magic: +1}
+          message: 표식의 문법을 알아냈지만 한 획이 눈 안쪽에 남았다.
+      - id: scrape_black_sap
+        text: 검은 수액을 긁어낸다
+        type: safe
+        risk_level: low
+        result:
+          status: {health: -1, curse: -1}
+          event_weight: {curse: -1}
+          message: 손가락이 쓰렸지만 표식 하나가 조용히 사라졌다.
+      - id: press_forest_charm_to_ward
+        text: 숲 부적을 표식 위에 누른다
+        type: item_based
+        risk_level: low
+        requires_item: forest_charm
+        result:
+          status: {curse: -1}
+          event_weight: {curse: -2, magic: +1}
+          message: 부적의 매듭이 검은 수액을 빨아들이며 길의 냄새가 맑아졌다.
+
+  - id: old_hunter_cache
+    name: 오래된 사냥꾼의 은닉처
+    description: 이끼 낀 돌무더기 아래에 기름 먹인 천과 낡은 올가미가 숨겨져 있다.
+    region_tags: [forest]
+    event_tags: [survival, trade, exploration]
+    danger_tags: [trap, hunger, beast]
+    base_weight: 5
+    cooldown_turns: 3
+    choices:
+      - id: open_cache_slowly
+        text: 올가미를 하나씩 풀고 은닉처를 연다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1, money: +1}
+          event_weight: {survival: +1}
+          message: 오래 걸렸지만 손상 없이 작은 동전 주머니를 꺼냈다.
+      - id: take_hunter_ration
+        text: 사냥꾼의 비상 식량을 챙긴다
+        type: trade
+        risk_level: medium
+        result:
+          status: {food: +2, reputation: -1}
+          event_weight: {survival: +1}
+          message: 마른 고기는 배를 채웠지만 은닉처의 주인이 남긴 표식은 흐트러졌다.
+      - id: mark_cache_with_trail_ribbon
+        text: 길매듭 리본으로 은닉처를 다시 표시한다
+        type: item_based
+        risk_level: low
+        requires_item: trail_ribbon
+        result:
+          status: {reputation: +1}
+          event_weight: {lost: -1, survival: +1}
+          message: 리본 매듭은 돌아올 길과 남겨둘 몫을 동시에 표시했다.
+
+  - id: glowing_insect_swarm
+    name: 빛나는 벌레 떼
+    description: 푸른 벌레들이 길 위에 떠서 별자리처럼 모였다 흩어진다.
+    region_tags: [forest, ruin]
+    event_tags: [magic, exploration, survival]
+    danger_tags: [darkness, beast, lost]
+    base_weight: 6
+    choices:
+      - id: follow_insect_constellation
+        text: 벌레들이 만드는 별자리를 따라간다
+        type: investigate
+        risk_level: medium
+        result:
+          status: {curse: +1}
+          event_weight: {magic: +2, lost: -1}
+          message: 별자리는 지름길을 열었지만 피부 아래에도 작은 빛 하나가 남았다.
+      - id: shield_torchlight
+        text: 횃불을 가려 벌레를 자극하지 않는다
+        type: safe
+        risk_level: low
+        requires_item: torch
+        result:
+          event_weight: {beast: -1}
+          message: 빛을 낮추자 벌레들이 사라지고 숲짐승의 숨소리도 멀어졌다.
+      - id: reflect_swarm_with_signal_mirror
+        text: 신호 거울로 벌레 빛을 반사한다
+        type: item_based
+        risk_level: low
+        requires_item: signal_mirror
+        result:
+          status: {reputation: +1}
+          event_weight: {magic: +1, lost: -1}
+          message: 거울빛이 벌레 떼를 길 가장자리로 몰아 안전한 선을 그렸다.
+
+  - id: crossroads_flags
+    name: 갈림길의 깃발
+    description: 세 갈래 길마다 색이 바랜 깃발이 꽂혀 있고, 매듭법만 서로 다르다.
+    region_tags: [forest, village]
+    event_tags: [exploration, trade, survival]
+    danger_tags: [lost, bandit]
+    base_weight: 5
+    choices:
+      - id: read_flag_knots
+        text: 깃발 매듭의 방향 규칙을 읽는다
+        type: investigate
+        risk_level: low
+        result:
+          event_weight: {lost: -1, village: +1}
+          message: 색보다 매듭 위치가 길을 말하고 있었다.
+      - id: pay_flag_keeper
+        text: 숲지기에게 길값을 건넨다
+        type: trade
+        risk_level: medium
+        requires_status: {money: {min: 1}}
+        result:
+          status: {money: -1, reputation: +1}
+          event_weight: {trade: +1, village: +1}
+          message: 숲지기는 동전을 받고 가장 덜 위험한 깃발을 바로 세웠다.
+      - id: tie_trail_ribbon_to_flag
+        text: 길매듭 리본을 깃발에 묶는다
+        type: item_based
+        risk_level: low
+        requires_item: trail_ribbon
+        result:
+          event_weight: {lost: -2, forest: +1}
+          message: 낡은 깃발에 새 매듭이 더해지자 되돌아올 기준점이 생겼다.

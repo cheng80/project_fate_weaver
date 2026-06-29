@@ -371,3 +371,60 @@ SCORING_OBSERVABILITY_READY
 - scoring weight 확정 튜닝은 Content Expansion 2차 이후 다시 해야 한다.
 - `blow_signal_whistle`은 반복 완화 이후에도 최다 반복 choice로 남아 있다. 이는 현재 content slice에서 item choice와 경쟁할 동급 선택지가 부족하기 때문이다.
 - 다음 개선은 weight 정밀 튜닝보다 Content Expansion 2차와 그 이후의 재검증이 더 효율적이다.
+
+---
+
+## 14. Content Expansion Phase 2 Recheck
+
+정리 일자:
+
+```text
+2026-06-30
+```
+
+Phase 2 변경:
+
+- `signal_grove_pack` 신규 이벤트 9개 추가
+- 신규 아이템 4개 추가
+- `content_expansion_test` 검증 범위를 13개 signal grove 이벤트, 18턴으로 확대
+- `src`, `tools`, `tests`, `data/core` 변경 없음
+
+재검증 조건:
+
+```text
+scenario: data/scenarios/content_expansion_test.yaml
+profiles: balanced, safe_leaning, greedy_leaning, curious_leaning, desperate
+seed: 42
+runs: 3 per profile
+target_turns: 18
+```
+
+Phase 2 profile metric:
+
+| Profile | Meaningful Choices | Item-unlocked Choices | Bad Tradeoffs | Choice Diversity | Most Repeated Choice | Repeat Bias Ratio |
+|---|---:|---:|---:|---:|---|---:|
+| balanced | 48 | 40 | 3 | 21 | `blow_signal_whistle` x8 | 0.15 |
+| safe_leaning | 48 | 40 | 0 | 19 | `blow_signal_whistle` x7 | 0.13 |
+| greedy_leaning | 38 | 34 | 10 | 19 | `blow_signal_whistle` x7 | 0.14 |
+| curious_leaning | 50 | 42 | 1 | 19 | `blow_signal_whistle` x9 | 0.17 |
+| desperate | 48 | 40 | 8 | 21 | `blow_signal_whistle` x8 | 0.15 |
+
+선택 분포 변화:
+
+- 기존 4-event slice에서는 `blow_signal_whistle`이 profile별 8~11회 반복됐다.
+- Phase 2에서는 turn 수가 18로 늘었는데도 profile별 7~9회로 유지되어 상대 반복 편향이 낮아졌다.
+- `signal_mirror`, `forest_charm`, `smoke_pellet` 기반 선택지가 상위 선택에 진입했다.
+- `greedy_leaning`과 `desperate`에서 bad tradeoff가 더 뚜렷하게 발생한다.
+- `safe_leaning`은 bad tradeoff 0을 유지한다.
+
+재검증 판정:
+
+```text
+CONTENT_EXPANSION_PHASE2_READY
+```
+
+남은 리스크:
+
+- `blow_signal_whistle`은 더 이상 독점적이지 않지만 여전히 most repeated choice다.
+- 이번 결과는 seed 42, profile별 3 runs 기준 smoke 재검증이다.
+- 다음 단계에서 scoring weight 확정 튜닝을 다시 판단할 수 있다.

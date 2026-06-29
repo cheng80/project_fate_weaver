@@ -145,3 +145,98 @@ NEEDS_SCORING_TUNING
 - 실제 플레이 감각 검수에서는 profile별 차이가 일부 확인됐지만, `balanced`와 `curious_leaning` 결과가 동일하고 item-based choice가 과도하게 강해 scoring tuning이 필요하다.
 - 후속 Weighted AutoPlayer Scoring Tuning에서는 profile weight를 크게 흔들지 않고, 반복 item-based choice 감쇠와 runner-up/gap/top_factors reason 출력, profile별 choice diversity/repeat bias 분석을 추가했다.
 - 현재 이벤트 수가 적어 profile별 선택 차이는 Content Expansion 2차 이후 다시 검증해야 한다.
+
+---
+
+# 9. Content Expansion Phase 2 검증 결과
+
+검증 일자:
+
+```text
+2026-06-30
+```
+
+변경 범위:
+
+- `signal_grove_pack/events.yaml`: 신규 이벤트 9개 추가
+- `signal_grove_pack/items.yaml`: 신규 아이템 4개 추가
+- `content_expansion_test.yaml`: 신규 이벤트 9개를 include 범위에 추가하고 target_turns를 18로 확대
+- `data/core` 변경 없음. 기존 enum과 relation으로 표현 가능
+
+신규 이벤트:
+
+```text
+whispering_bark_marks
+abandoned_watch_post
+mist_guide_call
+survivor_tracks
+false_rescue_signal
+cursed_tree_ward
+old_hunter_cache
+glowing_insect_swarm
+crossroads_flags
+```
+
+신규 아이템:
+
+```text
+signal_mirror
+forest_charm
+trail_ribbon
+smoke_pellet
+```
+
+Phase 2 체크:
+
+- [x] 신규 이벤트는 6~10개 범위 안이다. (`9`)
+- [x] 신규 아이템은 2~4개 범위 안이다. (`4`)
+- [x] 모든 신규 이벤트는 choice 3개를 가진다.
+- [x] item 없이 선택 가능한 `investigate`/curiosity choice를 여러 이벤트에 추가했다.
+- [x] 위험/보상 tradeoff와 curse 증가 선택지를 추가했다.
+- [x] `signal_whistle` 외에 `signal_mirror`, `forest_charm`, `trail_ribbon`, `smoke_pellet` item route를 추가했다.
+- [x] `content_expansion_test`가 신규 이벤트 9개를 직접 include한다.
+- [x] `src`, `tools`, `tests`, `data/core`는 변경하지 않았다.
+
+검증 명령:
+
+```bash
+.venv/bin/python tools/validate_data.py --scenario data/scenarios/content_expansion_test.yaml
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile balanced --logs /tmp/fateweaver_content_phase2_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile safe_leaning --logs /tmp/fateweaver_content_phase2_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile greedy_leaning --logs /tmp/fateweaver_content_phase2_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile curious_leaning --logs /tmp/fateweaver_content_phase2_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile desperate --logs /tmp/fateweaver_content_phase2_logs < /dev/null
+.venv/bin/python tools/analyze_logs.py --logs /tmp/fateweaver_content_phase2_logs
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
+```
+
+검증 결과:
+
+```text
+validate_data: PASS
+console_simulator: 15 logs generated
+analyze_logs: PASS
+unittest discover: PASS
+unavailable_selected: 0
+```
+
+Phase 2 profile metric:
+
+| Profile | Meaningful Choices | Item-unlocked Choices | Bad Tradeoffs | Choice Diversity | Most Repeated Choice | Repeat Bias Ratio |
+|---|---:|---:|---:|---:|---|---:|
+| balanced | 48 | 40 | 3 | 21 | `blow_signal_whistle` x8 | 0.15 |
+| safe_leaning | 48 | 40 | 0 | 19 | `blow_signal_whistle` x7 | 0.13 |
+| greedy_leaning | 38 | 34 | 10 | 19 | `blow_signal_whistle` x7 | 0.14 |
+| curious_leaning | 50 | 42 | 1 | 19 | `blow_signal_whistle` x9 | 0.17 |
+| desperate | 48 | 40 | 8 | 21 | `blow_signal_whistle` x8 | 0.15 |
+
+Phase 2 판정:
+
+```text
+CONTENT_EXPANSION_PHASE2_READY
+```
+
+남은 리스크:
+
+- `blow_signal_whistle`은 반복 지배가 완화됐지만 여전히 최다 반복 choice다.
+- 신규 아이템 route가 item choice 다양성을 넓혔으므로, 다음 단계에서는 scoring weight 확정 튜닝을 다시 판단할 수 있다.

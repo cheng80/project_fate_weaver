@@ -9,3 +9,23 @@ items:
     roles: [risk_reduce, cost_convert]
     tags: [consumable]
     counters: [curse, darkness, bandit]
+  - id: signal_mirror
+    name: 신호 거울
+    roles: [unlock, information, risk_reduce]
+    tags: [tool]
+    counters: [lost, bandit, darkness]
+  - id: forest_charm
+    name: 숲 부적
+    roles: [risk_reduce, cost_convert]
+    tags: [holy, tool]
+    counters: [curse, ancient]
+  - id: trail_ribbon
+    name: 길매듭 리본
+    roles: [unlock, future_weight, risk_reduce]
+    tags: [travel, tool]
+    counters: [lost, trap]
+  - id: smoke_pellet
+    name: 연막 구슬
+    roles: [risk_reduce, cost_convert]
+    tags: [consumable]
+    counters: [bandit, physical]
