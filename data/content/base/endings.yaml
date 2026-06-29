@@ -1,0 +1,11 @@
+endings:
+  - id: survival_return
+    name: 생존 귀환
+    condition:
+      target_turns_reached: true
+
+  - id: curse_end
+    name: 저주에 잠식
+    condition:
+      curse:
+        min: 5

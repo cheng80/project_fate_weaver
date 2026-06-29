@@ -1,0 +1,7 @@
+tags:
+  region: [forest, village, ruin]
+  event: [exploration, survival, trade, curse, combat, rest, magic]
+  danger: [darkness, undead, beast, bandit, trap, storm, hunger, physical, well, cliff, ancient, forbidden, curse, lost]
+  item_role: [unlock, risk_reduce, probability, information, future_weight, cost_convert]
+  item_tag: [tool, light, holy, consumable, healing, travel, weapon]
+  weight_target: [forest, village, ruin, survival, trade, curse, combat, magic, rest, holy, undead, bandit, beast, ancient, lost]

@@ -1,0 +1,454 @@
+events:
+  - id: cursed_well
+    name: 저주받은 우물
+    description: 검은 물이 고인 우물에서 낮은 속삭임이 들린다.
+    region_tags: [forest, ruin]
+    event_tags: [exploration, curse]
+    danger_tags: [well, darkness, curse]
+    base_weight: 10
+    max_occurrences_per_run: 2
+    choices:
+      - id: pass
+        text: 그냥 지나간다
+        type: safe
+        risk_level: none
+        result:
+          status: {food: -1}
+          message: 먼 길을 돌아가며 식량을 조금 소모했다.
+      - id: drink
+        text: 물을 마신다
+        type: gamble
+        risk_level: high
+        result_pool:
+          - when: {curse: {max: 1}}
+            result:
+              status: {health: +1, curse: +1}
+              message: 물은 차갑고 달콤했지만 손끝이 검게 물들었다.
+          - when: {default: true}
+            result:
+              status: {curse: +2}
+              message: 우물의 물은 이미 당신 안의 저주에 반응했다.
+      - id: purify
+        text: 성수로 정화한다
+        type: item_based
+        risk_level: low
+        requires_item: holy_water
+        consume_item: true
+        result:
+          status: {curse: -1, reputation: +1}
+          remove_item: [holy_water]
+          event_weight: {holy: +1}
+          message: 성수가 검은 물결을 잠재웠다.
+      - id: climb_down
+        text: 밧줄로 내려간다
+        type: item_based
+        risk_level: medium
+        requires_item: rope
+        result:
+          status: {health: -1, money: +3, curse: +1}
+          message: 우물 아래에서 은화를 찾았지만 검은 이끼가 팔에 달라붙었다.
+    variation_rules:
+      - when: {curse: {min: 3}}
+        override_description: 우물 속 속삭임이 이제는 당신의 이름을 부른다.
+
+  - id: broken_bridge
+    name: 무너진 다리
+    description: 계곡 위 낡은 다리가 반쯤 무너져 있다.
+    region_tags: [forest, ruin]
+    event_tags: [exploration]
+    danger_tags: [cliff, trap]
+    base_weight: 9
+    choices:
+      - id: detour
+        text: 멀리 돌아간다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 안전하게 우회했지만 식량을 소모했다.
+      - id: cross
+        text: 무너진 다리를 건넌다
+        type: risky
+        risk_level: high
+        result:
+          status: {health: -2}
+          message: 다리는 버텼지만 당신은 심하게 미끄러졌다.
+      - id: use_rope
+        text: 밧줄을 묶고 건넌다
+        type: item_based
+        risk_level: low
+        requires_item: rope
+        result:
+          event_weight: {ruin: +1}
+          message: 밧줄 덕분에 안전하게 건넜다.
+
+  - id: ruined_gate
+    name: 폐허의 문
+    description: 오래된 문은 고대 문자로 덮여 있다.
+    region_tags: [ruin]
+    event_tags: [exploration, magic]
+    danger_tags: [ancient, trap]
+    base_weight: 8
+    choices:
+      - id: leave
+        text: 문을 건드리지 않는다
+        type: safe
+        risk_level: none
+        result:
+          status: {food: -1}
+          message: 당신은 폐허를 돌아갔다.
+      - id: force_open
+        text: 억지로 연다
+        type: risky
+        risk_level: high
+        result:
+          status: {health: -1, money: +2}
+          add_run_tag: [opened_ruin_gate]
+          message: 문은 열렸지만 먼지 속 함정이 작동했다.
+      - id: read_marks
+        text: 지도를 대조한다
+        type: item_based
+        risk_level: low
+        requires_item: map
+        result:
+          event_weight: {ancient: +2}
+          add_run_tag: [understood_ruin_marks]
+          message: 지도 여백의 기호가 문자의 의미를 알려주었다.
+
+  - id: sudden_storm
+    name: 갑작스런 폭우
+    description: 숲 위로 검은 구름이 몰려오고 길이 진흙으로 잠긴다.
+    region_tags: [forest]
+    event_tags: [survival]
+    danger_tags: [storm, hunger]
+    base_weight: 10
+    choices:
+      - id: wait
+        text: 비를 피하며 기다린다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 비는 그쳤지만 배가 고파졌다.
+      - id: push_forward
+        text: 강행한다
+        type: risky
+        risk_level: medium
+        result:
+          status: {health: -1}
+          event_weight: {village: +1}
+          message: 진흙길을 뚫고 나아갔다.
+      - id: use_torch
+        text: 횃불로 길 표식을 확인한다
+        type: item_based
+        risk_level: low
+        requires_item: torch
+        result:
+          event_weight: {lost: -2}
+          message: 젖은 횃불은 약했지만 길 표식을 비췄다.
+
+  - id: hunger_night
+    name: 굶주린 밤
+    description: 밤이 깊고 배낭은 가볍다.
+    region_tags: [forest, ruin]
+    event_tags: [survival]
+    danger_tags: [hunger]
+    base_weight: 10
+    choices:
+      - id: ration
+        text: 식량을 아껴 먹는다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 배고픔은 남았지만 아침까지 버텼다.
+      - id: forage
+        text: 어둠 속에서 먹을 것을 찾는다
+        type: risky
+        risk_level: medium
+        result:
+          status: {food: +1, health: -1}
+          message: 뿌리를 찾았지만 가시에 손을 베였다.
+      - id: use_herb
+        text: 약초로 허기를 달랜다
+        type: item_based
+        risk_level: low
+        requires_item: herb
+        consume_item: true
+        result:
+          status: {food: +1}
+          remove_item: [herb]
+          message: 약초는 맛이 쓰지만 허기를 잠재웠다.
+
+  - id: suspicious_merchant
+    name: 수상한 상인
+    description: 길가의 상인이 이상할 정도로 싼 물건을 내민다.
+    region_tags: [village, forest]
+    event_tags: [trade]
+    danger_tags: [bandit]
+    base_weight: 9
+    choices:
+      - id: ignore
+        text: 무시한다
+        type: safe
+        risk_level: none
+        result: {message: 당신은 상인의 미소를 뒤로했다.}
+      - id: buy
+        text: 물건을 산다
+        type: trade
+        risk_level: medium
+        requires_status: {money: {min: 2}}
+        result_pool:
+          - when: {reputation: {min: 1}}
+            result:
+              status: {money: -2}
+              add_item: [holy_water]
+              message: 상인은 당신의 이름을 알고 있었고, 진짜 성수를 내주었다.
+          - when: {default: true}
+            result:
+              status: {money: -2, curse: +1}
+              message: 병 안의 액체는 성수가 아니었다.
+      - id: check_map
+        text: 지도에 표시된 상인길인지 확인한다
+        type: item_based
+        risk_level: low
+        requires_item: map
+        result:
+          event_weight: {trade: +1}
+          message: 지도에는 이 길의 상인이 믿을 만하다고 적혀 있다.
+
+  - id: village_market
+    name: 마을 장터
+    description: 작은 마을 장터가 열렸지만 당신을 보는 시선은 차갑다.
+    region_tags: [village]
+    event_tags: [trade]
+    base_weight: 8
+    choices:
+      - id: buy_food
+        text: 식량을 산다
+        type: trade
+        risk_level: none
+        requires_status: {money: {min: 1}}
+        result:
+          status: {money: -1, food: +2}
+          message: 거친 빵과 말린 고기를 얻었다.
+      - id: ask_help
+        text: 도움을 청한다
+        type: status_based
+        risk_level: low
+        requires_status: {reputation: {min: 1}}
+        result:
+          status: {food: +1}
+          message: 누군가 조용히 빵을 건넸다.
+      - id: steal
+        text: 몰래 훔친다
+        type: risky
+        risk_level: high
+        result:
+          status: {food: +2, reputation: -2}
+          add_run_tag: [wanted]
+          message: 배는 찼지만 당신의 얼굴이 기억되었다.
+
+  - id: cursed_altar
+    name: 저주받은 제단
+    description: 금 간 제단 위에 검은 보석이 놓여 있다.
+    region_tags: [ruin, forest]
+    event_tags: [curse, magic]
+    danger_tags: [curse, forbidden]
+    base_weight: 8
+    choices:
+      - id: leave
+        text: 건드리지 않는다
+        type: safe
+        risk_level: none
+        result: {message: 당신은 제단을 지나쳤다.}
+      - id: take_gem
+        text: 검은 보석을 가져간다
+        type: corrupt
+        risk_level: high
+        result:
+          status: {curse: +2, money: +5}
+          event_weight: {undead: +2}
+          message: 보석은 따뜻했고, 그림자는 길어졌다.
+      - id: purify_altar
+        text: 성수로 제단을 씻는다
+        type: item_based
+        risk_level: low
+        requires_item: holy_water
+        consume_item: true
+        result:
+          status: {curse: -1, reputation: +1}
+          remove_item: [holy_water]
+          message: 검은 보석은 재가 되어 흩어졌다.
+
+  - id: ghost_whisper
+    name: 유령의 속삭임
+    description: 안개 속에서 죽은 자의 목소리가 길을 알려주겠다고 말한다.
+    region_tags: [ruin, forest]
+    event_tags: [curse, magic]
+    danger_tags: [undead, darkness]
+    base_weight: 7
+    choices:
+      - id: ignore
+        text: 듣지 않는다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 당신은 먼 길을 택했다.
+      - id: listen
+        text: 목소리를 따른다
+        type: corrupt
+        risk_level: high
+        result:
+          status: {curse: +1}
+          event_weight: {ruin: +2}
+          message: 길은 짧았지만 목소리는 계속 따라왔다.
+      - id: light_torch
+        text: 횃불을 밝힌다
+        type: item_based
+        risk_level: low
+        requires_item: torch
+        result:
+          event_weight: {undead: -1}
+          message: 불빛이 안개를 밀어냈다.
+
+  - id: tainted_spring
+    name: 오염된 샘
+    description: 맑아 보이는 샘물 아래 검은 실 같은 것이 흐른다.
+    region_tags: [forest]
+    event_tags: [curse, survival]
+    danger_tags: [curse, hunger]
+    base_weight: 8
+    choices:
+      - id: drink_carefully
+        text: 조금만 마신다
+        type: gamble
+        risk_level: medium
+        result:
+          status: {health: +1, curse: +1}
+          message: 갈증은 가셨지만 불길한 맛이 남았다.
+      - id: use_herb
+        text: 약초를 섞어 마신다
+        type: item_based
+        risk_level: low
+        requires_item: herb
+        consume_item: true
+        result:
+          status: {health: +2}
+          remove_item: [herb]
+          message: 약초가 샘의 독기를 누그러뜨렸다.
+      - id: bless
+        text: 성수 한 방울을 떨어뜨린다
+        type: item_based
+        risk_level: low
+        requires_item: holy_water
+        consume_item: true
+        result:
+          status: {curse: -1}
+          remove_item: [holy_water]
+          message: 샘물이 잠시 맑게 빛났다.
+
+  - id: goblin_ambush
+    name: 고블린 습격
+    description: 덤불 속에서 고블린들이 낡은 창을 들고 뛰쳐나온다.
+    region_tags: [forest, ruin]
+    event_tags: [combat]
+    danger_tags: [bandit, physical]
+    base_weight: 7
+    choices:
+      - id: flee
+        text: 도망친다
+        type: retreat
+        risk_level: medium
+        result:
+          status: {food: -1}
+          event_weight: {bandit: +1}
+          message: 도망쳤지만 뒤쫓는 발소리가 오래 남았다.
+      - id: negotiate
+        text: 은화로 달랜다
+        type: trade
+        risk_level: low
+        requires_status: {money: {min: 2}}
+        result:
+          status: {money: -2, reputation: +1}
+          message: 고블린들은 은화를 세느라 길을 비켜주었다.
+      - id: fight
+        text: 단검으로 맞선다
+        type: combat_response
+        risk_level: high
+        requires_item: dagger
+        result:
+          status: {health: -1, money: +3}
+          add_run_tag: [wounded]
+          message: 고블린은 물러났지만 상처가 남았다.
+
+  - id: wolf_pack
+    name: 늑대 무리
+    description: 굶주린 늑대들이 원을 그리며 다가온다.
+    region_tags: [forest]
+    event_tags: [combat]
+    danger_tags: [beast, physical]
+    base_weight: 7
+    choices:
+      - id: climb_tree
+        text: 나무 위로 피한다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 늑대가 떠날 때까지 기다렸다.
+      - id: scare_with_torch
+        text: 횃불로 위협한다
+        type: item_based
+        risk_level: low
+        requires_item: torch
+        result:
+          event_weight: {beast: -2}
+          message: 불빛에 늑대들이 물러섰다.
+      - id: run
+        text: 숲길로 달린다
+        type: risky
+        risk_level: high
+        result:
+          status: {health: -1, food: -1}
+          message: 도망쳤지만 다리에는 이빨 자국이 남았다.
+      - id: hold_with_dagger
+        text: 단검을 들고 버틴다
+        type: combat_response
+        risk_level: medium
+        requires_item: dagger
+        result:
+          status: {health: -1}
+          event_weight: {beast: -1}
+          message: 단검 끝을 본 늑대들이 쉽게 달려들지 못했다.
+
+  - id: quiet_camp
+    name: 고요한 야영지
+    description: 오래된 모닥불 자리에 아직 따뜻한 재가 남아 있다.
+    region_tags: [forest, ruin]
+    event_tags: [rest]
+    base_weight: 6
+    cooldown_turns: 3
+    choices:
+      - id: rest
+        text: 잠시 쉰다
+        type: rest
+        risk_level: low
+        result:
+          status: {health: +1, food: -1}
+          message: 몸은 나아졌지만 식량은 줄었다.
+      - id: search
+        text: 주변을 조사한다
+        type: investigate
+        risk_level: medium
+        result:
+          add_item: [herb]
+          message: 재 아래에서 말린 약초를 발견했다.
+      - id: move_on
+        text: 쉬지 않고 이동한다
+        type: safe
+        risk_level: none
+        result:
+          event_weight: {survival: +1}
+          message: 당신은 시간을 아끼기로 했다.

@@ -1,0 +1,31 @@
+items:
+  - id: rope
+    name: 밧줄
+    roles: [unlock]
+    tags: [tool]
+    counters: [cliff, well, trap]
+  - id: torch
+    name: 횃불
+    roles: [risk_reduce, information]
+    tags: [tool, light]
+    counters: [darkness, beast]
+  - id: holy_water
+    name: 성수
+    roles: [risk_reduce, cost_convert]
+    tags: [holy, consumable]
+    counters: [curse, undead]
+  - id: herb
+    name: 약초
+    roles: [risk_reduce]
+    tags: [consumable, healing]
+    counters: [hunger]
+  - id: map
+    name: 지도
+    roles: [information, future_weight]
+    tags: [tool, travel]
+    counters: [hidden_path]
+  - id: dagger
+    name: 단검
+    roles: [risk_reduce]
+    tags: [weapon]
+    counters: [beast, bandit, physical]

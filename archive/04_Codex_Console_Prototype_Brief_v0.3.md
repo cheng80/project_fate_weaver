@@ -1,0 +1,106 @@
+# Project FateWeaver Codex Console Prototype Brief v0.3
+
+## 문서 목적
+
+이 문서는 Codex에게 MVP-0 콘솔 프로토타입 제작을 지시하기 위한 작업 브리프다.
+
+v0.3에서는 `src/`, `tools/`, `fate_weaver/`의 역할 분리를 명확히 한다.
+
+---
+
+# 1. 작업 목표
+
+Flutter 앱을 만들지 말고, PRD를 작성하지 말고, 콘솔 시뮬레이터만 만든다.
+
+---
+
+# 2. 반드시 읽을 문서
+
+- `docs/00_Project_FateWeaver_Current_Baseline_v0.5.md`
+- `docs/01_Data_Architecture_v0.5.md`
+- `docs/02_Event_Grammar_Draft_YAML_Schema_v0.4.md`
+- `docs/03_Console_Simulator_Spec_v0.4.md`
+
+---
+
+# 3. 허용 작업 범위
+
+Codex는 아래 경로만 생성/수정한다.
+
+```text
+data/core/
+data/content/
+data/scenarios/
+src/fateweaver/
+tools/
+logs/
+README.md
+```
+
+---
+
+# 4. 금지 작업
+
+```text
+data/mvp0/ 생성 금지
+fate_weaver/ 생성 금지
+Flutter 프로젝트 생성 금지
+Flame 코드 작성 금지
+Dart 앱 코드 작성 금지
+UI 디자인 금지
+PRD 작성 금지
+World Bible 작성 금지
+온디바이스 LLM 실험 금지
+실시간 전투 시스템 구현 금지
+이벤트별 if문 하드코딩 금지
+```
+
+---
+
+# 5. 구현해야 할 명령
+
+```bash
+python tools/validate_data.py --scenario data/scenarios/mvp0_console_test.yaml
+python tools/console_simulator.py --scenario data/scenarios/mvp0_console_test.yaml --seed 42 --runs 1
+python tools/analyze_logs.py --logs logs
+```
+
+---
+
+# 6. 성공 조건
+
+- scenario 기반 로드 가능
+- content_sources 로드 가능
+- validator 실행 가능
+- console simulator 실행 가능
+- run log 생성
+- summary report 생성
+- event selector가 seed 기반으로 동작
+- choices_seen에 unavailable choice 기록
+- influenced_by 기록 가능
+- player_woven_score 기록 가능
+- README에 실행법 포함
+
+---
+
+# 7. 작업 전 응답 형식
+
+```text
+STATUS: PLAN
+작업 범위:
+생성/수정 파일:
+실행 명령:
+금지한 작업:
+```
+
+---
+
+# 8. 작업 후 응답 형식
+
+```text
+STATUS: DONE
+생성/수정 파일:
+검증 명령 결과:
+남은 리스크:
+다음 작업:
+```

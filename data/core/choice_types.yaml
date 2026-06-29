@@ -1,0 +1,13 @@
+choice_types:
+  - safe
+  - risky
+  - item_based
+  - status_based
+  - sacrifice
+  - gamble
+  - retreat
+  - corrupt
+  - trade
+  - combat_response
+  - investigate
+  - rest

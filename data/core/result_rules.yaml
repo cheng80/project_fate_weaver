@@ -1,0 +1,11 @@
+result_rules:
+  status:
+    allowed: [health, food, money, reputation, curse]
+  item:
+    add_key: add_item
+    remove_key: remove_item
+  event_weight:
+    applies_to: tag
+  run_tag:
+    add_key: add_run_tag
+    remove_key: remove_run_tag

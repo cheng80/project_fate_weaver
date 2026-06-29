@@ -1,0 +1,33 @@
+events:
+  - id: black_dream
+    name: 검은 꿈
+    description: 잠깐 눈을 붙인 사이, 당신은 검은 강을 건너는 꿈을 꾸었다.
+    region_tags: [forest, ruin, village]
+    event_tags: [curse, magic]
+    danger_tags: [curse]
+    base_weight: 4
+    choices:
+      - id: wake
+        text: 억지로 깨어난다
+        type: safe
+        risk_level: low
+        result:
+          status: {health: -1}
+          message: 깨어났지만 식은땀이 등줄기를 적셨다.
+      - id: follow_dream
+        text: 꿈을 따라간다
+        type: corrupt
+        risk_level: high
+        result:
+          status: {curse: +1, money: +3}
+          message: 꿈속에서 쥔 검은 동전이 손 안에 남아 있었다.
+      - id: use_holy_water
+        text: 성수를 마신다
+        type: item_based
+        risk_level: low
+        requires_item: holy_water
+        consume_item: true
+        result:
+          status: {curse: -1}
+          remove_item: [holy_water]
+          message: 차가운 성수가 꿈의 잔향을 씻어냈다.

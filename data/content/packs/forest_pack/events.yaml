@@ -1,0 +1,30 @@
+events:
+  - id: forest_tracks
+    name: 젖은 발자국
+    description: 축축한 흙 위에 사람과 짐승의 발자국이 뒤섞여 있다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [beast]
+    base_weight: 5
+    choices:
+      - id: ignore
+        text: 무시한다
+        type: safe
+        risk_level: none
+        result:
+          message: 당신은 발자국을 무시하고 이동했다.
+      - id: follow
+        text: 발자국을 따라간다
+        type: risky
+        risk_level: medium
+        result:
+          event_weight: {beast: +1}
+          message: 숲은 점점 조용해졌다.
+      - id: read_map
+        text: 지도와 대조한다
+        type: item_based
+        risk_level: low
+        requires_item: map
+        result:
+          event_weight: {forest: +1}
+          message: 지도 덕분에 위험한 길을 피했다.

@@ -1,0 +1,28 @@
+statuses:
+  health:
+    type: int
+    min: 0
+    max: 10
+    initial: 7
+    fail_when: 0
+  food:
+    type: int
+    min: 0
+    max: 10
+    initial: 5
+  money:
+    type: int
+    min: 0
+    max: 99
+    initial: 2
+  reputation:
+    type: int
+    min: -5
+    max: 5
+    initial: 0
+  curse:
+    type: int
+    min: 0
+    max: 5
+    initial: 1
+    fail_when: 5

@@ -1,0 +1,10 @@
+regions:
+  - id: forest
+    name: 숲
+    tags: [forest, beast, herb]
+  - id: village
+    name: 마을
+    tags: [village, trade, reputation]
+  - id: ruin
+    name: 폐허
+    tags: [ruin, ancient, curse]

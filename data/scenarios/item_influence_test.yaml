@@ -1,0 +1,28 @@
+id: item_influence_test
+name: Item Influence Test
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+
+include_regions:
+  - forest
+  - village
+  - ruin
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 1
+
+initial_items:
+  - rope
+  - torch
+  - map
+  - dagger
+
+target_turns: 15
+seed: 123

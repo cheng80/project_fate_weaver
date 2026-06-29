@@ -1,0 +1,30 @@
+id: curse_balance_test
+name: Curse Balance Test
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+  - data/content/base/endings.yaml
+  - data/content/packs/curse_pack/events.yaml
+
+include_regions:
+  - forest
+  - ruin
+
+include_event_tags:
+  - curse
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 3
+
+initial_items:
+  - holy_water
+  - torch
+
+target_turns: 15
+seed: 777

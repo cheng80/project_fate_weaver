@@ -1,0 +1,54 @@
+id: mvp0_console_test
+name: MVP-0 Console Loop Validation
+
+description: >
+  이벤트 중심 판타지 로그라이크의 핵심 루프를 콘솔에서 검증하기 위한 시나리오.
+  실제 콘텐츠 구조에서 일부 이벤트를 선택해 실행한다.
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+  - data/content/base/endings.yaml
+  - data/content/packs/forest_pack/events.yaml
+  - data/content/packs/curse_pack/events.yaml
+
+include_regions:
+  - forest
+  - village
+  - ruin
+
+include_event_ids:
+  - cursed_well
+  - broken_bridge
+  - ruined_gate
+  - sudden_storm
+  - hunger_night
+  - suspicious_merchant
+  - village_market
+  - cursed_altar
+  - ghost_whisper
+  - tainted_spring
+  - goblin_ambush
+  - wolf_pack
+  - quiet_camp
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 1
+
+initial_items:
+  - rope
+  - torch
+
+target_turns: 20
+seed: 42
+
+validation_targets:
+  min_events: 12
+  min_curse_events: 4
+  min_combat_events: 2
+  min_item_count: 5
