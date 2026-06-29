@@ -1,46 +1,70 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 
+from fateweaver.models import JsonMap
 
-def analyze_logs(logs_dir: Path) -> dict[str, float | int]:
+
+@dataclass(slots=True)
+class _MetricBucket:
+    meaningful_choice_count: int = 0
+    item_unlocked_choice_count: int = 0
+    bad_tradeoff_count: int = 0
+    restart_scores: list[int] = field(default_factory=list)
+    woven_scores: list[int] = field(default_factory=list)
+    failed_interesting: int = 0
+
+    def add_turn(self, turn: JsonMap) -> None:
+        influenced_by = tuple(turn.get("influenced_by", []))
+        if influenced_by:
+            self.meaningful_choice_count += 1
+        if any(str(value).startswith("item:") for value in influenced_by):
+            self.item_unlocked_choice_count += 1
+        if turn.get("expected_risk") == "high" or int(turn.get("regret_score", 0)) >= 4:
+            self.bad_tradeoff_count += 1
+
+    def add_summary(self, summary: JsonMap) -> None:
+        restart = int(summary.get("restart_intent_score", 0))
+        woven = int(summary.get("player_woven_score", 0))
+        self.restart_scores.append(restart)
+        self.woven_scores.append(woven)
+        if summary.get("run_failed") is True and restart >= 4:
+            self.failed_interesting += 1
+
+    def to_json(self) -> JsonMap:
+        return {
+            "runs_analyzed": len(self.restart_scores),
+            "meaningful_choice_count": self.meaningful_choice_count,
+            "item_unlocked_choice_count": self.item_unlocked_choice_count,
+            "bad_tradeoff_count": self.bad_tradeoff_count,
+            "restart_intent_score_avg": _average(self.restart_scores),
+            "run_failed_but_interesting_count": self.failed_interesting,
+            "player_woven_score_avg": _average(self.woven_scores),
+        }
+
+
+def analyze_logs(logs_dir: Path) -> JsonMap:
     paths = sorted(path for path in logs_dir.glob("*.json") if path.is_file())
     if not paths:
         raise ValueError("no run logs found")
-    meaningful_choice_count = 0
-    item_unlocked_choice_count = 0
-    bad_tradeoff_count = 0
-    restart_scores: list[int] = []
-    woven_scores: list[int] = []
-    failed_interesting = 0
+    totals = _MetricBucket()
+    profile_buckets: dict[str, _MetricBucket] = {}
     for path in paths:
         with path.open("r", encoding="utf-8") as handle:
             log = json.load(handle)
+        profile = str(log.get("profile", "unknown"))
+        profile_bucket = profile_buckets.setdefault(profile, _MetricBucket())
         for turn in log.get("turns", []):
-            influenced_by = tuple(turn.get("influenced_by", []))
-            if influenced_by:
-                meaningful_choice_count += 1
-            if any(str(value).startswith("item:") for value in influenced_by):
-                item_unlocked_choice_count += 1
-            if turn.get("expected_risk") == "high" or int(turn.get("regret_score", 0)) >= 4:
-                bad_tradeoff_count += 1
+            totals.add_turn(turn)
+            profile_bucket.add_turn(turn)
         summary = log.get("run_summary", {})
-        restart = int(summary.get("restart_intent_score", 0))
-        woven = int(summary.get("player_woven_score", 0))
-        restart_scores.append(restart)
-        woven_scores.append(woven)
-        if summary.get("run_failed") is True and restart >= 4:
-            failed_interesting += 1
-    return {
-        "runs_analyzed": len(paths),
-        "meaningful_choice_count": meaningful_choice_count,
-        "item_unlocked_choice_count": item_unlocked_choice_count,
-        "bad_tradeoff_count": bad_tradeoff_count,
-        "restart_intent_score_avg": _average(restart_scores),
-        "run_failed_but_interesting_count": failed_interesting,
-        "player_woven_score_avg": _average(woven_scores),
-    }
+        totals.add_summary(summary)
+        profile_bucket.add_summary(summary)
+    result = totals.to_json()
+    result["profile_metrics"] = {profile: bucket.to_json() for profile, bucket in sorted(profile_buckets.items())}
+    return result
 
 
 def _average(values: list[int]) -> float:

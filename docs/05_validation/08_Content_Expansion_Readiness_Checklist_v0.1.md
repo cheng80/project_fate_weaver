@@ -73,6 +73,11 @@ Next focus: Content Expansion Readiness
 - [x] `meaningful_choice_count`가 확장 콘텐츠에서 해석 가능해야 한다. (seed 42 AutoPlayer 결과 `0`, 첫 available choice 선택 정책 때문)
 - [x] `item_unlocked_choice_count`가 새 item/choice 관계를 반영해야 한다. (item-gated choice는 존재하나 seed 42 AutoPlayer 결과 선택 횟수 `0`)
 - [x] `bad_tradeoff_count`, `restart_intent_score_avg`, `run_failed_but_interesting_count`, `player_woven_score_avg`가 계속 출력되어야 한다.
+- [x] AutoPlayer profile별 metric 비교가 가능해야 한다. (`profile_metrics` 출력)
+- [x] `item_usage_score`가 item-gated choice 선택에 영향을 줘야 한다. (`choice_scores[].item_usage_score`와 selected score 기록)
+- [x] `desperate` profile은 health/food가 낮을 때 survival 관련 선택 가중치를 높여야 한다. (`survival_need_score` 기록)
+- [x] `greedy_leaning` profile은 reward_score를 더 크게 반영해야 한다.
+- [x] 모든 weighted profile에서 unavailable choice가 선택되지 않아야 한다.
 
 검증 명령:
 
@@ -80,6 +85,10 @@ Next focus: Content Expansion Readiness
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/content_expansion_test.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/mvp0_console_test.yaml
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 1 --logs /tmp/fateweaver_content_expansion_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 1 --profile balanced --logs /tmp/fateweaver_profile_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 1 --profile greedy_leaning --logs /tmp/fateweaver_profile_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 1 --profile curious_leaning --logs /tmp/fateweaver_profile_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 1 --profile desperate --logs /tmp/fateweaver_profile_logs < /dev/null
 .venv/bin/python tools/analyze_logs.py --logs /tmp/fateweaver_content_expansion_logs
 ```
 
@@ -90,6 +99,7 @@ content_expansion_test: VALIDATION: PASS
 mvp0_console_test: VALIDATION: PASS
 console_simulator: LOG 생성 PASS
 analyze_logs: metric JSON 출력 PASS
+profile_metrics: weighted profile별 비교 PASS
 ```
 
 ---

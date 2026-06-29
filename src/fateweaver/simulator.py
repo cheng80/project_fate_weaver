@@ -5,7 +5,7 @@ from pathlib import Path
 from random import Random
 from typing import Protocol
 
-from fateweaver.choice_resolver import ChoiceSeen, build_choices_seen, select_available_choice, selected_choice_from_seen
+from fateweaver.choice_resolver import ChoiceSeen, ChoiceSelection, build_choices_seen, select_choice, selected_choice_from_seen
 from fateweaver.data_loader import load_project_data
 from fateweaver.event_selector import select_event
 from fateweaver.logger import save_run_log
@@ -33,6 +33,7 @@ def run_console_simulation(
     logs_dir: Path,
     stdin: InputPort,
     stdout: OutputPort,
+    profile: str = "balanced",
 ) -> list[Path]:
     loaded = load_project_data(project_root, scenario_path)
     bundle, scenario = loaded.bundle, loaded.scenario
@@ -44,11 +45,11 @@ def run_console_simulation(
     seed = scenario.seed if seed_override is None else seed_override
     saved_paths: list[Path] = []
     for run_number in range(1, runs + 1):
-        saved_paths.append(_run_once(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout))
+        saved_paths.append(_run_once(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
     return saved_paths
 
 
-def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Path, stdin: InputPort, stdout: OutputPort) -> Path:
+def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Path, stdin: InputPort, stdout: OutputPort, profile: str) -> Path:
     rng = Random(seed + run_number - 1)
     state = dict(scenario.initial_status)
     inventory = tuple(scenario.initial_items)
@@ -58,8 +59,9 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
     for turn in range(1, scenario.target_turns + 1):
         event = select_event(events, state, inventory, run_tags, rng, recent_event_ids)
         choices_seen = build_choices_seen(event, state, inventory, run_tags)
-        selected = _choose(choices_seen, stdin, stdout)
-        feedback = _choice_feedback(selected, stdin, stdout)
+        selection = _choose(choices_seen, stdin, stdout, profile, state, seed, turn)
+        selected = selection.choice
+        feedback = _choice_feedback(selected, selection.reason, stdin, stdout)
         influenced_by = _influenced_by(selected, event.event_tags, choices_seen)
         state_before = dict(state)
         inventory_before = list(inventory)
@@ -77,6 +79,9 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
                 "choices_seen": [_choice_seen_json(choice) for choice in choices_seen],
                 "selected_choice_id": selected.choice_id,
                 "selected_choice_type": selected.choice_type,
+                "selected_choice_reason": selection.reason,
+                "selected_choice_score": selection.selected_choice_score,
+                "choice_scores": list(selection.choice_scores),
                 "was_available": selected.available,
                 "was_hidden": selected.hidden,
                 "choice_time_seconds": 0,
@@ -94,26 +99,27 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
         if is_failed(state, bundle.statuses):
             break
     run_feedback = _run_feedback(turns, is_failed(state, bundle.statuses), stdin, stdout)
-    log = _run_log(scenario.id, seed, run_number, turns, state, inventory, run_feedback)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    filename = f"run_{scenario.id}_{seed}_{timestamp}_{run_number:04d}.json"
+    log = _run_log(scenario.id, seed, run_number, profile, turns, state, inventory, run_feedback)
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    filename = f"run_{scenario.id}_{profile}_{seed}_{timestamp}_{run_number:04d}.json"
     return save_run_log(log, logs_dir, filename)
 
 
-def _choose(choices_seen: tuple[ChoiceSeen, ...], stdin: InputPort, stdout: OutputPort) -> ChoiceSeen:
+def _choose(choices_seen: tuple[ChoiceSeen, ...], stdin: InputPort, stdout: OutputPort, profile: str, state, seed: int, turn: int) -> ChoiceSelection:
     if not stdin.isatty():
-        return select_available_choice(choices_seen)
+        return select_choice(choices_seen, profile=profile, state=state, seed=seed, turn=turn)
     for choice in choices_seen:
         status = "available" if choice.available else f"unavailable: {choice.unavailable_reason}"
         stdout.write(f"{choice.choice_id}: {status}\n")
     stdout.write("choice> ")
-    return selected_choice_from_seen(choices_seen, stdin.readline().strip())
+    selected = selected_choice_from_seen(choices_seen, stdin.readline().strip())
+    return ChoiceSelection(selected, "profile=manual: selected by interactive input", {}, ())
 
 
-def _choice_feedback(selected: ChoiceSeen, stdin: InputPort, stdout: OutputPort) -> PlayerChoiceFeedback:
+def _choice_feedback(selected: ChoiceSeen, auto_reason: str, stdin: InputPort, stdout: OutputPort) -> PlayerChoiceFeedback:
     if not stdin.isatty():
         return PlayerChoiceFeedback(
-            choice_reason="auto: selected first available non-hidden choice",
+            choice_reason=auto_reason,
             expected_risk=selected.expected_risk,
             regret_score=_regret_score(selected.expected_risk),
         )
@@ -147,13 +153,14 @@ def _run_feedback(turns: list[JsonMap], run_failed: bool, stdin: InputPort, stdo
     return RunFeedback(fairness, restart, woven, narrative, memorable, next_intent)
 
 
-def _run_log(scenario_id: str, seed: int, run_number: int, turns: list[JsonMap], state, inventory, feedback: RunFeedback) -> JsonMap:
+def _run_log(scenario_id: str, seed: int, run_number: int, profile: str, turns: list[JsonMap], state, inventory, feedback: RunFeedback) -> JsonMap:
     run_failed = bool(state.get("health", 1) <= 0 or state.get("curse", 0) >= 5)
     return {
         "schema_version": "console_validation_log_v0.1",
         "scenario_id": scenario_id,
         "seed": seed,
         "run_id": f"{scenario_id}-{seed}-{run_number:04d}",
+        "profile": profile,
         "turns": turns,
         "run_summary": {
             "final_state": dict(state),

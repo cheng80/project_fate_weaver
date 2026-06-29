@@ -125,6 +125,38 @@ tools/
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/mvp0_console_test.yaml --seed 42 --runs 5
 ```
 
+## Weighted AutoPlayer Profile Run
+
+```bash
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 5 --profile balanced
+```
+
+지원 profile:
+
+```text
+first_available
+balanced
+safe_leaning
+greedy_leaning
+curious_leaning
+desperate
+```
+
+기본 profile은 `balanced`다. `first_available`는 기존 호환 정책으로 가능한 첫 번째 non-hidden choice를 고른다. 나머지 profile은 고정 성격이 아니라 scoring weight preset이다. scorer는 unavailable choice를 제외한 뒤 아래 항목을 계산한다.
+
+```text
+safety_score
+reward_score
+item_usage_score
+risk_score
+survival_need_score
+novelty_score
+curse_penalty
+final_score
+```
+
+동점은 seed, turn, profile, choice_id 기반 deterministic tie-break로 고른다.
+
 ## 로그 분석
 
 ```bash
@@ -187,6 +219,7 @@ logs/summary.md
 
 ```yaml
 run_id:
+profile:
 turn:
 scenario_id:
 event_id:
@@ -195,6 +228,9 @@ state_before:
 inventory_before:
 choices_seen:
 selected_choice:
+selected_choice_reason:
+selected_choice_score:
+choice_scores:
 choice_time_seconds:
 choice_reason:
 expected_risk:
@@ -319,6 +355,7 @@ bad_tradeoff_count
 restart_intent_score
 run_failed_but_interesting
 player_woven_score
+profile_metrics
 ```
 
 정의:
@@ -338,6 +375,9 @@ Run 실패 후 restart_intent_score가 4 이상이면 true
 
 player_woven_score:
 이번 Run이 내가 선택으로 엮은 이야기처럼 느껴졌는지 1-5로 평가
+
+profile_metrics:
+profile별 runs_analyzed, meaningful_choice_count, item_unlocked_choice_count, bad_tradeoff_count, restart_intent_score_avg, run_failed_but_interesting_count, player_woven_score_avg를 같은 구조로 집계
 ```
 
 ---

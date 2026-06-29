@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -50,12 +51,79 @@ class CliSmokeTests(unittest.TestCase):
                 ],
                 check=False,
                 capture_output=True,
+                stdin=subprocess.DEVNULL,
                 text=True,
+                timeout=15,
             )
             logs = list(Path(tmp).glob("run_*.json"))
 
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-        self.assertEqual(1, len(logs))
+        self.assertEqual(1, len(logs), result.stdout + result.stderr)
+
+    def test_console_simulator_accepts_balanced_profile_and_logs_weighted_score(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/console_simulator.py",
+                    "--scenario",
+                    "data/scenarios/mvp0_console_test.yaml",
+                    "--seed",
+                    "42",
+                    "--runs",
+                    "1",
+                    "--logs",
+                    tmp,
+                    "--profile",
+                    "balanced",
+                ],
+                check=False,
+                capture_output=True,
+                stdin=subprocess.DEVNULL,
+                text=True,
+                timeout=15,
+            )
+            logs = list(Path(tmp).glob("run_*.json"))
+
+            self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+            self.assertEqual(1, len(logs), result.stdout + result.stderr)
+            payload = json.loads(logs[0].read_text(encoding="utf-8"))
+
+        self.assertEqual("balanced", payload["profile"])
+        reason = str(payload["turns"][0]["selected_choice_reason"])
+        self.assertIn("profile", reason)
+        self.assertIn("balanced", reason)
+        self.assertIn("final_score", reason)
+        self.assertIn("selected_choice_score", payload["turns"][0])
+
+    def test_console_simulator_rejects_invalid_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/console_simulator.py",
+                    "--scenario",
+                    "data/scenarios/mvp0_console_test.yaml",
+                    "--seed",
+                    "42",
+                    "--runs",
+                    "1",
+                    "--logs",
+                    tmp,
+                    "--profile",
+                    "reckless_ghost",
+                ],
+                check=False,
+                capture_output=True,
+                stdin=subprocess.DEVNULL,
+                text=True,
+                timeout=15,
+            )
+
+        combined_output = result.stdout + result.stderr
+        self.assertNotEqual(0, result.returncode, combined_output)
+        self.assertIn("profile", combined_output)
+        self.assertNotIn("unrecognized arguments", combined_output)
 
 
 if __name__ == "__main__":

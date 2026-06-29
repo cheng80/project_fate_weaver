@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from fateweaver.choice_scoring import ChoiceSelection, select_weighted_choice
 from fateweaver.models import Choice, ChoiceSeen, Event, JsonMap, JsonValue, StatusMap, StatusRequirement
 
 
@@ -30,13 +31,26 @@ def build_choices_seen(
     return tuple(seen)
 
 
-def select_available_choice(choices_seen: tuple[ChoiceSeen, ...], policy: str = "auto") -> ChoiceSeen:
-    if policy != "auto":
-        raise ValueError(f"Unsupported choice policy: {policy}")
-    for choice in choices_seen:
-        if choice.available and not choice.hidden:
-            return choice
-    raise ValueError("No available choices")
+def select_available_choice(
+    choices_seen: tuple[ChoiceSeen, ...],
+    policy: str = "auto",
+    profile: str = "balanced",
+    state: StatusMap | None = None,
+    seed: int = 0,
+    turn: int = 0,
+) -> ChoiceSeen:
+    return select_choice(choices_seen, policy, profile, state, seed, turn).choice
+
+
+def select_choice(
+    choices_seen: tuple[ChoiceSeen, ...],
+    policy: str = "auto",
+    profile: str = "balanced",
+    state: StatusMap | None = None,
+    seed: int = 0,
+    turn: int = 0,
+) -> ChoiceSelection:
+    return select_weighted_choice(choices_seen, policy, profile, state, seed, turn)
 
 
 def selected_choice_from_seen(choices_seen: tuple[ChoiceSeen, ...], choice_id: str) -> ChoiceSeen:
