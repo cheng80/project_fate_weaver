@@ -1,10 +1,10 @@
-# Project FateWeaver Console Simulator Spec v0.6
+# Project FateWeaver Console Simulator Spec v0.7
 
 ## 문서 목적
 
 이 문서는 MVP-0 Console Loop Validation을 실제로 실행하기 위한 콘솔 시뮬레이터 사양이다.
 
-v0.6에서는 `docs/`, `data/`, `src/`, `tools/`, `fate_weaver/`의 역할 분리를 명확히 한다.
+v0.7에서는 scenario filter, unavailable choice, 로그 metric, 재미 검증 지표, combat policy 계약을 명시한다.
 
 ---
 
@@ -141,11 +141,25 @@ tools/
 1. scenario yaml 로드
 2. core yaml 로드
 3. scenario.content_sources 로드
-4. include_event_ids로 이벤트 제한
-5. include_regions로 region 제한
-6. initial_status 적용
-7. initial_items 적용
-8. target_turns 적용
+4. include_regions로 region 제한
+5. include_event_ids/include_event_tags로 이벤트 제한
+6. exclude_event_ids/exclude_event_tags로 이벤트 제거
+7. initial_status 적용
+8. initial_items 적용
+9. target_turns 적용
+```
+
+Filter 규칙:
+
+```text
+include_event_ids: optional
+include_event_tags: optional
+exclude_event_ids: optional
+exclude_event_tags: optional
+
+include_event_ids와 include_event_tags가 둘 다 없으면 content_sources + include_regions 기준 전체 이벤트를 사용한다.
+include_event_ids와 include_event_tags가 둘 다 있으면 AND 조건으로 필터링한다.
+exclude_*는 include 필터 이후 적용한다.
 ```
 
 ---
@@ -195,7 +209,154 @@ notes:
 
 ---
 
-# 10. 금지 구현
+# 10. Unavailable Choice Policy
+
+MVP-0 기본 정책은 **show unavailable**이다.
+
+```text
+unavailable choice는 표시한다.
+단, 선택은 불가능하다.
+표시 이유를 함께 보여준다.
+```
+
+표시 예:
+
+```text
+[unavailable: requires holy_water]
+```
+
+로그 예:
+
+```yaml
+choices_seen:
+  - id: purify
+    available: false
+    hidden: false
+    reason: requires_item:holy_water
+
+unavailable_choice_count: 1
+missing_items_noticed:
+  - holy_water
+```
+
+`hidden_until_available: true`가 있는 choice는 숨길 수 있다. 단, MVP-0 fixture 기본값은 false다.
+
+---
+
+# 11. Choice Requires Policy
+
+```text
+choice-level requires_*는 해당 choice의 available 여부만 판단한다.
+event-level requires_*는 이벤트 자체의 eligible 여부를 판단한다.
+MVP-0에서 대부분의 조건은 choice-level로 둔다.
+```
+
+지원 대상:
+
+```yaml
+requires_item: string
+requires_any_item: list[string]
+requires_status: StatusCondition
+requires_tag: string
+consume_item: bool
+hidden_until_available: bool
+```
+
+---
+
+# 12. 로그 Metric Contract
+
+## choice-level
+
+```yaml
+choice_time_seconds:
+  type: int
+  source: system
+
+choice_reason:
+  type: string
+  source: player
+  required: true
+
+expected_risk:
+  type: string
+  source: player
+  required: true
+
+influenced_by:
+  type: list[string]
+  source: player
+  allowed_prefix: [item:, status:, unavailable:, event:, risk:]
+
+regret_score:
+  type: int
+  scale: 1-5
+  source: player
+```
+
+## run-level
+
+```yaml
+run_summary:
+  fairness_score: 1-5
+  restart_intent_score: 1-5
+  player_woven_score: 1-5
+  narrative_summary: string
+  most_memorable_choice: string
+  next_run_intent: string
+```
+
+---
+
+# 13. MVP-0 재미 검증 지표
+
+필수 분석 지표:
+
+```text
+meaningful_choice_count
+item_unlocked_choice_count
+bad_tradeoff_count
+restart_intent_score
+run_failed_but_interesting
+player_woven_score
+```
+
+정의:
+
+```text
+meaningful_choice_count:
+choice_reason에 상태/아이템/위험/미래 영향 중 하나 이상이 언급된 선택 수
+
+item_unlocked_choice_count:
+available=true라서 실제 선택에 영향을 준 item_based choice 수
+
+bad_tradeoff_count:
+플레이어가 손해를 알면서도 선택했다고 기록한 선택 수
+
+run_failed_but_interesting:
+Run 실패 후 restart_intent_score가 4 이상이면 true
+
+player_woven_score:
+이번 Run이 내가 선택으로 엮은 이야기처럼 느껴졌는지 1-5로 평가
+```
+
+---
+
+# 14. Combat Policy
+
+전투형 이벤트는 별도 전투 시스템이 아니다.
+
+```text
+combat은 event_tags: [combat]을 가진 일반 이벤트다.
+combat_response는 choice_type 중 하나일 뿐이다.
+MVP-0에서 CombatEventResolver는 만들지 않는다.
+모든 전투형 이벤트는 일반 ChoiceResolver로 처리한다.
+별도 전투 루프, 적 HP, 공격/방어 턴, 전투 UI는 금지한다.
+```
+
+---
+
+# 15. 금지 구현
 
 - Flutter 앱
 - Flame 연출
@@ -207,10 +368,13 @@ notes:
 - 이벤트별 하드코딩 분기
 - data/mvp0 폴더 생성
 - fate_weaver 폴더 생성
+- CombatEventResolver
+- 전투 전용 루프
+- 적 HP/공격/방어 턴 시스템
 
 ---
 
-# 11. Flutter 이전 계획
+# 16. Flutter 이전 계획
 
 MVP-0 통과 후에만 아래를 진행한다.
 
@@ -227,7 +391,7 @@ Flame 연출
 
 ---
 
-# 12. 점수 필드 위치
+# 17. 점수 필드 위치
 
 ## 12.1 선택 단위 필드
 
@@ -247,8 +411,11 @@ regret_score: 4
 
 ```yaml
 run_summary:
+  fairness_score: 4
+  restart_intent_score: 5
   player_woven_score: 4
   narrative_summary: "성수를 아끼다가 저주가 쌓여 실패한 런"
+  most_memorable_choice: "저주받은 우물에서 성수를 아낀 선택"
   next_run_intent: "다음에는 성수를 초반에 쓰지 않고 저주 보상 루트를 실험해보고 싶다."
 ```
 
@@ -256,7 +423,7 @@ run_summary:
 
 ---
 
-# 13. Python 실행 환경
+# 18. Python 실행 환경
 
 MVP-0 Python 실행은 프로젝트 루트의 `requirements.txt`를 사용한다.
 

@@ -15,6 +15,9 @@ include_regions:
 include_event_tags:
   - curse
 
+exclude_event_ids: []
+exclude_event_tags: []
+
 initial_status:
   health: 7
   food: 5

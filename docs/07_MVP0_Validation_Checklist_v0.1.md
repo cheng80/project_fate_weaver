@@ -44,6 +44,9 @@
 - [ ] Data Architecture가 core/content/scenarios 구조를 설명한다.
 - [ ] Console Simulator Spec이 scenario 기반 실행을 설명한다.
 - [ ] Codex Brief가 금지 작업을 명시한다.
+- [ ] Event Grammar가 scenario filter 문법을 설명한다.
+- [ ] Console Simulator Spec이 unavailable choice 정책을 설명한다.
+- [ ] Codex Brief가 combat policy를 설명한다.
 
 ---
 
@@ -68,3 +71,9 @@
 - [ ] `PyYAML` 의존성이 명시되어 있다.
 - [ ] Flutter export JSON 계약 문서가 존재한다.
 - [ ] dagger가 최소 2개 이벤트에서 의미 있게 사용된다.
+- [ ] scenario filter의 include/exclude 문법이 문서와 데이터에서 일치한다.
+- [ ] choice-level requires와 event-level requires가 분리되어 있다.
+- [ ] unavailable choice는 show unavailable 기본 정책을 따른다.
+- [ ] `influenced_by`, `regret_score`, `player_woven_score`의 타입/스케일/입력 주체가 명시되어 있다.
+- [ ] MVP-0 재미 검증 지표가 summary 대상에 포함되어 있다.
+- [ ] 전투형 이벤트는 일반 이벤트 + `combat_response` choice로만 처리한다.

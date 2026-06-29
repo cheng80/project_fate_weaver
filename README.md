@@ -71,9 +71,9 @@ MVP-0 검증 통과 후 MVP-1 단계에서 생성한다.
 00_Project_FateWeaver_Current_Baseline_v0.7.md
 01_Project_Structure_Guide_v0.1.md
 02_Data_Architecture_v0.7.md
-03_Event_Grammar_Draft_YAML_Schema_v0.6.md
-04_Console_Simulator_Spec_v0.6.md
-05_Codex_Console_Prototype_Brief_v0.5.md
+03_Event_Grammar_Draft_YAML_Schema_v0.7.md
+04_Console_Simulator_Spec_v0.7.md
+05_Codex_Console_Prototype_Brief_v0.6.md
 06_Fixture_Data_Plan_v0.3.md
 07_MVP0_Validation_Checklist_v0.1.md
 08_Flutter_Data_Export_Contract_v0.1.md
@@ -120,6 +120,61 @@ python3.12 -m venv .venv
 ```
 
 실행 명령도 전역 `python`이 아니라 `.venv/bin/python`을 사용한다.
+
+---
+
+# MVP-0 계약 보강
+
+Writing-plans 진입 전 아래 계약을 고정한다.
+
+## Scenario filter
+
+```text
+include_event_ids: optional
+include_event_tags: optional
+exclude_event_ids: optional
+exclude_event_tags: optional
+
+include_event_ids와 include_event_tags가 둘 다 없으면 content_sources + include_regions 기준 전체 이벤트를 사용한다.
+include_event_ids와 include_event_tags가 둘 다 있으면 AND 조건으로 필터링한다.
+```
+
+## Unavailable choice
+
+MVP-0 기본 정책은 **show unavailable**이다.
+
+```text
+unavailable choice는 표시한다.
+단, 선택은 불가능하다.
+표시 이유를 함께 보여준다.
+```
+
+## 로그와 재미 검증
+
+```text
+regret_score = choice-level, int 1-5, player
+player_woven_score = run-level, int 1-5, player
+```
+
+Analyzer는 최소 아래 지표를 summary에 포함한다.
+
+```text
+meaningful_choice_count
+item_unlocked_choice_count
+bad_tradeoff_count
+restart_intent_score
+run_failed_but_interesting
+player_woven_score
+```
+
+## Combat policy
+
+```text
+combat은 event_tags: [combat]을 가진 일반 이벤트다.
+combat_response는 choice_type 중 하나일 뿐이다.
+MVP-0에서 CombatEventResolver는 만들지 않는다.
+모든 전투형 이벤트는 일반 ChoiceResolver로 처리한다.
+```
 
 ---
 

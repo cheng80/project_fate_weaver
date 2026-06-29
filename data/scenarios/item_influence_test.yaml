@@ -11,6 +11,9 @@ include_regions:
   - village
   - ruin
 
+exclude_event_ids: []
+exclude_event_tags: []
+
 initial_status:
   health: 7
   food: 5
