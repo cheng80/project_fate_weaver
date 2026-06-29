@@ -56,9 +56,20 @@ class CliSmokeTests(unittest.TestCase):
                 timeout=15,
             )
             logs = list(Path(tmp).glob("run_*.json"))
+            text_logs = list(Path(tmp).glob("run_*.txt"))
+            text_log = text_logs[0].read_text(encoding="utf-8") if text_logs else ""
 
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         self.assertEqual(1, len(logs), result.stdout + result.stderr)
+        self.assertEqual(1, len(text_logs), result.stdout + result.stderr)
+        self.assertIn("[Run 시작]", text_log)
+        self.assertIn("장소:", text_log)
+        self.assertIn("선택:", text_log)
+        self.assertIn("위험/보상 판단:", text_log)
+        self.assertIn("상태 변화:", text_log)
+        self.assertIn("아이템/단서/징조 영향:", text_log)
+        self.assertIn("다음 사건 변화:", text_log)
+        self.assertIn("[Run 종료]", text_log)
 
     def test_console_simulator_accepts_balanced_profile_and_logs_weighted_score(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

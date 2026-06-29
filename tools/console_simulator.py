@@ -29,6 +29,9 @@ def main() -> int:
         return 1
     for saved in saved_paths:
         print(f"LOG: {saved}")
+        text_log_path = saved.with_suffix(".txt")
+        if text_log_path.exists():
+            print(f"TEXT_MUD_LOG: {text_log_path}")
     return 0
 
 

@@ -12,6 +12,7 @@ from fateweaver.logger import save_run_log
 from fateweaver.models import JsonMap, PlayerChoiceFeedback, RunFeedback
 from fateweaver.scenario_filter import filter_events_for_scenario
 from fateweaver.state_manager import apply_choice_result, is_failed
+from fateweaver.text_mud_log import save_text_mud_log
 from fateweaver.validator import validate_bundle
 
 
@@ -74,10 +75,14 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
             {
                 "turn": turn,
                 "event_id": event.id,
+                "event_name": event.name,
+                "event_description": event.description,
+                "region_tags": list(event.region_tags),
                 "event_tags": list(event.event_tags),
+                "danger_tags": list(event.danger_tags),
                 "state_before": state_before,
                 "inventory_before": inventory_before,
-                "choices_seen": [_choice_seen_json(choice) for choice in choices_seen],
+                "choices_seen": [_choice_seen_json(event, choice) for choice in choices_seen],
                 "selected_choice_id": selected.choice_id,
                 "selected_choice_type": selected.choice_type,
                 "selected_choice_reason": selection.reason,
@@ -104,7 +109,9 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
     log = _run_log(scenario.id, seed, run_number, profile, turns, state, inventory, run_feedback)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     filename = f"run_{scenario.id}_{profile}_{seed}_{timestamp}_{run_number:04d}.json"
-    return save_run_log(log, logs_dir, filename)
+    json_path = save_run_log(log, logs_dir, filename)
+    save_text_mud_log(log, json_path)
+    return json_path
 
 
 def _choose(
@@ -188,14 +195,22 @@ def _run_log(scenario_id: str, seed: int, run_number: int, profile: str, turns: 
     }
 
 
-def _choice_seen_json(choice: ChoiceSeen) -> JsonMap:
+def _choice_seen_json(event, choice: ChoiceSeen) -> JsonMap:
     return {
         "choice_id": choice.choice_id,
+        "choice_text": _choice_text(event, choice.choice_id),
         "choice_type": choice.choice_type,
         "available": choice.available,
         "unavailable_reason": choice.unavailable_reason,
         "hidden": choice.hidden,
+        "expected_risk": choice.expected_risk,
+        "influenced_by": list(choice.influenced_by),
+        "result": choice.result,
     }
+
+
+def _choice_text(event, choice_id: str) -> str:
+    return next((choice.text for choice in event.choices if choice.id == choice_id), choice_id)
 
 
 def _influenced_by(selected: ChoiceSeen, event_tags: tuple[str, ...], choices_seen: tuple[ChoiceSeen, ...]) -> tuple[str, ...]:
