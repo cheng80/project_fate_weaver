@@ -1,0 +1,298 @@
+# Playtest Review Result v0.1
+
+## 1. Playtest Review 목적
+
+이 문서는 `Weighted AutoPlayer Scoring`과 `Content Expansion` slice가 기술적으로 통과한 뒤, 실제 플레이 감각 기준으로 Console Simulator의 선택 재미, profile 차이, 아이템 선택지 사용, 위험 선택, 로그 품질을 검수한 결과다.
+
+이번 검수는 구현 작업이 아니라 리뷰다. Python 코드, scenario, content, core data는 수정하지 않았다.
+
+최종 판정:
+
+```text
+NEEDS_SCORING_TUNING
+```
+
+판정 이유:
+
+- profile별 결과는 완전히 동일하지 않다.
+- `item_unlocked_choice_count`와 `meaningful_choice_count`는 충분히 발생한다.
+- `bad_tradeoff_count`는 `greedy_leaning`, `desperate`에서만 자연스럽게 발생한다.
+- `unavailable_selected`는 0이다.
+- 다만 `balanced`와 `curious_leaning`의 선택 결과가 이번 slice에서는 동일했다.
+- `blow_signal_whistle` 같은 item-based 선택이 매우 강하게 반복되어, 일부 profile 개성이 아이템 점수에 묻힌다.
+
+---
+
+## 2. 실행 조건
+
+대상 scenario:
+
+```text
+data/scenarios/content_expansion_test.yaml
+```
+
+profile:
+
+```text
+balanced
+safe_leaning
+greedy_leaning
+curious_leaning
+desperate
+```
+
+seed/runs:
+
+```text
+seed: 42
+runs: 3 per profile
+total runs: 15
+target_turns: 12
+```
+
+로그 경로:
+
+```text
+/tmp/fateweaver_playtest_review_logs
+```
+
+실행 명령:
+
+```bash
+.venv/bin/python tools/validate_data.py --scenario data/scenarios/content_expansion_test.yaml
+rm -rf /tmp/fateweaver_playtest_review_logs
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile balanced --logs /tmp/fateweaver_playtest_review_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile safe_leaning --logs /tmp/fateweaver_playtest_review_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile greedy_leaning --logs /tmp/fateweaver_playtest_review_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile curious_leaning --logs /tmp/fateweaver_playtest_review_logs < /dev/null
+.venv/bin/python tools/console_simulator.py --scenario data/scenarios/content_expansion_test.yaml --seed 42 --runs 3 --profile desperate --logs /tmp/fateweaver_playtest_review_logs < /dev/null
+.venv/bin/python tools/analyze_logs.py --logs /tmp/fateweaver_playtest_review_logs
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
+```
+
+검증 결과:
+
+```text
+validate_data: PASS
+console_simulator: 15 logs generated
+analyze_logs: PASS
+unittest discover: Ran 26 tests, OK
+```
+
+---
+
+## 3. Profile별 metric 비교
+
+`tools/analyze_logs.py` 출력 기준:
+
+| Profile | Runs | Meaningful Choices | Item-unlocked Choices | Bad Tradeoffs | Restart Avg | Woven Avg |
+|---|---:|---:|---:|---:|---:|---:|
+| balanced | 3 | 36 | 24 | 0 | 4.0 | 4.0 |
+| safe_leaning | 3 | 36 | 24 | 0 | 4.0 | 4.0 |
+| greedy_leaning | 3 | 36 | 24 | 4 | 4.0 | 4.0 |
+| curious_leaning | 3 | 36 | 24 | 0 | 4.0 | 4.0 |
+| desperate | 3 | 35 | 23 | 4 | 4.0 | 4.0 |
+
+전체 집계:
+
+```text
+runs_analyzed: 15
+meaningful_choice_count: 179
+item_unlocked_choice_count: 119
+bad_tradeoff_count: 8
+restart_intent_score_avg: 4.0
+run_failed_but_interesting_count: 0
+player_woven_score_avg: 4.0
+unavailable_selected: 0
+```
+
+해석:
+
+- 확장 콘텐츠는 더 이상 `meaningful_choice_count = 0` 문제가 없다.
+- item-gated 선택지는 실제 선택된다.
+- 위험 선택은 모든 profile에 퍼지지 않고 `greedy_leaning`, `desperate`에 집중된다.
+- `player_woven_score_avg`는 자동 산출값이라 실제 감정 품질을 완전히 증명하지는 못한다.
+
+---
+
+## 4. 선택 다양성 평가
+
+선택 분포:
+
+| Profile | 주요 선택 분포 |
+|---|---|
+| balanced | `blow_signal_whistle` 15, `inspect_marker` 5, `retreat` 5, `leave` 4, `bribe` 3, `scatter_flare_powder` 3, `flash_flare_powder` 1 |
+| safe_leaning | `blow_signal_whistle` 15, `retreat` 8, `inspect_marker` 5, `leave` 4, `scatter_flare_powder` 3, `flash_flare_powder` 1 |
+| greedy_leaning | `blow_signal_whistle` 15, `answer_echo` 4, `bribe` 4, `inspect_marker` 5, `retreat` 4, `scatter_flare_powder` 3, `flash_flare_powder` 1 |
+| curious_leaning | `balanced`와 동일 |
+| desperate | `blow_signal_whistle` 15, `answer_echo` 4, `bribe` 4, `inspect_marker` 4, `retreat` 4, `scatter_flare_powder` 3, `forage` 1, `flash_flare_powder` 1 |
+
+평가:
+
+- profile 간 선택 결과는 완전히 동일하지 않다.
+- `safe_leaning`은 `bribe` 대신 `retreat`를 더 자주 택해 안전 성향이 보인다.
+- `greedy_leaning`은 `answer_echo`를 선택해 보상/위험 tradeoff가 드러난다.
+- `desperate`는 `forage`까지 선택해 생존 압박 상황의 선택 차이가 일부 보인다.
+- `curious_leaning`은 `balanced`와 결과가 동일해 profile 분리력이 약하다.
+
+---
+
+## 5. 아이템 선택지 사용 평가
+
+아이템 기반 선택은 활발하다.
+
+대표 선택:
+
+- `blow_signal_whistle`
+- `scatter_flare_powder`
+- `flash_flare_powder`
+- `inspect_marker`
+
+긍정:
+
+- `signal_whistle`, `flare_powder`가 dead item이 아니다.
+- `item_usage_score`가 실제 선택에 영향을 준다.
+- item-gated choice가 story route를 여는 느낌은 있다.
+
+부족:
+
+- `blow_signal_whistle`이 모든 profile에서 15회 선택되어 지나치게 지배적이다.
+- 아이템 선택이 안전, 호기심, 보상 차이를 덮어버리는 구간이 있다.
+- `curious_leaning`은 novelty가 강해야 하지만, 현재 slice에서는 item choice dominance 때문에 `balanced`와 분리되지 않는다.
+
+---
+
+## 6. 위험 선택 / bad tradeoff 발생 평가
+
+Risk 분포:
+
+| Profile | High Risk | Medium Risk | Low/None |
+|---|---:|---:|---:|
+| balanced | 0 | 3 | 33 |
+| safe_leaning | 0 | 0 | 36 |
+| greedy_leaning | 4 | 4 | 28 |
+| curious_leaning | 0 | 3 | 33 |
+| desperate | 4 | 5 | 27 |
+
+평가:
+
+- 위험 선택은 무작위로 흩어지지 않는다.
+- `greedy_leaning`은 `answer_echo`를 선택하면서 curse 증가와 money 보상을 감수한다.
+- `desperate`는 `answer_echo`, `forage`를 통해 위험 감수와 생존 회복 선택이 같이 발생한다.
+- `safe_leaning`은 high risk를 피하고 low/none 선택만 한다.
+
+이 부분은 playtest 기준으로 긍정적이다.
+
+---
+
+## 7. 선택 이유 로그 품질 평가
+
+`selected_choice_reason` 예:
+
+```text
+profile=balanced: final_score=9.15 (safety=4.0, reward=0.0, item=4.0, risk=1.0, survival=0.0, novelty=1.0, curse_penalty=0.0)
+profile=greedy_leaning: final_score=8.15 (safety=4.0, reward=0.0, item=4.0, risk=1.0, survival=0.0, novelty=1.0, curse_penalty=0.0)
+profile=safe_leaning: final_score=9.7 (safety=4.0, reward=0.0, item=4.0, risk=1.0, survival=0.0, novelty=1.0, curse_penalty=0.0)
+```
+
+긍정:
+
+- profile 이름이 남는다.
+- final_score와 구성 score가 남는다.
+- 사람이 디버깅할 수 있는 형태다.
+- 선택 근거가 단순 "first available"보다 훨씬 낫다.
+
+부족:
+
+- 수치 중심이라 플레이어 관점의 자연어 이유는 약하다.
+- 선택된 choice가 다른 후보를 왜 이겼는지 비교 설명은 없다.
+- `choice_scores`를 같이 보면 추적 가능하지만, review reader가 바로 이해하기에는 다소 기계적이다.
+
+---
+
+## 8. 현재 콘텐츠의 재미 가능성 평가
+
+재미 가능성은 있다.
+
+좋은 신호:
+
+- `signal_whistle`은 길 찾기, 마을 표식, 산적 대응과 연결되어 "내가 가진 도구가 세계를 해석한다"는 느낌을 준다.
+- `flare_powder`는 산적 대응과 저주 정화에 쓰여 risk-reduction item 역할이 분명하다.
+- `answer_echo`는 curse 증가와 money 보상을 묶어 명확한 유혹을 만든다.
+- `forage`는 food 회복과 health 손실을 묶어 survival tradeoff를 만든다.
+
+약한 신호:
+
+- 4개 이벤트를 12턴 동안 반복하므로 같은 선택이 많이 반복된다.
+- `blow_signal_whistle`이 너무 자주 최적해가 되어 선택 고민이 줄어든다.
+- profile 차이는 보이지만, narrative arc 차이는 아직 얕다.
+
+---
+
+## 9. 반복 플레이 가능성 평가
+
+현재 반복 플레이 가능성은 "기술 검증 slice로는 양호, 실제 플레이 slice로는 부족"이다.
+
+긍정:
+
+- 동일 seed/run에서도 profile별 final state가 달라진다.
+- `safe_leaning`은 money를 보존하고 curse를 낮게 유지한다.
+- `greedy_leaning`, `desperate`는 curse와 money 변동이 커진다.
+
+부족:
+
+- `balanced`와 `curious_leaning`이 같은 선택 sequence를 만든다.
+- event pool이 작아 반복 run에서 새 느낌이 빨리 줄어든다.
+- 자동 `player_woven_score_avg = 4.0`은 실제 플레이어 감정 검증으로 보기 어렵다.
+
+---
+
+## 10. 아직 부족한 점
+
+1. `curious_leaning`의 선택 결과가 `balanced`와 분리되지 않는다.
+2. item-based choice가 너무 강해 profile별 의도 차이를 덮는다.
+3. `selected_choice_reason`은 디버깅용으로는 좋지만 플레이 감각 리뷰용으로는 비교 설명이 부족하다.
+4. 4-event / 12-turn slice는 반복 체감 검수에 작다.
+5. `player_woven_score_avg`가 non-interactive 자동값이라 실제 재미 지표로는 제한적이다.
+
+---
+
+## 11. 다음 개선 후보
+
+Scoring tuning 후보:
+
+- `curious_leaning`에서 `novelty_score`가 실제로 `investigate`, `magic`, `unknown`, 정보성 choice를 더 끌어올리도록 조정한다.
+- `item_usage_score`가 모든 profile에서 같은 방식으로 압도하지 않게 profile별 cap 또는 diminishing return을 검토한다.
+- `selected_choice_reason`에 top competing choice와 점수 차이를 추가한다.
+
+Content tuning 후보:
+
+- `signal_grove_pack`에 item 없이도 매력적인 curiosity choice를 추가한다.
+- `blow_signal_whistle`의 반복 최적화를 줄이기 위해 cost, cooldown, consume, run_tag 조건 중 하나를 검토한다.
+- `content_expansion_test`에 같은 pack의 추가 이벤트를 더 넣어 반복 run의 사건 폭을 넓힌다.
+
+Validation 후보:
+
+- `profile_choice_divergence_count` 같은 analyzer metric을 추가한다.
+- `selected_choice_reason` readability check를 review checklist에 추가한다.
+- non-interactive 자동 `player_woven_score`와 실제 manual playtest score를 분리한다.
+
+---
+
+## 12. 최종 판정
+
+```text
+NEEDS_SCORING_TUNING
+```
+
+세부 판정:
+
+- Technical validation: PASS
+- Content expansion readiness: PASS
+- Profile metric comparison: PASS
+- Unavailable choice safety: PASS
+- Playtest fun potential: PARTIAL PASS
+- Profile differentiation: PARTIAL PASS
+- Reason log readability: PARTIAL PASS
+
+다음 단계는 PRD/Flutter가 아니라 scoring tuning과 소규모 content tuning이다.

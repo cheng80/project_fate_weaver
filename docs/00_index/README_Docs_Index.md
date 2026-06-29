@@ -160,3 +160,5 @@ docs/
   - Console Validation 패키지 기준선 커밋 내용을 요약한다.
 - `docs/07_reviews/10_Console_Simulator_Review_Result_v0.1.md`
   - Console Simulator 구현 후 검수 PASS와 최종 재리뷰 승인 결과를 보관한다.
+- `docs/07_reviews/11_Playtest_Review_Result_v0.1.md`
+  - Weighted AutoPlayer Scoring과 Content Expansion slice의 실제 플레이 감각, profile 차이, 선택/로그 품질 리뷰 결과를 보관한다.

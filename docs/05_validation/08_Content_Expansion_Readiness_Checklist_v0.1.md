@@ -7,6 +7,7 @@
 Status: PASS
 대상: signal_grove_pack + content_expansion_test
 evidence: `.omo/ulw-loop/content-expansion-20260629/evidence/`
+playtest_review: `docs/07_reviews/11_Playtest_Review_Result_v0.1.md`
 
 ## 검수 목적
 
@@ -131,3 +132,14 @@ profile_metrics: weighted profile별 비교 PASS
 ```text
 CONTENT_EXPANSION_READY
 ```
+
+추가 Playtest Review 판정:
+
+```text
+NEEDS_SCORING_TUNING
+```
+
+의미:
+
+- Content Expansion Readiness 자체는 유지된다.
+- 실제 플레이 감각 검수에서는 profile별 차이가 일부 확인됐지만, `balanced`와 `curious_leaning` 결과가 동일하고 item-based choice가 과도하게 강해 scoring tuning이 필요하다.
