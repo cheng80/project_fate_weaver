@@ -1,0 +1,48 @@
+id: content_expansion_test
+name: Content Expansion Test
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+  - data/content/base/endings.yaml
+  - data/content/packs/forest_pack/events.yaml
+  - data/content/packs/curse_pack/events.yaml
+  - data/content/packs/signal_grove_pack/items.yaml
+  - data/content/packs/signal_grove_pack/events.yaml
+
+include_regions:
+  - forest
+  - village
+  - ruin
+
+include_event_ids:
+  - signal_grove_trail
+  - bandit_signal_post
+  - echoing_clearing
+  - quiet_marker_camp
+
+exclude_event_ids: []
+exclude_event_tags: []
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 1
+
+initial_items:
+  - rope
+  - torch
+  - signal_whistle
+  - flare_powder
+
+target_turns: 12
+seed: 4242
+
+validation_targets:
+  min_events: 4
+  min_combat_events: 1
+  min_curse_events: 1
+  min_item_count: 7

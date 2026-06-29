@@ -1,0 +1,133 @@
+events:
+  - id: signal_grove_trail
+    name: 신호 숲길
+    description: 나무껍질마다 낮은 휘파람 표식이 새겨져 있고, 덫줄은 낙엽 아래 숨어 있다.
+    region_tags: [forest]
+    event_tags: [exploration, survival]
+    danger_tags: [lost, trap]
+    base_weight: 7
+    choices:
+      - id: mark_trail
+        text: 길을 다시 표시한다
+        type: safe
+        risk_level: low
+        result:
+          status: {food: -1}
+          event_weight: {lost: -1}
+          message: 시간이 들었지만 같은 나무를 두 번 지나치지 않게 되었다.
+      - id: shortcut
+        text: 표식 사이의 지름길로 간다
+        type: risky
+        risk_level: medium
+        result:
+          status: {health: -1}
+          event_weight: {lost: +1}
+          message: 길은 짧았지만 발목을 스친 덫줄이 피를 냈다.
+      - id: blow_signal_whistle
+        text: 신호 호루라기로 답한다
+        type: item_based
+        risk_level: low
+        requires_item: signal_whistle
+        result:
+          event_weight: {lost: -2, forest: +1}
+          message: 멀리서 같은 음이 돌아와 안전한 나무줄을 알려주었다.
+
+  - id: bandit_signal_post
+    name: 산적의 신호 말뚝
+    description: 오래된 방향 말뚝에 새 붉은 천이 묶여 있고, 덤불 뒤에서 발소리가 멈춘다.
+    region_tags: [forest, village]
+    event_tags: [combat, trade]
+    danger_tags: [bandit, physical]
+    base_weight: 6
+    choices:
+      - id: retreat
+        text: 말뚝을 피해 물러난다
+        type: retreat
+        risk_level: low
+        result:
+          status: {food: -1}
+          message: 먼 길을 돌아가며 매복을 피했다.
+      - id: bribe
+        text: 은화로 길값을 낸다
+        type: trade
+        risk_level: medium
+        requires_status: {money: {min: 2}}
+        result:
+          status: {money: -2}
+          event_weight: {trade: +1}
+          message: 숲속의 목소리들이 동전을 받고 길을 열었다.
+      - id: flash_flare_powder
+        text: 섬광 가루를 터뜨린다
+        type: combat_response
+        risk_level: low
+        requires_item: flare_powder
+        result:
+          status: {reputation: +1}
+          event_weight: {bandit: -2}
+          message: 흰 섬광에 산적들이 흩어졌고, 길가 사람들은 그 이야기를 기억했다.
+
+  - id: echoing_clearing
+    name: 메아리 공터
+    description: 둥근 공터 한가운데서 당신의 발소리가 한 박자 늦게 되돌아온다.
+    region_tags: [forest, ruin]
+    event_tags: [magic, curse, exploration]
+    danger_tags: [curse, lost]
+    base_weight: 6
+    choices:
+      - id: leave
+        text: 소리를 무시하고 떠난다
+        type: safe
+        risk_level: none
+        result:
+          message: 당신은 대답하지 않고 숲의 가장자리를 따라 나갔다.
+      - id: answer_echo
+        text: 메아리에게 답한다
+        type: gamble
+        risk_level: high
+        result:
+          status: {curse: +1, money: +1}
+          message: 메아리는 웃음으로 답했고, 손바닥에는 낯선 동전이 놓여 있었다.
+      - id: scatter_flare_powder
+        text: 섬광 가루를 흩뿌린다
+        type: item_based
+        risk_level: low
+        requires_item: flare_powder
+        consume_item: true
+        result:
+          status: {curse: -1}
+          remove_item: [flare_powder]
+          event_weight: {magic: +1}
+          message: 빛나는 가루가 메아리의 윤곽을 드러내자 저주가 한 겹 벗겨졌다.
+
+  - id: quiet_marker_camp
+    name: 조용한 표식 야영지
+    description: 꺼진 모닥불 곁에 같은 방향을 가리키는 작은 돌표식들이 놓여 있다.
+    region_tags: [forest]
+    event_tags: [rest, survival]
+    danger_tags: [hunger]
+    base_weight: 5
+    cooldown_turns: 3
+    choices:
+      - id: rest
+        text: 표식 곁에서 쉰다
+        type: rest
+        risk_level: low
+        result:
+          status: {health: +1, food: -1}
+          message: 숲은 조용했고 몸은 조금 회복되었다.
+      - id: inspect_marker
+        text: 호루라기 음으로 표식을 확인한다
+        type: investigate
+        risk_level: low
+        requires_item: signal_whistle
+        result:
+          status: {reputation: +1}
+          event_weight: {village: +1}
+          message: 표식은 가까운 마을의 구조 신호였고, 당신은 그 의미를 알아냈다.
+      - id: forage
+        text: 주변에서 먹을 것을 찾는다
+        type: risky
+        risk_level: medium
+        result:
+          status: {food: +1, health: -1}
+          message: 먹을 뿌리를 찾았지만 가시에 손을 베였다.
