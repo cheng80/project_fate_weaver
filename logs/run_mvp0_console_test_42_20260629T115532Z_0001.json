@@ -1,0 +1,1437 @@
+{
+  "run_id": "mvp0_console_test-42-0001",
+  "run_summary": {
+    "fairness_score": 4,
+    "final_inventory": [
+      "rope",
+      "torch"
+    ],
+    "final_state": {
+      "curse": 1,
+      "food": 0,
+      "health": 7,
+      "money": 0,
+      "reputation": 0
+    },
+    "most_memorable_choice": "detour",
+    "narrative_summary": "auto console validation run",
+    "next_run_intent": "auto validation complete",
+    "player_woven_score": 4,
+    "restart_intent_score": 4,
+    "run_failed": false,
+    "run_failed_but_interesting": false
+  },
+  "scenario_id": "mvp0_console_test",
+  "schema_version": "console_validation_log_v0.1",
+  "seed": 42,
+  "turns": [
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "leave",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "take_gem",
+          "choice_type": "corrupt",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "purify_altar",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: holy_water"
+        }
+      ],
+      "event_id": "cursed_altar",
+      "event_tags": [
+        "curse",
+        "magic"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:purify_altar"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 제단을 지나쳤다."
+      },
+      "selected_choice_id": "leave",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 5,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 5,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 1,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "pass",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "drink",
+          "choice_type": "gamble",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "purify",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: holy_water"
+        },
+        {
+          "available": true,
+          "choice_id": "climb_down",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "cursed_well",
+      "event_tags": [
+        "exploration",
+        "curse"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:purify"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "먼 길을 돌아가며 식량을 조금 소모했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "pass",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 4,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 5,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 2,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "wait",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "push_forward",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "sudden_storm",
+      "event_tags": [
+        "survival"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "비는 그쳤지만 배가 고파졌다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "wait",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 3,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 4,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 3,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "leave",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "force_open",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "read_marks",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: map"
+        }
+      ],
+      "event_id": "ruined_gate",
+      "event_tags": [
+        "exploration",
+        "magic"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:read_marks"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 폐허를 돌아갔다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "leave",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 3,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 4,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "ignore",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "listen",
+          "choice_type": "corrupt",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "light_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "ghost_whisper",
+      "event_tags": [
+        "curse",
+        "magic"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 먼 길을 택했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "ignore",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 5,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "ignore",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "listen",
+          "choice_type": "corrupt",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "light_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "ghost_whisper",
+      "event_tags": [
+        "curse",
+        "magic"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 먼 길을 택했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "ignore",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 6,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "climb_tree",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "scare_with_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "run",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "hold_with_dagger",
+          "choice_type": "combat_response",
+          "hidden": false,
+          "unavailable_reason": "requires item: dagger"
+        }
+      ],
+      "event_id": "wolf_pack",
+      "event_tags": [
+        "combat"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [
+        "unavailable:hold_with_dagger"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "늑대가 떠날 때까지 기다렸다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "climb_tree",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 7,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "pass",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "drink",
+          "choice_type": "gamble",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "purify",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: holy_water"
+        },
+        {
+          "available": true,
+          "choice_id": "climb_down",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "cursed_well",
+      "event_tags": [
+        "exploration",
+        "curse"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:purify"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "먼 길을 돌아가며 식량을 조금 소모했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "pass",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 8,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "ignore",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "buy",
+          "choice_type": "trade",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "check_map",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: map"
+        }
+      ],
+      "event_id": "suspicious_merchant",
+      "event_tags": [
+        "trade"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:check_map"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 상인의 미소를 뒤로했다."
+      },
+      "selected_choice_id": "ignore",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 9,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "detour",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "cross",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_rope",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "broken_bridge",
+      "event_tags": [
+        "exploration"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "안전하게 우회했지만 식량을 소모했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "detour",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 10,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "wait",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "push_forward",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "sudden_storm",
+      "event_tags": [
+        "survival"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "비는 그쳤지만 배가 고파졌다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "wait",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 11,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "buy_food",
+          "choice_type": "trade",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "ask_help",
+          "choice_type": "status_based",
+          "hidden": false,
+          "unavailable_reason": "requires reputation >= 1"
+        },
+        {
+          "available": true,
+          "choice_id": "steal",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "village_market",
+      "event_tags": [
+        "trade"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "status:money",
+        "unavailable:ask_help"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "거친 빵과 말린 고기를 얻었다.",
+        "status": {
+          "food": 2,
+          "money": -1
+        }
+      },
+      "selected_choice_id": "buy_food",
+      "selected_choice_type": "trade",
+      "state_after": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 2,
+        "reputation": 0
+      },
+      "turn": 12,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "detour",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "cross",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_rope",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "broken_bridge",
+      "event_tags": [
+        "exploration"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "안전하게 우회했지만 식량을 소모했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "detour",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "turn": 13,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "wait",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "push_forward",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "sudden_storm",
+      "event_tags": [
+        "survival"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "비는 그쳤지만 배가 고파졌다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "wait",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "turn": 14,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "ignore",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "listen",
+          "choice_type": "corrupt",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "light_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "ghost_whisper",
+      "event_tags": [
+        "curse",
+        "magic"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 먼 길을 택했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "ignore",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "turn": 15,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "buy_food",
+          "choice_type": "trade",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "ask_help",
+          "choice_type": "status_based",
+          "hidden": false,
+          "unavailable_reason": "requires reputation >= 1"
+        },
+        {
+          "available": true,
+          "choice_id": "steal",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "village_market",
+      "event_tags": [
+        "trade"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "status:money",
+        "unavailable:ask_help"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "거친 빵과 말린 고기를 얻었다.",
+        "status": {
+          "food": 2,
+          "money": -1
+        }
+      },
+      "selected_choice_id": "buy_food",
+      "selected_choice_type": "trade",
+      "state_after": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 1,
+        "reputation": 0
+      },
+      "turn": 16,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "wait",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "push_forward",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_torch",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "sudden_storm",
+      "event_tags": [
+        "survival"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "비는 그쳤지만 배가 고파졌다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "wait",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 2,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "turn": 17,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "leave",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "take_gem",
+          "choice_type": "corrupt",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "purify_altar",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": "requires item: holy_water"
+        }
+      ],
+      "event_id": "cursed_altar",
+      "event_tags": [
+        "curse",
+        "magic"
+      ],
+      "expected_risk": "none",
+      "influenced_by": [
+        "unavailable:purify_altar"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "당신은 제단을 지나쳤다."
+      },
+      "selected_choice_id": "leave",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "turn": 18,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "flee",
+          "choice_type": "retreat",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": false,
+          "choice_id": "negotiate",
+          "choice_type": "trade",
+          "hidden": false,
+          "unavailable_reason": "requires money >= 2"
+        },
+        {
+          "available": false,
+          "choice_id": "fight",
+          "choice_type": "combat_response",
+          "hidden": false,
+          "unavailable_reason": "requires item: dagger"
+        }
+      ],
+      "event_id": "goblin_ambush",
+      "event_tags": [
+        "combat"
+      ],
+      "expected_risk": "medium",
+      "influenced_by": [
+        "unavailable:negotiate",
+        "unavailable:fight"
+      ],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 3,
+      "result": {
+        "event_weight": {
+          "bandit": 1
+        },
+        "message": "도망쳤지만 뒤쫓는 발소리가 오래 남았다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "flee",
+      "selected_choice_type": "retreat",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 1,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "turn": 19,
+      "was_available": true,
+      "was_hidden": false
+    },
+    {
+      "choice_reason": "auto: selected first available non-hidden choice",
+      "choice_time_seconds": 0,
+      "choices_seen": [
+        {
+          "available": true,
+          "choice_id": "detour",
+          "choice_type": "safe",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "cross",
+          "choice_type": "risky",
+          "hidden": false,
+          "unavailable_reason": null
+        },
+        {
+          "available": true,
+          "choice_id": "use_rope",
+          "choice_type": "item_based",
+          "hidden": false,
+          "unavailable_reason": null
+        }
+      ],
+      "event_id": "broken_bridge",
+      "event_tags": [
+        "exploration"
+      ],
+      "expected_risk": "low",
+      "influenced_by": [],
+      "inventory_after": [
+        "rope",
+        "torch"
+      ],
+      "inventory_before": [
+        "rope",
+        "torch"
+      ],
+      "notes": "",
+      "regret_score": 1,
+      "result": {
+        "message": "안전하게 우회했지만 식량을 소모했다.",
+        "status": {
+          "food": -1
+        }
+      },
+      "selected_choice_id": "detour",
+      "selected_choice_type": "safe",
+      "state_after": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "state_before": {
+        "curse": 1,
+        "food": 0,
+        "health": 7,
+        "money": 0,
+        "reputation": 0
+      },
+      "turn": 20,
+      "was_available": true,
+      "was_hidden": false
+    }
+  ]
+}
