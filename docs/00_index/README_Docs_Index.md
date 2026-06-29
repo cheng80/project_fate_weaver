@@ -125,6 +125,8 @@ docs/
   - Writing-plans와 구현 착수 전에 확인해야 할 구조, 데이터, 계약 체크리스트다.
 - `docs/05_validation/08_Content_Expansion_Readiness_Checklist_v0.1.md`
   - Console Simulator PASS 이후 콘텐츠 확장 전에 확인해야 할 이벤트, 아이템, 상태, 팩, 시나리오, Ontology-lite 체크리스트다.
+- `docs/05_validation/09_Content_Expansion_Review_Checklist_v0.1.md`
+  - Content Expansion 구현 후 새 이벤트, 아이템, status/result_rules, pack/scenario, ontology relation, validator/simulator/analyzer 통과 여부를 검수한다.
 
 ---
 
@@ -139,6 +141,8 @@ docs/
 
 - `docs/06_plans/00_Console_Simulator_Implementation_Plan_v0.1.md`
   - 완료된 Console Simulator 구현 계획이다.
+- `docs/06_plans/01_Content_Expansion_Implementation_Plan_v0.1.md`
+  - Console Simulator PASS 이후 콘텐츠 확장을 구현할 때 따라야 할 이벤트, 아이템, 상태, pack, scenario, Ontology-lite 검증 계획이다.
 
 ---
 

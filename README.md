@@ -95,9 +95,11 @@ docs/
   05_validation/
     07_Console_Validation_Checklist_v0.1.md
     08_Content_Expansion_Readiness_Checklist_v0.1.md
+    09_Content_Expansion_Review_Checklist_v0.1.md
 
   06_plans/
     00_Console_Simulator_Implementation_Plan_v0.1.md
+    01_Content_Expansion_Implementation_Plan_v0.1.md
 
   07_reviews/
     09_Commit_Summary_v0.1.md
@@ -275,10 +277,17 @@ Content Expansion Readiness 검수
 Ontology-lite 관계 유지 관리
 ```
 
+다음 계획서:
+
+```text
+docs/06_plans/01_Content_Expansion_Implementation_Plan_v0.1.md
+```
+
 다음 체크리스트:
 
 ```text
 docs/05_validation/08_Content_Expansion_Readiness_Checklist_v0.1.md
+docs/05_validation/09_Content_Expansion_Review_Checklist_v0.1.md
 ```
 
 ---
