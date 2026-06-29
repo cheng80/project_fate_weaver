@@ -1,8 +1,8 @@
-# Project FateWeaver Office Hour Review Request v1.1
+# Project FateWeaver Office Hour Review Request v1.2
 
 ## 문서 목적
 
-이 문서는 `Project_FateWeaver_Constitution_v1.0.md`를 GSTACK Office
+이 문서는 `Project_FateWeaver_Constitution_v1.1.md`를 GSTACK Office
 Hour에서 검토받기 위한 리뷰 요청서이다.
 
 이번 Office Hour의 목적은 구현이 아니다.
@@ -10,11 +10,16 @@ Hour에서 검토받기 위한 리뷰 요청서이다.
 목적은 **Project FateWeaver Constitution이 PRD 이전 단계의 최상위 기준
 문서로 충분한가를 검증하는 것**이다.
 
+v1.2에서는 특히 `Combat Policy`가 추가되었다.
+
+전투는 존재할 수 있지만, MVP에서는 독립 시스템이 아니라 **전투형
+이벤트**로만 추상화하는 방향을 검증받고자 한다.
+
 ------------------------------------------------------------------------
 
 # 1. 함께 검토할 문서
 
--   `Project_FateWeaver_Constitution_v1.0.md`
+-   `Project_FateWeaver_Constitution_v1.1.md`
 
 이 문서는 PRD가 아니다.
 
@@ -213,21 +218,44 @@ MVP 상태는 다음 5개다.
 
 현재 MVP 범위:
 
-  항목         수량
-  -------- --------
-  Region          3
-  Status          5
-  Item           10
-  Event      40\~50
-  Ending          3
-  Tag        20\~30
+  항목               수량
+  -------------- --------
+  Region                3
+  Status                5
+  Item                 10
+  Event            40\~50
+  Combat Event       5\~8
+  Ending                3
+  Tag              20\~30
 
 검토 질문:
 
 -   이 범위가 MVP로 적절한가?
 -   이벤트 40\~50개가 과한가?
+-   전투형 이벤트 5\~8개가 적절한가?
 -   더 작은 검증 단위가 가능한가?
 -   Flutter UI 구현 전에 콘솔 시뮬레이터로 먼저 검증해야 하는가?
+
+------------------------------------------------------------------------
+
+## 3.10 Combat Policy가 타당한가?
+
+v1.1 Constitution에서는 전투를 다음과 같이 정의했다.
+
+``` text
+MVP: 전투 없음 또는 전투형 이벤트로 추상화
+v1 이후: 전투형 이벤트 확장
+고급 버전: 별도 미니 전투 룰 검토
+```
+
+검토 질문:
+
+-   전투를 MVP에서 별도 시스템으로 구현하지 않는 결정이 타당한가?
+-   전투형 이벤트만으로 판타지 감각을 충분히 줄 수 있는가?
+-   전투를 추상화하면 재미가 너무 약해지지 않는가?
+-   별도 전투 시스템을 도입해야 하는 시점은 언제인가?
+-   전투가 Core Fun을 흐릴 위험은 없는가?
+-   `CombatEventResolver`가 필요한가, 일반 `ChoiceResolver`로 충분한가?
 
 ------------------------------------------------------------------------
 
@@ -260,10 +288,11 @@ MVP 상태는 다음 5개다.
 6.  State 시스템은 충분히 단순하면서도 깊이를 만들 수 있는가?
 7.  MVP 범위는 줄여야 하는가?
 8.  AI First 개발 철학은 실제로 생산성을 높일 수 있는가?
-9.  이 프로젝트가 빠질 수 있는 가장 큰 함정은 무엇인가?
-10. 다음 문서로 PRD를 써도 되는가, 아니면 World Bible이 먼저인가?
-11. Office Hour 이후 반드시 수정해야 할 Constitution 항목은 무엇인가?
-12. Superpowers Brainstorm으로 넘기기 전에 막아야 할 설계 구멍은
+9.  Combat Policy는 MVP 단계에서 적절한가?
+10. 이 프로젝트가 빠질 수 있는 가장 큰 함정은 무엇인가?
+11. 다음 문서로 PRD를 써도 되는가, 아니면 World Bible이 먼저인가?
+12. Office Hour 이후 반드시 수정해야 할 Constitution 항목은 무엇인가?
+13. Superpowers Brainstorm으로 넘기기 전에 막아야 할 설계 구멍은
     무엇인가?
 
 ------------------------------------------------------------------------
@@ -279,12 +308,13 @@ Project FateWeaver Constitution이
 
 리뷰 결과에 따라 다음 중 하나를 선택한다.
 
-1.  Constitution v1.1 수정
+1.  Constitution v1.2 수정
 2.  World Bible 작성
 3.  Open Questions Register 작성
 4.  MVP Scope 축소
 5.  핵심 재미 재정의
-6.  PRD 작성 보류
+6.  Combat Policy 수정
+7.  PRD 작성 보류
 
 ------------------------------------------------------------------------
 
