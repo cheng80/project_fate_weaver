@@ -200,7 +200,36 @@ GraphDB를 지금 도입하면 아래 비용이 먼저 생긴다.
 
 ---
 
-## 12. 콘텐츠 확장 준비와의 관계
+## 12. Relation 확장 정책
+
+기존 relation으로 설명되지 않는 관계가 반복적으로 필요해지면 relation 추가를 허용한다.
+
+단, 1회성 이벤트 때문에 relation을 추가하지 않는다. Ontology-lite는 콘텐츠를 과하게 고정하는 장치가 아니라, 반복되는 관계를 분석 가능하게 만드는 최소 계약이다.
+
+Relation 추가 조건:
+
+- 2개 이상 이벤트/아이템/시나리오에서 재사용될 가능성이 있다.
+- validator, analyzer, export 중 하나 이상에서 의미가 있다.
+- 기존 tag/status/result로 표현하면 오히려 의미가 모호해진다.
+- Content Expansion Phase 3 이후에도 유지 가능한 구조다.
+
+Relation 추가 시 반드시 함께 갱신해야 하는 파일:
+
+```text
+data/core/ontology.yaml
+docs/02_schema/09_Content_Ontology_Model_v0.1.md
+```
+
+Relation 추가를 보류해야 하는 경우:
+
+- 특정 이벤트 하나만 설명한다.
+- description이나 기존 tag 조합으로 충분히 설명된다.
+- analyzer/export가 사용할 수 없는 장식적 관계다.
+- PRD, World Bible, 별도 시스템이 있어야만 의미가 고정된다.
+
+---
+
+## 13. 콘텐츠 확장 준비와의 관계
 
 Ontology-lite는 콘텐츠 확장 전에 관계 누락을 찾기 위한 기준으로 사용한다.
 
