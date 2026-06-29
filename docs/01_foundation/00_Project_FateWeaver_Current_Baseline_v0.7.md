@@ -27,7 +27,7 @@ Project FateWeaver의 장르는 다음으로 유지한다.
 현재 목표는:
 
 ```text
-MVP-0 Console Loop Validation
+Console Validation
 ```
 
 이다.
@@ -50,8 +50,8 @@ project_fate_weaver/
   fate_weaver/
 ```
 
-단, `fate_weaver/`는 MVP-0 단계에서는 생성하지 않는다.  
-MVP-0 검증 통과 후 MVP-1 단계에서 생성한다.
+단, `fate_weaver/`는 Console Validation 단계에서는 생성하지 않는다.  
+Console Validation 통과 후 Flutter 앱 단계에서 생성한다.
 
 ---
 
@@ -88,7 +88,7 @@ YAML 원천 데이터다.
 
 ## src/
 
-Python MVP-0 검증 엔진이다.
+Python Console Validation 검증 엔진이다.
 
 역할:
 
@@ -118,7 +118,7 @@ Python 실행 도구다.
 
 ## logs/
 
-MVP-0 테스트 결과 저장소다.
+Console Validation 테스트 결과 저장소다.
 
 ---
 
@@ -132,13 +132,13 @@ MVP-0 테스트 결과 저장소다.
 
 나중에 생성할 Flutter + Flame 앱 프로젝트다.
 
-MVP-0 단계에서는 생성하지 않는다.
+Console Validation 단계에서는 생성하지 않는다.
 
 ---
 
 # 5. 현재 금지 사항
 
-MVP-0 단계에서 금지한다.
+Console Validation 단계에서 금지한다.
 
 ```text
 Flutter 프로젝트 생성

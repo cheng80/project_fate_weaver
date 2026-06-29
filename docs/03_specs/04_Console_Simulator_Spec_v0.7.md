@@ -2,7 +2,7 @@
 
 ## 문서 목적
 
-이 문서는 MVP-0 Console Loop Validation을 실제로 실행하기 위한 콘솔 시뮬레이터 사양이다.
+이 문서는 Console Validation을 실제로 실행하기 위한 콘솔 시뮬레이터 사양이다.
 
 v0.7에서는 scenario filter, unavailable choice, 로그 metric, 재미 검증 지표, combat policy 계약을 명시한다.
 
@@ -33,7 +33,7 @@ core/content 로드
 
 # 2. 허용 파일 범위
 
-Codex는 MVP-0에서 아래 경로만 생성/수정한다.
+Codex는 Console Validation에서 아래 경로만 생성/수정한다.
 
 ```text
 docs/
@@ -52,7 +52,7 @@ README.md
 
 # 3. 금지 파일 범위
 
-MVP-0에서는 아래를 생성하거나 수정하지 않는다.
+Console Validation에서는 아래를 생성하거나 수정하지 않는다.
 
 ```text
 fate_weaver/
@@ -211,7 +211,7 @@ notes:
 
 # 10. Unavailable Choice Policy
 
-MVP-0 기본 정책은 **show unavailable**이다.
+Console Validation 기본 정책은 **show unavailable**이다.
 
 ```text
 unavailable choice는 표시한다.
@@ -239,7 +239,7 @@ missing_items_noticed:
   - holy_water
 ```
 
-`hidden_until_available: true`가 있는 choice는 숨길 수 있다. 단, MVP-0 fixture 기본값은 false다.
+`hidden_until_available: true`가 있는 choice는 숨길 수 있다. 단, Console Validation fixture 기본값은 false다.
 
 ---
 
@@ -248,7 +248,7 @@ missing_items_noticed:
 ```text
 choice-level requires_*는 해당 choice의 available 여부만 판단한다.
 event-level requires_*는 이벤트 자체의 eligible 여부를 판단한다.
-MVP-0에서 대부분의 조건은 choice-level로 둔다.
+Console Validation에서 대부분의 조건은 choice-level로 둔다.
 ```
 
 지원 대상:
@@ -308,7 +308,7 @@ run_summary:
 
 ---
 
-# 13. MVP-0 재미 검증 지표
+# 13. Console Validation 재미 검증 지표
 
 필수 분석 지표:
 
@@ -349,7 +349,7 @@ player_woven_score:
 ```text
 combat은 event_tags: [combat]을 가진 일반 이벤트다.
 combat_response는 choice_type 중 하나일 뿐이다.
-MVP-0에서 CombatEventResolver는 만들지 않는다.
+Console Validation에서 CombatEventResolver는 만들지 않는다.
 모든 전투형 이벤트는 일반 ChoiceResolver로 처리한다.
 별도 전투 루프, 적 HP, 공격/방어 턴, 전투 UI는 금지한다.
 ```
@@ -376,7 +376,7 @@ MVP-0에서 CombatEventResolver는 만들지 않는다.
 
 # 16. Flutter 이전 계획
 
-MVP-0 통과 후에만 아래를 진행한다.
+Console Validation 통과 후에만 아래를 진행한다.
 
 ```text
 tools/export_json.py
@@ -425,7 +425,7 @@ run_summary:
 
 # 18. Python 실행 환경
 
-MVP-0 Python 실행은 프로젝트 루트의 `requirements.txt`를 사용한다.
+Console Validation Python 실행은 프로젝트 루트의 `requirements.txt`를 사용한다.
 
 ```bash
 python3.12 -m venv .venv

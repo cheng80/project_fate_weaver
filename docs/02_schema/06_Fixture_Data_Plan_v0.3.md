@@ -2,7 +2,7 @@
 
 ## 문서 목적
 
-이 문서는 MVP-0 콘솔 시뮬레이터 제작을 시작하기 위한 최소 fixture 데이터 기준을 정의한다.
+이 문서는 Console Validation 시뮬레이터 제작을 시작하기 위한 최소 fixture 데이터 기준을 정의한다.
 
 v0.3에서는 fixture 데이터를 `data/mvp0`에 두지 않고 실제 콘텐츠 구조에 배치한다.
 
@@ -26,7 +26,7 @@ data/
 
 # 2. Scenario 방식
 
-MVP-0는 별도 폴더가 아니라 시나리오로 관리한다.
+Console Validation은 별도 폴더가 아니라 시나리오로 관리한다.
 
 ```text
 data/scenarios/mvp0_console_test.yaml

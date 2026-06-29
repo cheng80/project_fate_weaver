@@ -2,7 +2,7 @@
 
 ## 문서 목적
 
-이 문서는 MVP-0 실험을 위한 Draft YAML Schema다.
+이 문서는 Console Validation 실험을 위한 Draft YAML Schema다.
 
 v0.7에서는 scenario filter 문법, choice-level requires 계약, unavailable choice 표시 정책, 로그 metric 계약을 명시한다.
 
@@ -167,7 +167,7 @@ Requires 규칙:
 ```text
 choice-level requires_*는 해당 choice의 available 여부를 판단한다.
 event-level requires_*는 이벤트 자체의 eligible 여부를 판단한다.
-MVP-0에서 대부분의 조건은 choice-level로 둔다.
+Console Validation에서 대부분의 조건은 choice-level로 둔다.
 hidden_until_available 기본값은 false다.
 ```
 
@@ -200,7 +200,7 @@ choice-level requires 조건은 이벤트 후보 제거에 쓰지 않는다.
 
 # 8. Unavailable Choice Policy
 
-MVP-0 기본 정책은 **show unavailable**이다.
+Console Validation 기본 정책은 **show unavailable**이다.
 
 ```text
 unavailable choice는 표시한다.
@@ -302,9 +302,9 @@ player_woven_score = run-level
 
 ---
 
-# 10. MVP-0 Fun Validation Metrics
+# 10. Console Validation Metrics
 
-실행 가능 여부만 MVP-0 성공으로 보지 않는다.
+실행 가능 여부만 Console Validation 성공으로 보지 않는다.
 
 필수 분석 지표:
 
@@ -368,7 +368,7 @@ player_woven_score:
 
 모든 `danger_tags`, `event_tags`, `region_tags`, `event_weight` 대상은 `data/core/tags.yaml`의 master enum 안에 있어야 한다.
 
-특히 아래 태그는 MVP-0 fixture에서 사용되므로 반드시 존재해야 한다.
+특히 아래 태그는 Console Validation fixture에서 사용되므로 반드시 존재해야 한다.
 
 ```text
 curse
@@ -390,7 +390,7 @@ survival
 ```text
 combat은 event_tags: [combat]을 가진 일반 이벤트다.
 combat_response는 choice_type 중 하나일 뿐이다.
-MVP-0에서 CombatEventResolver는 만들지 않는다.
+Console Validation에서 CombatEventResolver는 만들지 않는다.
 모든 전투형 이벤트는 일반 ChoiceResolver로 처리한다.
 별도 전투 루프, 적 HP, 공격/방어 턴, 전투 UI는 금지한다.
 ```
@@ -403,6 +403,6 @@ MVP-0에서 CombatEventResolver는 만들지 않는다.
 
 Flutter 앱은 이 YAML을 직접 읽지 않는다.
 
-MVP-1에서는 `tools/export_json.py`가 본 Schema를 검증한 뒤 JSON artifact를 생성한다.
+Flutter 앱 단계에서는 `tools/export_json.py`가 본 Schema를 검증한 뒤 JSON artifact를 생성한다.
 
 자세한 내용은 `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.

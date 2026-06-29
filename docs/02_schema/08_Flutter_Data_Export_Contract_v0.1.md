@@ -4,7 +4,7 @@
 
 이 문서는 YAML 원천 데이터가 이후 Flutter + Flame 앱 프로젝트인 `fate_weaver/`로 이동하는 방식을 정의한다.
 
-현재 MVP-0 단계에서는 Flutter 프로젝트를 만들지 않는다.
+현재 Console Validation 단계에서는 Flutter 프로젝트를 만들지 않는다.
 
 그러나 데이터 구조는 향후 Flutter 이전을 해치지 않아야 한다.
 
@@ -55,7 +55,7 @@ Flutter Runtime
 
 # 4. 생성 파일 위치
 
-MVP-1 이후 예상 위치:
+Flutter 앱 단계 이후 예상 위치:
 
 ```text
 fate_weaver/
@@ -147,7 +147,7 @@ YAML과 JSON 동시 수동 관리
 
 # 8. Flutter pubspec 예상 등록
 
-MVP-1에서 Flutter 프로젝트가 생성되면 아래처럼 등록한다.
+Flutter 앱 단계에서 Flutter 프로젝트가 생성되면 아래처럼 등록한다.
 
 ```yaml
 flutter:
@@ -163,9 +163,9 @@ flutter:
 
 ---
 
-# 9. MVP-0 단계에서의 금지
+# 9. Console Validation 단계에서의 금지
 
-MVP-0에서는 아래를 하지 않는다.
+Console Validation에서는 아래를 하지 않는다.
 
 ```text
 fate_weaver/ 생성
@@ -174,4 +174,4 @@ Flutter pubspec 수정
 Dart 모델 작성
 ```
 
-MVP-0는 Python 콘솔 검증만 수행한다.
+Console Validation은 Python 콘솔 검증만 수행한다.

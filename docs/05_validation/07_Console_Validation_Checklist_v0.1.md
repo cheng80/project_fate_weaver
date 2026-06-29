@@ -1,8 +1,8 @@
-# Project FateWeaver MVP-0 Validation Checklist v0.1
+# Project FateWeaver Console Validation Checklist v0.1
 
 ## 목적
 
-이 문서는 MVP-0 콘솔 제작 착수 전 확인할 체크리스트다.
+이 문서는 Console Validation 제작 착수 전 확인할 체크리스트다.
 
 ---
 
@@ -39,7 +39,7 @@
 # 3. 문서 체크
 
 - [ ] README가 현재 구조를 설명한다.
-- [ ] Baseline 문서가 현재 단계가 MVP-0임을 명시한다.
+- [ ] Baseline 문서가 현재 단계가 Console Validation임을 명시한다.
 - [ ] Structure Guide가 각 폴더 책임을 설명한다.
 - [ ] Data Architecture가 core/content/scenarios 구조를 설명한다.
 - [ ] Console Simulator Spec이 scenario 기반 실행을 설명한다.
@@ -75,5 +75,5 @@
 - [ ] choice-level requires와 event-level requires가 분리되어 있다.
 - [ ] unavailable choice는 show unavailable 기본 정책을 따른다.
 - [ ] `influenced_by`, `regret_score`, `player_woven_score`의 타입/스케일/입력 주체가 명시되어 있다.
-- [ ] MVP-0 재미 검증 지표가 summary 대상에 포함되어 있다.
+- [ ] Console Validation 재미 검증 지표가 summary 대상에 포함되어 있다.
 - [ ] 전투형 이벤트는 일반 이벤트 + `combat_response` choice로만 처리한다.

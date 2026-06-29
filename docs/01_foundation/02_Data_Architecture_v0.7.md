@@ -10,11 +10,11 @@
 
 `mvp0/`는 콘텐츠 폴더가 아니다.
 
-MVP-0는 `data/scenarios/mvp0_console_test.yaml`이라는 **시나리오 파일**로 관리한다.
+Console Validation은 `data/scenarios/mvp0_console_test.yaml`이라는 **시나리오 파일**로 관리한다.
 
 또한 `src/`는 Flutter 프로젝트가 아니다.
 
-`src/`는 Python MVP-0 검증 엔진이다.
+`src/`는 Python Console Validation 검증 엔진이다.
 
 Flutter 앱은 이후 별도 `fate_weaver/` 폴더로 생성한다.
 
@@ -102,7 +102,7 @@ data/scenarios/
 
 ```yaml
 id: mvp0_console_test
-name: MVP-0 Console Loop Validation
+name: Console Validation
 
 content_sources:
   - data/content/base/regions.yaml

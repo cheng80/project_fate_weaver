@@ -4,7 +4,7 @@
 
 이 문서는 `docs/` 폴더의 역할별 구조와 현재 문서 목록을 정리한다.
 
-현재 단계는 PRD 작성 전이며, 목표는 MVP-0 콘솔 검증 프로토타입 제작 전 문서 계약을 명확히 하는 것이다.
+현재 단계는 PRD 작성 전이며, 목표는 Console Validation 프로토타입 제작 전 문서 계약을 명확히 하는 것이다.
 
 ---
 
@@ -51,7 +51,7 @@ docs/
 문서:
 
 - `docs/01_foundation/00_Project_FateWeaver_Current_Baseline_v0.7.md`
-  - 현재 단계가 MVP-0 Console Loop Validation임을 고정한다.
+  - 현재 단계가 Console Validation임을 고정한다.
 - `docs/01_foundation/01_Project_Structure_Guide_v0.1.md`
   - `docs/`, `data/`, `src/`, `tools/`, `logs/`, `archive/`, 향후 `fate_weaver/`의 역할을 정의한다.
 - `docs/01_foundation/02_Data_Architecture_v0.7.md`
@@ -72,7 +72,7 @@ docs/
 - `docs/02_schema/03_Event_Grammar_Draft_YAML_Schema_v0.7.md`
   - scenario filter, choice-level requires, unavailable choice, metric, combat policy 계약을 정의한다.
 - `docs/02_schema/06_Fixture_Data_Plan_v0.3.md`
-  - MVP-0 fixture 데이터의 최소 기준을 정의한다.
+  - Console Validation fixture 데이터의 최소 기준을 정의한다.
 - `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`
   - YAML에서 Flutter JSON artifact로 이전하는 계약을 정의한다.
 
@@ -89,7 +89,7 @@ docs/
 문서:
 
 - `docs/03_specs/04_Console_Simulator_Spec_v0.7.md`
-  - MVP-0 콘솔 시뮬레이터의 로드, 선택, 로그, 분석, 금지 구현 범위를 정의한다.
+  - Console Validation 시뮬레이터의 로드, 선택, 로그, 분석, 금지 구현 범위를 정의한다.
 
 ---
 
@@ -104,7 +104,7 @@ docs/
 문서:
 
 - `docs/04_codex/05_Codex_Console_Prototype_Brief_v0.6.md`
-  - Codex가 MVP-0 콘솔 프로토타입을 만들 때 따라야 할 작업 브리프다.
+  - Codex가 Console Validation 프로토타입을 만들 때 따라야 할 작업 브리프다.
 
 ---
 
@@ -118,7 +118,7 @@ docs/
 
 문서:
 
-- `docs/05_validation/07_MVP0_Validation_Checklist_v0.1.md`
+- `docs/05_validation/07_Console_Validation_Checklist_v0.1.md`
   - Writing-plans와 구현 착수 전에 확인해야 할 구조, 데이터, 계약 체크리스트다.
 
 ---
@@ -146,7 +146,7 @@ docs/
 문서:
 
 - `docs/07_reviews/09_Commit_Summary_v0.1.md`
-  - MVP-0 검증 패키지 기준선 커밋 내용을 요약한다.
+  - Console Validation 패키지 기준선 커밋 내용을 요약한다.
 
 ---
 

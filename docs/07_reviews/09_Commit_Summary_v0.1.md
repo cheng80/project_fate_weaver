@@ -4,7 +4,7 @@
 
 이 문서는 이번 커밋에서 정리한 Project FateWeaver의 현재 상태를 한국어로 요약한다.
 
-이번 커밋의 목적은 Flutter 앱 구현이 아니라, **MVP-0 콘솔 검증 프로토타입 제작 직전의 기준선**을 저장하는 것이다.
+이번 커밋의 목적은 Flutter 앱 구현이 아니라, **Console Validation 프로토타입 제작 직전의 기준선**을 저장하는 것이다.
 
 ---
 
@@ -17,7 +17,7 @@
 ```text
 지금 만들 것은 Flutter 앱이 아니라 Python 콘솔 검증 엔진이다.
 YAML 데이터가 원천이고, Python은 루프 검증용 도구다.
-Flutter 프로젝트는 MVP-0 검증 통과 후 fate_weaver/에 별도로 생성한다.
+Flutter 프로젝트는 Console Validation 통과 후 fate_weaver/에 별도로 생성한다.
 ```
 
 ---
@@ -29,7 +29,7 @@ Flutter 프로젝트는 MVP-0 검증 통과 후 fate_weaver/에 별도로 생성
 ```text
 docs/      설계, 검증, Codex 작업 기준 문서
 data/      YAML 원천 데이터
-src/       Python MVP-0 검증 엔진 영역
+src/       Python Console Validation 검증 엔진 영역
 tools/     Python 실행 도구 영역
 logs/      콘솔 검증 로그 영역
 archive/   이전 문서와 폐기 문서 보관
@@ -41,7 +41,7 @@ archive/   이전 문서와 폐기 문서 보관
 
 # 3. 문서 패키지
 
-`docs/`에는 MVP-0 콘솔 검증을 시작하기 위한 기준 문서를 둔다.
+`docs/`에는 Console Validation을 시작하기 위한 기준 문서를 둔다.
 
 주요 문서는 다음 역할을 가진다.
 
@@ -52,7 +52,7 @@ archive/   이전 문서와 폐기 문서 보관
 - 콘솔 시뮬레이터 스펙
 - Codex 구현 브리프
 - fixture 데이터 계획
-- MVP-0 검증 체크리스트
+- Console Validation 체크리스트
 - Flutter 데이터 export 계약
 
 ---
@@ -69,13 +69,13 @@ data/scenarios/  검증용 실행 범위와 초기 조건
 
 테스트 전용 콘텐츠 폴더인 `data/mvp0/`는 만들지 않는다.
 
-MVP-0는 `data/scenarios/mvp0_console_test.yaml` 시나리오로 관리한다.
+Console Validation은 `data/scenarios/mvp0_console_test.yaml` 시나리오로 관리한다.
 
 ---
 
 # 5. Python 실행 환경
 
-MVP-0 콘솔 제작과 검증은 프로젝트 루트의 `.venv`를 기준으로 실행한다.
+Console Validation 제작과 검증은 프로젝트 루트의 `.venv`를 기준으로 실행한다.
 
 ```bash
 python3.12 -m venv .venv
@@ -88,7 +88,7 @@ YAML 처리는 `PyYAML`만 사용한다.
 
 # 6. Codex 작업 기준
 
-Codex는 다음 범위 안에서만 MVP-0 콘솔 프로토타입을 만든다.
+Codex는 다음 범위 안에서만 Console Validation 프로토타입을 만든다.
 
 ```text
 src/fateweaver/
@@ -128,7 +128,7 @@ YAML 파싱: schema_errors=none
 
 # 8. 다음 작업
 
-다음 커밋의 목적은 문서 작성이 아니라 MVP-0 콘솔 프로토타입 구현이다.
+다음 커밋의 목적은 문서 작성이 아니라 Console Validation 프로토타입 구현이다.
 
 구현 대상은 다음이다.
 

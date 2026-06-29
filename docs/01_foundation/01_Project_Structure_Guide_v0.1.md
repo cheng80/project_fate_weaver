@@ -87,7 +87,7 @@ mvp0 폴더를 콘텐츠 저장소로 만들지 않는다.
 
 ## 역할
 
-`src/`는 Python MVP-0 검증 엔진이다.
+`src/`는 Python Console Validation 검증 엔진이다.
 
 Flutter 프로젝트의 소스 폴더가 아니다.
 
@@ -140,7 +140,7 @@ export_json.py
 
 ## 역할
 
-MVP-0 콘솔 검증 결과를 저장한다.
+Console Validation 결과를 저장한다.
 
 ```text
 run_001.yaml
@@ -166,7 +166,7 @@ summary.md
 
 이후 생성할 Flutter + Flame 앱 프로젝트다.
 
-MVP-0 단계에서는 생성하지 않는다.
+Console Validation 단계에서는 생성하지 않는다.
 
 ## 예상 구조
 
@@ -183,7 +183,7 @@ fate_weaver/
 
 # 9. 단계별 폴더 사용
 
-## MVP-0
+## Console Validation
 
 사용:
 
@@ -202,7 +202,7 @@ archive/
 fate_weaver/
 ```
 
-## MVP-1
+## Flutter 앱 단계
 
 사용:
 
@@ -210,7 +210,7 @@ fate_weaver/
 fate_weaver/
 ```
 
-MVP-1에서는 `tools/export_json.py`를 통해 YAML 원천 데이터를 Flutter assets로 변환한다.
+Flutter 앱 단계에서는 `tools/export_json.py`를 통해 YAML 원천 데이터를 Flutter assets로 변환한다.
 
 ---
 
