@@ -1,12 +1,12 @@
 # Project FateWeaver Current Baseline v0.7
 
+> 상태: [Baseline] 이 문서는 과거 Console Validation 단계의 구현 기준선이다. 최신 Gameplay Replan 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 ## 문서 목적
 
 이 문서는 Project FateWeaver의 현재 기준선을 정리한다.
 
 v0.7의 핵심은 **프로젝트 최상위 구조를 명확히 고정**하는 것이다.
-
-> 기준 구분: 이 문서는 Console Validation PASS 시점의 기준선 기록이다. Gameplay Replan 관련 새 작업의 최상위 기준은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`에서 시작한다.
 
 ---
 

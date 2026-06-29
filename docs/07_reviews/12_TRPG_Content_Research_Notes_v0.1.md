@@ -1,5 +1,7 @@
 # TRPG Content Research Notes v0.1
 
+> 상태: [Historical] 이 문서는 과거 검토와 판단 기록을 보관하기 위한 문서다.
+
 ## 1. 문서 목적
 
 이 문서는 FateWeaver의 다음 Content Expansion 단계 전에 사용할 콘텐츠 표본 추출 근거를 정리한다.

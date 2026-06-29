@@ -1,5 +1,7 @@
 # Playtest Review Result v0.1
 
+> 상태: [Historical] 이 문서는 과거 검토와 판단 기록을 보관하기 위한 문서다.
+
 ## 1. Playtest Review 목적
 
 이 문서는 `Weighted AutoPlayer Scoring`과 `Content Expansion` slice가 기술적으로 통과한 뒤, 실제 플레이 감각 기준으로 Console Simulator의 선택 재미, profile 차이, 아이템 선택지 사용, 위험 선택, 로그 품질을 검수한 결과다.

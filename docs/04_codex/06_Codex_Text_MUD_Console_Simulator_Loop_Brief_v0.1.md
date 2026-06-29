@@ -1,12 +1,12 @@
 # Codex 텍스트 MUD형 콘솔 시뮬레이터 루프 작업 지시서 v0.1
 
+> 상태: [Superseded] 이 문서는 최신 Gameplay Replan 기준으로 대체되었으나 참고용으로 유지한다. 새 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 ## 문서 목적
 
 이 문서는 LazyCodex `ulw-loop` 작업을 위한 기준 문서다.
 
 목표는 Project FateWeaver의 Console Simulator를 단순 YAML/schema 검증기가 아니라, **텍스트 MUD형 게임성 검증 도구**로 보강하는 것이다.
-
-> 기준 구분: 이 문서는 기존 Console Simulator를 Text MUD Play Log 검증 도구로 보강한 단계의 브리프다. 최신 Gameplay Replan 작업에서는 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 먼저 읽고 Quest Layer, Expedition Clock, 3-Card Choice UI, Multi-Select, Economy/Reputation/Score 기준을 우선한다.
 
 이 작업은 Flutter UI나 Flame 렌더링 구현을 시작하라는 의미가 아니다.  
 또한 YAML 문법만 검사하는 단순 검증기를 만드는 작업도 아니다.

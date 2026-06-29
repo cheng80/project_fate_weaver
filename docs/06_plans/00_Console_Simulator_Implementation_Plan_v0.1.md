@@ -1,5 +1,7 @@
 # Console Simulator Implementation Plan
 
+> 상태: [Baseline] 이 문서는 과거 Console Validation 단계의 구현 기준선이다. 최신 Gameplay Replan 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the Python Console Validation simulator that validates FateWeaver YAML data, runs a seedable event-choice-state loop, writes analyzable JSON logs, and reports Core Loop Validation Metrics before Flutter work begins.

@@ -1,5 +1,7 @@
 # Codex Start Here - Gameplay Replan v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 문서 목적
 
 이 문서는 Codex가 Project FateWeaver의 Gameplay Replan 관련 작업을 시작하기 전에 반드시 먼저 읽어야 하는 최신 기준 문서다.

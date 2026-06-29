@@ -1,5 +1,7 @@
 # Text MUD Gameplay Simulator Spec v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 1. 문서 목적
 
 이 문서는 Console Simulator가 실게임형 텍스트 모험 프로토타입으로 작동하기 위한 실행 사양을 정의한다.

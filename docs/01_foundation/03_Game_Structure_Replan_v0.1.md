@@ -1,5 +1,7 @@
 # FateWeaver Game Structure Replan v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 1. 문서 목적
 
 이 문서는 FateWeaver의 게임 구조를 다시 정의한다.

@@ -1,5 +1,7 @@
 # Quest / Expedition / Card Schema v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 1. 문서 목적
 
 이 문서는 FateWeaver의 실게임형 텍스트 모험 구조를 데이터로 표현하기 위한 스키마 초안을 정의한다.

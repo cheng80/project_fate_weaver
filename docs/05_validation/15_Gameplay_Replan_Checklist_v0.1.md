@@ -1,5 +1,7 @@
 # Gameplay Replan Checklist v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 1. 목적 검증
 
 - [ ] Run에 Quest 목적이 있는가?

@@ -1,5 +1,15 @@
 # Project FateWeaver
 
+## Current Project Direction
+
+FateWeaver의 최신 기준은 Console Validation이 아니라 Gameplay Replan입니다.
+
+현재 목표는 Quest Layer, Expedition Clock, Ontology Director, 3-Card Choice UI, Multi-Select Resolver, Economy/Reputation/Score, Quest Report를 갖춘 실게임형 텍스트 모험 시뮬레이터입니다.
+
+Codex 작업 전에는 반드시 아래 문서를 먼저 확인합니다.
+
+- `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`
+
 ## Project Goal
 
 FateWeaver는 단서, 징조, 아이템, 상태 변화를 바탕으로 위험한 판타지 세계를 살아남으며, 플레이어가 자기만의 여정을 엮어가는 선택형 생존/탐험 로그라이크입니다.

@@ -1,5 +1,7 @@
 # Codex Gameplay Replan Brief v0.1
 
+> 상태: [Current] 현재 Gameplay Replan 작업의 기준 문서.
+
 ## 작업 목적
 
 현재 FateWeaver는 Console Validation 중심 구조에서 실게임형 텍스트 모험 시뮬레이터 구조로 재정렬이 필요하다.

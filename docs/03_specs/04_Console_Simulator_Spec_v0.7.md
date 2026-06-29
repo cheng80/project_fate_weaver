@@ -1,12 +1,12 @@
 # Project FateWeaver Console Simulator Spec v0.7
 
+> 상태: [Baseline] 이 문서는 과거 Console Validation 단계의 구현 기준선이다. 최신 Gameplay Replan 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 ## 문서 목적
 
 이 문서는 Console Validation을 실제로 실행하기 위한 콘솔 시뮬레이터 사양이다.
 
 v0.7에서는 scenario filter, unavailable choice, 로그 metric, 재미 검증 지표, combat policy 계약을 명시한다.
-
-> 기준 구분: 이 문서는 기존 Console Validation 실행 사양이다. Gameplay Replan 작업의 완료 기준은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`와 `docs/03_specs/13_Text_MUD_Gameplay_Simulator_Spec_v0.1.md`를 우선한다.
 
 ---
 

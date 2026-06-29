@@ -1,5 +1,7 @@
 # Entity Sampling Review v0.1
 
+> 상태: [Historical] 이 문서는 과거 검토와 판단 기록을 보관하기 위한 문서다.
+
 ## 1. 문서 목적
 
 이 문서는 Content Expansion Phase 3를 바로 실행하기 전에, FateWeaver에 필요한 entity 후보를 선별한 리뷰 결과다.

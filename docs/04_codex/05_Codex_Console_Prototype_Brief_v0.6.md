@@ -1,10 +1,10 @@
 # Project FateWeaver Codex Console Prototype Brief v0.6
 
+> 상태: [Superseded] 이 문서는 최신 Gameplay Replan 기준으로 대체되었으나 참고용으로 유지한다. 새 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 ## 문서 목적
 
 이 문서는 Codex에게 Console Validation 프로토타입 제작을 지시하기 위한 작업 브리프다.
-
-> 기준 구분: 이 문서는 과거 Console Validation 프로토타입 브리프다. Gameplay Replan 관련 새 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 먼저 읽고 `docs/04_codex/14_Codex_Gameplay_Replan_Brief_v0.1.md`를 따른다.
 
 ---
 

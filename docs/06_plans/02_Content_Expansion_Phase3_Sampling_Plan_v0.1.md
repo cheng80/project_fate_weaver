@@ -1,5 +1,7 @@
 # Content Expansion Phase 3 표본 추출 계획 v0.1
 
+> 상태: [Superseded] 이 문서는 최신 Gameplay Replan 기준으로 대체되었으나 참고용으로 유지한다. 새 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 > **에이전트 작업자 필수 지침:** 이 계획을 실행할 때는 `superpowers:subagent-driven-development` 사용을 권장한다. 대안으로 `superpowers:executing-plans`를 사용해도 된다. 각 단계는 체크박스(`- [ ]`) 단위로 추적한다.
 
 **목표:** 새 YAML 콘텐츠를 작성하기 전에 FateWeaver Phase 3에서 어떤 이벤트, 아이템, Ontology-lite entity 표본을 어떤 기준으로 뽑을지 고정한다.

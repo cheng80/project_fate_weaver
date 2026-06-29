@@ -1,10 +1,10 @@
 # Project FateWeaver Console Validation Checklist v0.1
 
+> 상태: [Baseline] 이 문서는 과거 Console Validation 단계의 구현 기준선이다. 최신 Gameplay Replan 작업은 `docs/04_codex/00_START_HERE_Gameplay_Replan_v0.1.md`를 우선한다.
+
 ## 목적
 
 이 문서는 Console Validation 제작 착수 전 확인할 체크리스트다.
-
-> 기준 구분: 이 체크리스트는 Console Validation 단계의 PASS 기록이다. 최신 Gameplay Replan 검증은 `docs/05_validation/15_Gameplay_Replan_Checklist_v0.1.md`를 우선한다.
 
 ## 검수 상태
 
