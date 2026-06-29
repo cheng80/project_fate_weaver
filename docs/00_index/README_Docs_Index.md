@@ -76,9 +76,11 @@ docs/
 - `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`
   - YAML에서 Flutter JSON artifact로 이전하는 계약을 정의한다.
 - `docs/02_schema/09_Content_Ontology_Model_v0.1.md`
-  - `data/core/ontology.yaml` 기반의 최소 콘텐츠 관계 모델을 정의한다.
+  - `data/core/ontology.yaml` 기반의 Ontology-lite v0.2 trial 콘텐츠 관계 모델을 정의한다.
 - `docs/02_schema/10_Content_Sampling_Guide_v0.1.md`
   - TRPG 리서치에서 추출한 이벤트, 선택지, 위험, 보상, 단서, 아이템 상호작용 표본 추출 기준을 정의한다.
+- `docs/02_schema/11_Entity_Sampling_Catalog_v0.1.md`
+  - Phase 3 entity 후보와 Ontology-lite v0.2 trial entity/relation 채택 기준을 정의한다.
 
 ---
 
@@ -168,3 +170,5 @@ docs/
   - Weighted AutoPlayer Scoring과 Content Expansion slice의 실제 플레이 감각, profile 차이, 선택/로그 품질 리뷰 결과를 보관한다.
 - `docs/07_reviews/12_TRPG_Content_Research_Notes_v0.1.md`
   - CoC, D&D, 공개 TRPG 설계 자료를 FateWeaver용 추상 콘텐츠 샘플링 원칙으로 변환한 리서치 노트를 보관한다.
+- `docs/07_reviews/13_Entity_Sampling_Review_v0.1.md`
+  - Entity Sampling Review와 Ontology-lite v0.2 trial extension 판단 결과를 보관한다.

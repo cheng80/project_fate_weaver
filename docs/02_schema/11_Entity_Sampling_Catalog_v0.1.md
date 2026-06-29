@@ -6,7 +6,7 @@
 
 `docs/07_reviews/13_Entity_Sampling_Review_v0.1.md`가 선별 판단 문서라면, 이 문서는 실행자가 이벤트/아이템/단서/보상/비용 후보를 고를 때 참고하는 목록이다.
 
-이 문서는 data schema를 바꾸지 않는다. 후보는 기존 YAML 구조와 Ontology-lite relation으로 표현 가능한 형태를 우선한다.
+이 문서는 Phase 3 후보를 고르는 기준이다. v0.2부터는 `clue`, `location`, `omen`, `hazard`를 trial entity로 다루며, 관련 YAML field는 Phase 3에서 사용성을 검증하기 위한 선택 필드다.
 
 ---
 
@@ -17,7 +17,8 @@
 3. `조건부 채택` 후보는 같은 batch 안에서 choice/result 연결이 증명될 때만 쓴다.
 4. `보류` 후보는 별도 계획 없이는 YAML화하지 않는다.
 5. `거부` 조건에 걸리면 이름이 좋아도 사용하지 않는다.
-6. NPC, faction, clue, reward, cost는 아직 독립 schema entity가 아니라 event/choice/result의 설계 범주다.
+6. NPC, faction, reward, cost는 아직 독립 schema entity가 아니라 event/choice/result의 설계 범주다.
+7. `clue`, `location`, `omen`, `hazard`는 v0.2 trial entity이며, Phase 3 이후 유지/제거/통합을 다시 판단한다.
 
 ---
 
@@ -93,8 +94,9 @@ Relation 추가를 거부하는 경우:
 이번 카탈로그 기준:
 
 ```text
-현재 후보는 모두 기존 relation으로 우선 표현한다.
-새 relation 후보는 Phase 3 실행 후 반복 필요성이 확인될 때 별도 검토한다.
+기존 relation으로 충분한 후보는 기존 relation으로 표현한다.
+clue, location, omen, hazard 계열은 v0.2 trial field로 최소 검증한다.
+trial relation은 Phase 3 이후 반복 필요성이 낮으면 제거하거나 통합한다.
 ```
 
 ---
@@ -109,9 +111,12 @@ Relation 추가를 거부하는 경우:
 | item | 예 | 조건부 채택 | `items.yaml:items[]` + `requires_item` |
 | status | 예 | 기존만 채택 | `health`, `food`, `money`, `reputation`, `curse` |
 | tag | 예 | 기존만 채택 | `tags.yaml`의 기존 tag |
+| clue | v0.2 trial | trial 채택 | `revealed_clue_tags`, `reveals_clue_tags` |
+| location | v0.2 trial | trial 채택 | `location_tags` |
+| omen | v0.2 trial | trial 채택 | `omen_tags`, `creates_omen_tags` |
+| hazard | v0.2 trial | trial 채택 | `hazard_tags`, `counters_hazard_tags` |
 | region | 예 | 기존만 채택 | `forest`, `village`, `ruin` |
 | scenario | 예 | 실행 시 갱신 | `data/scenarios/content_expansion_test.yaml` |
-| clue | 아니오 | design-only | description, investigate choice, result message, event_weight |
 | reward | 아니오 | design-only | result status/item/event_weight |
 | cost | 아니오 | design-only | result status/remove_item/event_weight |
 | npc/faction | 아니오 | 보류 | description, choice, reputation, tag |
@@ -296,7 +301,90 @@ World Bible이 필요한 고유 설정
 
 ---
 
-## 16. Reject 기준
+## 16. Ontology-lite v0.2 Trial 후보 카탈로그
+
+이 섹션은 Phase 3 작성 전에 검토한 entity/relation gap 후보 중 v0.2 trial로 채택한 항목과 계속 보류할 항목을 구분한다.
+
+### 16.1 Entity 후보 판정
+
+| Entity 후보 | Catalog 사용 방식 | 현재 표현 | 판정 |
+| --- | --- | --- | --- |
+| `clue` | 조사/아이템/징조 선택의 정보 단위 | `revealed_clue_tags`, `reveals_clue_tags` | v0.2 trial 채택 |
+| `foreshadowing` | 후속 위험이나 보상을 미리 암시 | result message, future event weight | Phase 3 trial |
+| `location` | region보다 작은 반복 장소 | `location_tags` | v0.2 trial 채택 |
+| `hazard` | 구체 조우/장애/위험 장치 | `hazard_tags`, `counters_hazard_tags` | v0.2 trial 채택 |
+| `faction` | 집단 이해관계 | reputation, event description | 문서상 보류 |
+| `npc_role` | 목격자, 안내자, 경쟁자 같은 사건 역할 | choice text, event description | 문서상 보류 |
+| `resource_pressure` | 체력/식량/돈/평판/저주 압박 | status delta | 기존 relation으로 충분 |
+| `mystery_thread` | 여러 단서를 잇는 장기 사건 줄기 | event weight, result message | 문서상 보류 |
+| `sanctuary` | 회복/피난/재정비 장소 | recovery event, safety tag | Phase 3 trial |
+| `omen` | 위험을 예고하는 징조 | `omen_tags`, `creates_omen_tags` | v0.2 trial 채택 |
+| `rumor` | 사회적 정보 단서 | reputation event, result message | Phase 3 trial |
+| `route` | 장소 연결 선택 | event weight, region 암시 | Phase 3 trial |
+| `encounter_role` | 사건의 기능적 역할 | event tag, choice type | 기존 relation으로 충분 |
+
+### 16.2 Relation 후보 판정
+
+| Relation 후보 | 현재 대체 표현 | 판정 | 승격 조건 |
+| --- | --- | --- | --- |
+| `event_reveals_clue` | `revealed_clue_tags`, `reveals_clue_tags` | v0.2 trial 채택 | Phase 3에서 2개 이상 이벤트가 사용할 때 유지 |
+| `clue_foreshadows_event` | result message, later event weight | Phase 3 trial | 경고와 후속 사건 연결이 2회 이상 반복될 때 |
+| `event_occurs_at_location` | `location_tags` | v0.2 trial 채택 | Phase 3에서 2개 이상 이벤트가 같은 location 축을 공유할 때 유지 |
+| `location_has_hazard` | `event_has_danger_tag`, region context | 문서상 보류 | location entity가 먼저 안정화될 때 |
+| `choice_interacts_with_npc_role` | choice text, event description | 문서상 보류 | NPC role 분석이 analyzer/export에 필요할 때 |
+| `choice_affects_faction` | `result_modifies_status`의 reputation 변화 | 문서상 보류 | faction별 상태나 평판이 필요할 때 |
+| `result_changes_resource_pressure` | `result_modifies_status` | 기존 relation으로 충분 | 현재는 승격하지 않음 |
+| `event_advances_mystery_thread` | event weight, result message | 문서상 보류 | 장기 thread 진행도 시스템이 필요할 때 |
+| `item_reveals_clue` | `items[].reveals_clue_tags` | v0.2 trial 채택 | Phase 3에서 item clue payoff가 2회 이상 발생할 때 유지 |
+| `item_mitigates_hazard` | `item_counters_tag` | 기존 relation으로 충분 | 현재는 승격하지 않음 |
+| `route_leads_to_location` | event weight, region 암시 | Phase 3 trial | route 선택지가 location 이동을 반복적으로 만든 때 |
+| `omen_warns_about_hazard` | `omen_tags`, `creates_omen_tags`, `hazard_tags` | v0.2 trial 채택 | Phase 3에서 omen-hazard payoff가 2회 이상 확인될 때 유지 |
+
+### 16.3 v0.2 trial source field
+
+Phase 3 콘텐츠는 아래 field를 선택적으로 사용할 수 있다.
+
+```yaml
+event:
+  location_tags: list[string]
+  revealed_clue_tags: list[string]
+  omen_tags: list[string]
+  hazard_tags: list[string]
+
+choice:
+  reveals_clue_tags: list[string]
+  creates_omen_tags: list[string]
+
+result:
+  reveals_clue_tags: list[string]
+  creates_omen_tags: list[string]
+
+item:
+  reveals_clue_tags: list[string]
+  counters_hazard_tags: list[string]
+```
+
+`danger_tags`와 `hazard_tags` 차이:
+
+```text
+danger_tags = 넓은 위험 분류
+hazard_tags = 구체 조우/장애/위험 장치
+```
+
+### 16.4 Phase 3 trial 유지 기준
+
+v0.2 trial relation은 아래 조건을 만족할 때 유지 후보가 된다.
+
+- Phase 3에서 최소 2개 이상 이벤트/아이템이 해당 relation을 사용한다.
+- 단순 장식이 아니라 선택 판단, 아이템 payoff, 위험 예고, 장소 coverage 중 하나를 설명한다.
+- 기존 `danger_tags`, `event_weight`, `result_modifies_status`만으로 표현하면 의미가 흐려진다.
+- analyzer/export가 추후 별도 metric으로 소비할 가치가 있다.
+
+사용성이 낮으면 Phase 3 이후 제거하거나 기존 `tag`, `danger_tags`, `event_weight` 표현으로 통합한다.
+
+---
+
+## 17. Reject 기준
 
 후보가 아래 조건 중 하나라도 만족하면 Phase 3에서는 reject한다.
 
@@ -314,7 +402,7 @@ World Bible이 필요한 고유 설정
 
 ---
 
-## 17. Phase 3 작성 전 체크리스트
+## 18. Phase 3 작성 전 체크리스트
 
 ```text
 [ ] 선택한 후보가 즉시 채택 또는 조건부 채택 상태인가?
@@ -327,6 +415,8 @@ World Bible이 필요한 고유 설정
 [ ] NPC/세력은 독립 schema가 아니라 사건 역할로 표현되는가?
 [ ] Ontology-lite relation으로 설명 가능한가?
 [ ] 새 relation이 필요하다면 2개 이상 콘텐츠에서 재사용되는가?
+[ ] 새 relation 후보가 Phase 3 trial 목록에 있다면 source field와 target field를 명확히 지정할 수 있는가?
+[ ] analyzer/export가 새 relation을 실제로 사용할 수 있는가?
 [ ] relation 추가 시 `data/core/ontology.yaml`과 `09_Content_Ontology_Model` 갱신 계획이 있는가?
 [ ] 원전 설정/고유명/문장을 차용하지 않았는가?
 ```

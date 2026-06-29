@@ -68,8 +68,19 @@ statuses:
 
 정의 대상:
 
-- entity: `event`, `choice`, `result`, `item`, `status`, `tag`, `region`, `scenario`, `file`
-- relation: `event_has_choice`, `choice_produces_result`, `choice_requires_item`, `choice_requires_status`, `item_counters_tag`, `result_modifies_status`, `result_changes_event_weight`, `event_belongs_to_region`, `event_has_event_tag`, `event_has_danger_tag`, `scenario_includes_event`, `scenario_uses_content_source`
+- entity: `event`, `choice`, `result`, `item`, `status`, `tag`, `clue`, `location`, `omen`, `hazard`, `region`, `scenario`, `file`
+- relation: `event_has_choice`, `choice_produces_result`, `choice_requires_item`, `choice_requires_status`, `item_counters_tag`, `result_modifies_status`, `result_changes_event_weight`, `event_belongs_to_region`, `event_has_event_tag`, `event_has_danger_tag`, `event_reveals_clue`, `item_reveals_clue`, `event_occurs_at_location`, `omen_warns_about_hazard`, `scenario_includes_event`, `scenario_uses_content_source`
+
+v0.2 trial relation:
+
+```text
+event_reveals_clue
+item_reveals_clue
+event_occurs_at_location
+omen_warns_about_hazard
+```
+
+이 trial relation은 Phase 3 콘텐츠에서 사용성을 검증하기 위한 계약이다. validator/analyzer/export가 아직 소비하지 않을 수 있으며, Phase 3 이후 사용성이 낮으면 제거하거나 기존 tag/status/result 표현으로 통합할 수 있다.
 
 상세 계약:
 
@@ -147,6 +158,10 @@ choices: list[Choice]
 
 ```yaml
 danger_tags: list[string]
+location_tags: list[string]
+revealed_clue_tags: list[string]
+omen_tags: list[string]
+hazard_tags: list[string]
 requires_status: StatusCondition
 requires_item: string
 variation_rules: list[VariationRule]
@@ -176,6 +191,8 @@ requires_status: StatusCondition
 requires_tag: string
 consume_item: bool
 hidden_until_available: bool
+reveals_clue_tags: list[string]
+creates_omen_tags: list[string]
 result: Result
 result_pool: list[ConditionalResult]
 ```
@@ -190,6 +207,74 @@ event-level requires_*는 이벤트 자체의 eligible 여부를 판단한다.
 Console Validation에서 대부분의 조건은 choice-level로 둔다.
 hidden_until_available 기본값은 false다.
 ```
+
+Trial clue/omen 규칙:
+
+```text
+reveals_clue_tags는 선택 자체가 어떤 단서를 드러내는지 표시한다.
+creates_omen_tags는 선택이 어떤 징조를 만들거나 관찰하게 하는지 표시한다.
+이 필드는 available 여부를 직접 바꾸지 않는다.
+```
+
+---
+
+# 6.1 Result Trial Fields
+
+Result는 상태 변화와 event weight 변화 외에 Phase 3 trial 분석용 clue/omen field를 가질 수 있다.
+
+선택 필드:
+
+```yaml
+reveals_clue_tags: list[string]
+creates_omen_tags: list[string]
+```
+
+규칙:
+
+```text
+result.reveals_clue_tags는 선택 결과로 새로 확인된 정보 표식이다.
+result.creates_omen_tags는 선택 결과로 생성되거나 확인된 징조 표식이다.
+이 필드는 narrative message를 대체하지 않고, analyzer/export 후보 관계를 위한 구조적 표식이다.
+```
+
+---
+
+# 6.2 Item Trial Fields
+
+Item은 기존 `counters_tags` 외에 Phase 3 trial 분석용 field를 가질 수 있다.
+
+선택 필드:
+
+```yaml
+reveals_clue_tags: list[string]
+counters_hazard_tags: list[string]
+```
+
+규칙:
+
+```text
+reveals_clue_tags는 아이템이 정보 발견에 기여하는 경우 사용한다.
+counters_hazard_tags는 구체 hazard에 대응하는 경우 사용한다.
+기존 counters_tags는 broad danger/event/item tag 대응이고, counters_hazard_tags는 구체 조우/장애/위험 장치 대응이다.
+```
+
+---
+
+# 6.3 danger_tags와 hazard_tags 차이
+
+```text
+danger_tags:
+  넓은 위험 분류다.
+  예: lost, trap, bandit, hunger, curse, darkness
+  기존 event_has_danger_tag relation이 사용한다.
+
+hazard_tags:
+  구체 조우/장애/위험 장치다.
+  예: false_smoke_signal, sinking_mud, thorn_snare, echo_marker
+  trial omen_warns_about_hazard relation과 item counters_hazard_tags 검증에 사용한다.
+```
+
+`hazard_tags`는 `danger_tags`를 대체하지 않는다. Phase 3 이벤트는 broad 분석을 위해 `danger_tags`를 유지하고, 구체 counterplay나 omen 연결이 필요할 때만 `hazard_tags`를 추가한다.
 
 ---
 

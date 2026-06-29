@@ -1,4 +1,4 @@
-# Project FateWeaver Content Ontology Model v0.1
+# Project FateWeaver Content Ontology Model v0.2 Trial
 
 ## 1. 목적
 
@@ -6,12 +6,14 @@
 
 현재 목표는 온톨로지 엔진을 만드는 것이 아니라, 기존 YAML 데이터가 어떤 entity와 relation으로 해석될 수 있는지 고정하는 것이다.
 
+v0.2는 Phase 3에서 실제 콘텐츠로 검증할 최소 trial entity/relation을 추가한다. 이 확장은 GraphDB, RDF, OWL, 별도 ontology engine 도입이 아니다.
+
 현재 상태:
 
 ```text
 Console Simulator implementation: PASS
-Ontology-lite: READY
-Next focus: Content Expansion Readiness
+Ontology-lite: v0.2 Trial Extension
+Next focus: Phase 3 content trial
 ```
 
 최종 기준:
@@ -85,6 +87,10 @@ Ontology-lite는 그 데이터 위에 얹는 해석 규칙이다.
 | `item` | 선택지를 열거나 위험을 줄이는 소지품 | `data/content/**/items.yaml` |
 | `status` | 체력, 식량, 돈, 평판, 저주 같은 수치 | `data/core/statuses.yaml` |
 | `tag` | region, event, danger, item, weight 분류어 | `data/core/tags.yaml` |
+| `clue` | 이벤트/선택/아이템이 드러내는 정보 표식 | `event.revealed_clue_tags`, `choice.reveals_clue_tags`, `result.reveals_clue_tags`, `item.reveals_clue_tags` |
+| `location` | region보다 작은 trial 장소 표식 | `event.location_tags` |
+| `omen` | 현재/미래 hazard를 예고하는 warning 표식 | `event.omen_tags`, `choice.creates_omen_tags`, `result.creates_omen_tags` |
+| `hazard` | 구체 조우/장애/위험 장치 | `event.hazard_tags`, `item.counters_hazard_tags` |
 | `region` | 이벤트가 속하는 지역 분류 | `regions.yaml`, `event.region_tags` |
 | `scenario` | 검증 실행 조건 | `data/scenarios/*.yaml` |
 | `file` | scenario가 참조하는 YAML source | `content_sources` |
@@ -105,6 +111,10 @@ Ontology-lite는 그 데이터 위에 얹는 해석 규칙이다.
 | `event_belongs_to_region` | `event` | `region` | 이벤트가 지역에 속한다. |
 | `event_has_event_tag` | `event` | `tag` | 이벤트가 이벤트 태그를 가진다. |
 | `event_has_danger_tag` | `event` | `tag` | 이벤트가 위험 태그를 가진다. |
+| `event_reveals_clue` | `event` | `clue` | 이벤트, 선택, 결과가 clue tag를 드러낸다. |
+| `item_reveals_clue` | `item` | `clue` | 아이템이 clue tag를 드러낸다. |
+| `event_occurs_at_location` | `event` | `location` | 이벤트가 구체 location tag에서 발생한다. |
+| `omen_warns_about_hazard` | `omen` | `hazard` | omen tag가 구체 hazard tag를 경고한다. |
 | `scenario_includes_event` | `scenario` | `event` | 시나리오가 필터를 통해 이벤트를 포함한다. |
 | `scenario_uses_content_source` | `scenario` | `file` | 시나리오가 콘텐츠 source 파일을 사용한다. |
 
@@ -122,12 +132,15 @@ Ontology-lite는 그 데이터 위에 얹는 해석 규칙이다.
 id:
 from:
 to:
+status:
 description:
 source_fields:
 future_use:
 ```
 
-현재 Console Validation은 이 파일을 실행 중에 읽지 않는다. 지금은 문서/데이터 계약이며, 나중에 분석 도구가 읽을 수 있도록 YAML로 둔다.
+`status`는 선택 필드다. v0.2 trial relation은 `status: trial`로 표시한다.
+
+현재 Console Validation은 이 파일을 실행 중에 읽지 않는다. 지금은 문서/데이터 계약이며, 나중에 분석 도구가 읽을 수 있도록 YAML로 둔다. 따라서 v0.2 trial relation은 validator/analyzer/export가 아직 소비하지 않는 한계를 가진다.
 
 ---
 
@@ -229,7 +242,101 @@ Relation 추가를 보류해야 하는 경우:
 
 ---
 
-## 13. 콘텐츠 확장 준비와의 관계
+## 13. Ontology-lite v0.2 Trial Extension
+
+Entity Sampling Review에서 보류했던 후보 중 Phase 3에서 실제 검증할 수 있는 최소 relation을 trial 상태로 추가한다.
+
+Trial entity:
+
+| Entity | 의미 | Source field | 유지 조건 |
+| --- | --- | --- | --- |
+| `clue` | 정보 표식 | `revealed_clue_tags`, `reveals_clue_tags` | Phase 3에서 2개 이상 이벤트/아이템이 사용 |
+| `location` | region보다 작은 장소 표식 | `location_tags` | 반복 장소 분석이 region보다 유용함 |
+| `omen` | hazard를 예고하는 표식 | `omen_tags`, `creates_omen_tags` | 경고와 payoff 분석이 가능함 |
+| `hazard` | 구체 조우/장애/위험 장치 | `hazard_tags`, `counters_hazard_tags` | broad `danger_tags`보다 구체 counterplay 분석이 필요함 |
+
+Trial relation:
+
+| Relation | Source field | 역할 | 유지 조건 |
+| --- | --- | --- | --- |
+| `event_reveals_clue` | `event.revealed_clue_tags`, `choice.reveals_clue_tags`, `result.reveals_clue_tags` | 이벤트 단위 clue 노출 추적 | 2개 이상 이벤트에서 clue 노출이 선택 판단에 영향 |
+| `item_reveals_clue` | `item.reveals_clue_tags` | item 기반 정보 payoff 추적 | 2개 이상 아이템/선택에서 item clue payoff 발생 |
+| `event_occurs_at_location` | `event.location_tags` | region보다 작은 장소 coverage 추적 | 2개 이상 이벤트가 같은 location 축을 공유 |
+| `omen_warns_about_hazard` | `event.omen_tags`, `event.hazard_tags`, `choice/result.creates_omen_tags` | omen과 구체 hazard의 warning/payoff 연결 | 2개 이상 이벤트에서 omen-hazard 연결이 읽힘 |
+
+Trial source field:
+
+```yaml
+event:
+  location_tags: list[string]
+  revealed_clue_tags: list[string]
+  omen_tags: list[string]
+  hazard_tags: list[string]
+
+choice:
+  reveals_clue_tags: list[string]
+  creates_omen_tags: list[string]
+
+result:
+  reveals_clue_tags: list[string]
+  creates_omen_tags: list[string]
+
+item:
+  reveals_clue_tags: list[string]
+  counters_hazard_tags: list[string]
+```
+
+기존 relation과의 차이:
+
+- `event_belongs_to_region`은 넓은 지역 분류이고, `event_occurs_at_location`은 반복 가능한 구체 장소 표식이다.
+- `event_has_danger_tag`는 넓은 위험 분류이고, `hazard_tags`/`omen_warns_about_hazard`는 구체 조우/장애/위험 장치와 그 경고 관계다.
+- `item_counters_tag`는 broad tag 대응이고, `counters_hazard_tags`는 trial hazard 대응이다.
+- `result_changes_event_weight`는 미래 이벤트 가중치 변화이고, `event_reveals_clue`/`item_reveals_clue`는 정보 노출 자체를 기록한다.
+
+한계:
+
+- v0.2 trial field는 아직 validator/analyzer/export가 소비하지 않을 수 있다.
+- Phase 3 이후 사용성이 낮으면 제거하거나 기존 `tag`, `danger_tags`, `event_weight` 표현으로 통합할 수 있다.
+- trial field는 고유 세계관 설정이 아니라 일반 태그이며, D&D/CoC 고유 설정명이나 원문 문장을 담지 않는다.
+
+---
+
+## 14. Entity/Ontology Gap 후보 상태 목록
+
+v0.2에서 일부 후보는 trial relation으로 승격했고, 나머지는 계속 보류한다.
+
+보류 원칙:
+
+- source field와 target field가 YAML에서 안정적으로 지정되지 않으면 relation으로 승격하지 않는다.
+- validator, analyzer, export가 소비하지 않는 관계는 문서상 후보로만 둔다.
+- 기존 tag/status/result로 의미가 충분하면 새 relation을 만들지 않는다.
+- Phase 3에서 2개 이상 이벤트/아이템/시나리오에 반복 사용되는지 확인한 뒤 승격한다.
+
+| Relation 후보 | 현재 대체 표현 | 현재 판정 | 승격 조건 |
+| --- | --- | --- | --- |
+| `event_reveals_clue` | result message, event weight 변화 | v0.2 trial 추가 | Phase 3 이후 유지/제거 판단 |
+| `clue_foreshadows_event` | warning message, later event weight 변화 | Phase 3 trial | 단서와 후속 event 연결이 반복될 때 |
+| `event_occurs_at_location` | `event_belongs_to_region`, event tag | v0.2 trial 추가 | Phase 3 이후 유지/제거 판단 |
+| `location_has_hazard` | `event_has_danger_tag`, region context | 보류 | location entity가 안정화된 뒤 |
+| `choice_interacts_with_npc_role` | choice text, event description | 보류 | NPC role별 선택 분석이 필요할 때 |
+| `choice_affects_faction` | reputation status 변화 | 보류 | faction별 상태나 평판 축이 생길 때 |
+| `result_changes_resource_pressure` | `result_modifies_status` | 기존 relation으로 충분 | 현재 승격하지 않음 |
+| `event_advances_mystery_thread` | event weight, result message | 보류 | 장기 mystery thread 진행도를 추적할 때 |
+| `item_reveals_clue` | item-based choice result message | v0.2 trial 추가 | Phase 3 이후 유지/제거 판단 |
+| `item_mitigates_hazard` | `item_counters_tag` | 기존 relation으로 충분 | 현재 승격하지 않음 |
+| `route_leads_to_location` | event weight, region 암시 | Phase 3 trial | route 선택지가 location 이동을 반복적으로 만들 때 |
+| `omen_warns_about_hazard` | warning message, danger tag | v0.2 trial 추가 | Phase 3 이후 유지/제거 판단 |
+
+계속 보류하는 이유:
+
+- `route`, `npc_role`, `faction`, `mystery_thread`는 아직 core entity나 안정적 source field가 아니다.
+- source field 없는 relation은 validator/analyzer/export에서 사용할 수 없다.
+- Phase 3 콘텐츠가 작성되기 전에는 보류 후보의 반복 사용 가능성을 검증할 수 없다.
+- `item_mitigates_hazard`, `result_changes_resource_pressure`처럼 기존 relation으로 충분한 후보도 있다.
+
+---
+
+## 15. 콘텐츠 확장 준비와의 관계
 
 Ontology-lite는 콘텐츠 확장 전에 관계 누락을 찾기 위한 기준으로 사용한다.
 

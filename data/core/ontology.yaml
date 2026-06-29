@@ -1,7 +1,7 @@
 ontology:
   id: content_ontology_lite
-  version: 0.1
-  purpose: "Define the minimum content relationship contract for future analysis."
+  version: 0.2
+  purpose: "Define the minimum content relationship contract for future analysis, including Phase 3 trial relations."
 
 entities:
   event:
@@ -28,6 +28,22 @@ entities:
     description: "A controlled vocabulary term for regions, events, danger, items, and weights."
     source_fields: ["data/core/tags.yaml:tags"]
     future_use: "Analyze theme coverage, risk distribution, and weighting effects."
+  clue:
+    description: "A trial information marker revealed by events, choices, results, or items."
+    source_fields: ["data/content/**/events.yaml:revealed_clue_tags", "data/content/**/events.yaml:choices[].reveals_clue_tags", "data/content/**/events.yaml:choices[].result.reveals_clue_tags", "data/content/**/items.yaml:items[].reveals_clue_tags"]
+    future_use: "Trial: analyze clue exposure, item clue payoff, and whether clue tags need stable schema support after Phase 3."
+  location:
+    description: "A trial place marker more specific than a broad region."
+    source_fields: ["data/content/**/events.yaml:location_tags"]
+    future_use: "Trial: analyze repeated places and whether region-level grouping is too coarse for Phase 3 content."
+  omen:
+    description: "A trial warning marker that points toward a future or current hazard."
+    source_fields: ["data/content/**/events.yaml:omen_tags", "data/content/**/events.yaml:choices[].creates_omen_tags", "data/content/**/events.yaml:choices[].result.creates_omen_tags"]
+    future_use: "Trial: analyze warning/payoff patterns without introducing a full mystery system."
+  hazard:
+    description: "A trial concrete encounter, obstacle, or danger device; narrower than broad danger tags."
+    source_fields: ["data/content/**/events.yaml:hazard_tags", "data/content/**/items.yaml:items[].counters_hazard_tags"]
+    future_use: "Trial: analyze concrete hazard counterplay while keeping danger_tags as broad risk categories."
   region:
     description: "A location grouping used to filter or classify events."
     source_fields: ["data/content/base/regions.yaml:regions", "data/content/**/events.yaml:region_tags"]
@@ -102,6 +118,34 @@ relations:
     description: "An event carries one or more danger tags."
     source_fields: ["data/content/**/events.yaml:danger_tags"]
     future_use: "Analyze risk distribution and counterplay coverage."
+  - id: event_reveals_clue
+    from: event
+    to: clue
+    status: trial
+    description: "An event, choice, or result reveals one or more clue tags."
+    source_fields: ["data/content/**/events.yaml:revealed_clue_tags", "data/content/**/events.yaml:choices[].reveals_clue_tags", "data/content/**/events.yaml:choices[].result.reveals_clue_tags"]
+    future_use: "Trial: measure clue exposure and whether clue tags improve profile/content analysis in Phase 3."
+  - id: item_reveals_clue
+    from: item
+    to: clue
+    status: trial
+    description: "An item can reveal one or more clue tags."
+    source_fields: ["data/content/**/items.yaml:items[].reveals_clue_tags"]
+    future_use: "Trial: measure item-based information payoff without making every item a direct solution."
+  - id: event_occurs_at_location
+    from: event
+    to: location
+    status: trial
+    description: "An event occurs at one or more specific location tags inside or across regions."
+    source_fields: ["data/content/**/events.yaml:location_tags"]
+    future_use: "Trial: determine whether Phase 3 needs location-level coverage beyond broad regions."
+  - id: omen_warns_about_hazard
+    from: omen
+    to: hazard
+    status: trial
+    description: "An omen tag warns about concrete hazard tags present in the same event or created by a choice result."
+    source_fields: ["data/content/**/events.yaml:omen_tags", "data/content/**/events.yaml:hazard_tags", "data/content/**/events.yaml:choices[].creates_omen_tags", "data/content/**/events.yaml:choices[].result.creates_omen_tags"]
+    future_use: "Trial: evaluate whether warning/payoff links are useful before adding a fuller foreshadowing model."
   - id: scenario_includes_event
     from: scenario
     to: event
