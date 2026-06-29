@@ -68,16 +68,17 @@ MVP-0 검증 통과 후 MVP-1 단계에서 생성한다.
 # docs/ 포함 문서
 
 ```text
-00_Project_FateWeaver_Current_Baseline_v0.7.md
-01_Project_Structure_Guide_v0.1.md
-02_Data_Architecture_v0.7.md
-03_Event_Grammar_Draft_YAML_Schema_v0.7.md
-04_Console_Simulator_Spec_v0.7.md
-05_Codex_Console_Prototype_Brief_v0.6.md
-06_Fixture_Data_Plan_v0.3.md
-07_MVP0_Validation_Checklist_v0.1.md
-08_Flutter_Data_Export_Contract_v0.1.md
-09_Commit_Summary_v0.1.md
+docs/00_index/README_Docs_Index.md
+docs/01_foundation/00_Project_FateWeaver_Current_Baseline_v0.7.md
+docs/01_foundation/01_Project_Structure_Guide_v0.1.md
+docs/01_foundation/02_Data_Architecture_v0.7.md
+docs/02_schema/03_Event_Grammar_Draft_YAML_Schema_v0.7.md
+docs/02_schema/06_Fixture_Data_Plan_v0.3.md
+docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md
+docs/03_specs/04_Console_Simulator_Spec_v0.7.md
+docs/04_codex/05_Codex_Console_Prototype_Brief_v0.6.md
+docs/05_validation/07_MVP0_Validation_Checklist_v0.1.md
+docs/07_reviews/09_Commit_Summary_v0.1.md
 ```
 
 ---

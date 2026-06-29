@@ -171,5 +171,5 @@ data/temp_events.yaml
 
 - core tag enum과 실제 이벤트 데이터 충돌을 수정한다.
 - Python YAML 처리를 위해 requirements.txt를 사용한다.
-- Flutter 이전 경로는 `docs/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.
+- Flutter 이전 경로는 `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.
 - `regret_score`와 `player_woven_score`의 위치를 분리한다.

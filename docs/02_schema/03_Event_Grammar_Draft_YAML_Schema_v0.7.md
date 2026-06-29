@@ -405,4 +405,4 @@ Flutter 앱은 이 YAML을 직접 읽지 않는다.
 
 MVP-1에서는 `tools/export_json.py`가 본 Schema를 검증한 뒤 JSON artifact를 생성한다.
 
-자세한 내용은 `docs/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.
+자세한 내용은 `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`를 따른다.

@@ -15,11 +15,11 @@ Flutter 앱을 만들지 말고, PRD를 작성하지 말고, 콘솔 시뮬레이
 # 2. 반드시 읽을 문서
 
 - `README.md`
-- `docs/00_Project_FateWeaver_Current_Baseline_v0.7.md`
-- `docs/01_Project_Structure_Guide_v0.1.md`
-- `docs/02_Data_Architecture_v0.7.md`
-- `docs/03_Event_Grammar_Draft_YAML_Schema_v0.7.md`
-- `docs/04_Console_Simulator_Spec_v0.7.md`
+- `docs/01_foundation/00_Project_FateWeaver_Current_Baseline_v0.7.md`
+- `docs/01_foundation/01_Project_Structure_Guide_v0.1.md`
+- `docs/01_foundation/02_Data_Architecture_v0.7.md`
+- `docs/02_schema/03_Event_Grammar_Draft_YAML_Schema_v0.7.md`
+- `docs/03_specs/04_Console_Simulator_Spec_v0.7.md`
 
 ---
 
@@ -265,6 +265,6 @@ MVP-0에서 CombatEventResolver는 만들지 않는다.
 
 MVP-0에서는 `tools/export_json.py`를 반드시 구현할 필요는 없다.
 
-단, 구현한다면 `docs/08_Flutter_Data_Export_Contract_v0.1.md`를 따라야 한다.
+단, 구현한다면 `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`를 따라야 한다.
 
 Flutter 프로젝트 `fate_weaver/`는 생성하지 않는다.
