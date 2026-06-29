@@ -216,6 +216,8 @@ docs/
   - TRPG 리서치와 콘텐츠 샘플링 가이드를 기준으로 Phase 3 이벤트, 아이템, entity 표본 추출 계획을 정의한다.
 - `docs/06_plans/03_Playable_Text_Adventure_Replan_v0.1.md`
   - 현재 Console Validation 중심 구조에서 실게임형 텍스트 모험 시뮬레이터로 전환하기 위한 단계별 계획이다.
+- `docs/06_plans/04_Gameplay_P0_Foundation_Implementation_Plan_v0.1.md`
+  - Content Volume Audit 결과를 바탕으로 Quest, Expedition Clock, 3-Card Choice, Multi-Select, Score, Quest Report를 도입하기 위한 P0 구현 계획이다.
 
 ---
 
