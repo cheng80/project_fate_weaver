@@ -83,6 +83,7 @@ docs/
     03_Event_Grammar_Draft_YAML_Schema_v0.7.md
     06_Fixture_Data_Plan_v0.3.md
     08_Flutter_Data_Export_Contract_v0.1.md
+    09_Content_Ontology_Model_v0.1.md
 
   03_specs/
     04_Console_Simulator_Spec_v0.7.md
@@ -121,6 +122,7 @@ data/
     choice_types.yaml
     item_roles.yaml
     result_rules.yaml
+    ontology.yaml
 
   content/
     base/
@@ -223,6 +225,12 @@ combat_response는 choice_type 중 하나일 뿐이다.
 Console Validation에서 CombatEventResolver는 만들지 않는다.
 모든 전투형 이벤트는 일반 ChoiceResolver로 처리한다.
 ```
+
+## Ontology-lite
+
+`data/core/ontology.yaml`과 `docs/02_schema/09_Content_Ontology_Model_v0.1.md`는 콘텐츠 관계 분석을 위한 최소 관계 모델이다.
+
+GraphDB나 온톨로지 엔진은 아직 도입하지 않는다.
 
 ---
 

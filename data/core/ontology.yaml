@@ -1,0 +1,116 @@
+ontology:
+  id: content_ontology_lite
+  version: 0.1
+  purpose: "Define the minimum content relationship contract for future analysis."
+
+entities:
+  event:
+    description: "A player-facing situation loaded from content event YAML."
+    source_fields: ["data/content/**/events.yaml:id"]
+    future_use: "Analyze event coverage, recurrence, tags, and choice branching."
+  choice:
+    description: "A selectable player action inside an event."
+    source_fields: ["data/content/**/events.yaml:choices[].id"]
+    future_use: "Analyze availability, tradeoffs, locked options, and player intent."
+  result:
+    description: "The state, inventory, or weighting outcome produced by a choice."
+    source_fields: ["data/content/**/events.yaml:choices[].result"]
+    future_use: "Analyze balance impact and downstream consequence chains."
+  item:
+    description: "An inventory object that can unlock, modify, or explain choices."
+    source_fields: ["data/content/**/items.yaml:items"]
+    future_use: "Analyze item usefulness, dead items, and unlock coverage."
+  status:
+    description: "A numeric run state such as health, food, money, reputation, or curse."
+    source_fields: ["data/core/statuses.yaml:statuses"]
+    future_use: "Analyze resource pressure, failure paths, and balance curves."
+  tag:
+    description: "A controlled vocabulary term for regions, events, danger, items, and weights."
+    source_fields: ["data/core/tags.yaml:tags"]
+    future_use: "Analyze theme coverage, risk distribution, and weighting effects."
+  region:
+    description: "A location grouping used to filter or classify events."
+    source_fields: ["data/content/base/regions.yaml:regions", "data/content/**/events.yaml:region_tags"]
+    future_use: "Analyze regional content density and scenario coverage."
+  scenario:
+    description: "A validation setup that selects content sources, filters, seed, and starting state."
+    source_fields: ["data/scenarios/*.yaml:id"]
+    future_use: "Analyze test coverage and scenario-specific content exposure."
+  file:
+    description: "A YAML source file referenced by scenarios or data contracts."
+    source_fields: ["data/scenarios/*.yaml:content_sources"]
+    future_use: "Trace source ownership, export inputs, and analyzer dependency edges."
+
+relations:
+  - id: event_has_choice
+    from: event
+    to: choice
+    description: "An event exposes a choice to the player."
+    source_fields: ["data/content/**/events.yaml:choices[]"]
+    future_use: "Measure branch count and identify events with weak choice density."
+  - id: choice_produces_result
+    from: choice
+    to: result
+    description: "A choice produces a result or conditional result pool."
+    source_fields: ["data/content/**/events.yaml:choices[].result", "data/content/**/events.yaml:choices[].result_pool"]
+    future_use: "Trace consequence chains from player action to run state."
+  - id: choice_requires_item
+    from: choice
+    to: item
+    description: "A choice requires one item or any item from a set."
+    source_fields: ["data/content/**/events.yaml:choices[].requires_item", "data/content/**/events.yaml:choices[].requires_any_item"]
+    future_use: "Find dead unlocks, overused keys, and missing item payoff."
+  - id: choice_requires_status
+    from: choice
+    to: status
+    description: "A choice requires a status threshold before it is available."
+    source_fields: ["data/content/**/events.yaml:choices[].requires_status"]
+    future_use: "Analyze status-gated decisions and resource pressure."
+  - id: item_counters_tag
+    from: item
+    to: tag
+    description: "An item counters, mitigates, or explains a tagged risk or theme."
+    source_fields: ["data/content/**/items.yaml:items[].counters_tags"]
+    future_use: "Detect whether danger tags have meaningful item responses."
+  - id: result_modifies_status
+    from: result
+    to: status
+    description: "A result changes a numeric status."
+    source_fields: ["data/content/**/events.yaml:choices[].result.status_delta"]
+    future_use: "Analyze balance impact by status and choice type."
+  - id: result_changes_event_weight
+    from: result
+    to: tag
+    description: "A result changes future event weighting for a target tag."
+    source_fields: ["data/content/**/events.yaml:choices[].result.event_weight"]
+    future_use: "Analyze long-tail consequence shaping and scenario drift."
+  - id: event_belongs_to_region
+    from: event
+    to: region
+    description: "An event is associated with one or more region tags."
+    source_fields: ["data/content/**/events.yaml:region_tags"]
+    future_use: "Measure regional coverage and scenario filter reach."
+  - id: event_has_event_tag
+    from: event
+    to: tag
+    description: "An event carries one or more event classification tags."
+    source_fields: ["data/content/**/events.yaml:event_tags"]
+    future_use: "Analyze theme mix, combat density, and content variety."
+  - id: event_has_danger_tag
+    from: event
+    to: tag
+    description: "An event carries one or more danger tags."
+    source_fields: ["data/content/**/events.yaml:danger_tags"]
+    future_use: "Analyze risk distribution and counterplay coverage."
+  - id: scenario_includes_event
+    from: scenario
+    to: event
+    description: "A scenario includes events through explicit IDs, tags, regions, or content sources."
+    source_fields: ["data/scenarios/*.yaml:include_event_ids", "data/scenarios/*.yaml:include_event_tags", "data/scenarios/*.yaml:include_regions"]
+    future_use: "Explain which events a validation run can expose."
+  - id: scenario_uses_content_source
+    from: scenario
+    to: file
+    description: "A scenario loads one or more YAML content source files."
+    source_fields: ["data/scenarios/*.yaml:content_sources"]
+    future_use: "Trace scenario dependencies and export source sets."

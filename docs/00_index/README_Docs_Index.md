@@ -66,6 +66,7 @@ docs/
 - YAML 원천 데이터 계약
 - fixture 데이터 기준
 - Flutter export 계약
+- 콘텐츠 관계 분석을 위한 Ontology-lite 계약
 
 문서:
 
@@ -75,6 +76,8 @@ docs/
   - Console Validation fixture 데이터의 최소 기준을 정의한다.
 - `docs/02_schema/08_Flutter_Data_Export_Contract_v0.1.md`
   - YAML에서 Flutter JSON artifact로 이전하는 계약을 정의한다.
+- `docs/02_schema/09_Content_Ontology_Model_v0.1.md`
+  - `data/core/ontology.yaml` 기반의 최소 콘텐츠 관계 모델을 정의한다.
 
 ---
 

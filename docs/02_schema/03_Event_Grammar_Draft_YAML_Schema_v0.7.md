@@ -18,6 +18,7 @@ data/
     choice_types.yaml
     item_roles.yaml
     result_rules.yaml
+    ontology.yaml
 
   content/
     base/
@@ -56,6 +57,25 @@ statuses:
 - money
 - reputation
 - curse
+
+---
+
+# 2.1 core/ontology.yaml
+
+`data/core/ontology.yaml`은 콘텐츠 관계 분석을 위한 Ontology-lite 계약이다.
+
+이 파일은 이벤트 실행 엔진이 아니며, GraphDB나 온톨로지 엔진을 도입하지 않는다.
+
+정의 대상:
+
+- entity: `event`, `choice`, `result`, `item`, `status`, `tag`, `region`, `scenario`, `file`
+- relation: `event_has_choice`, `choice_produces_result`, `choice_requires_item`, `choice_requires_status`, `item_counters_tag`, `result_modifies_status`, `result_changes_event_weight`, `event_belongs_to_region`, `event_has_event_tag`, `event_has_danger_tag`, `scenario_includes_event`, `scenario_uses_content_source`
+
+상세 계약:
+
+```text
+docs/02_schema/09_Content_Ontology_Model_v0.1.md
+```
 
 ---
 
