@@ -74,10 +74,12 @@ data/content/packs/
     events.yaml
     items.yaml
 
-  curse_pack/
+  status_risk_pack/
     events.yaml
     items.yaml
 ```
+
+현재 데이터의 legacy 경로명 `curse_pack`은 후속 data migration에서 `status_risk_pack`로 바꿀 대상이며, 문서와 후속 설계에서는 상태/위험 보조 콘텐츠 팩으로 취급한다.
 
 ---
 
@@ -95,6 +97,10 @@ data/scenarios/
 시나리오는 콘텐츠를 직접 담지 않는다.
 
 시나리오는 어떤 데이터를 사용할지 지정한다.
+
+`mvp0_console_test`는 장소 탐험, 사건 선택, 자원/상태 변화, 다음 사건 변화를 검증하는 기본 시나리오다.
+
+`curse_balance_test`는 저주를 체력, 식량, 돈, 평판과 같은 상태/위험 요소 중 하나로 반영하는지 확인하는 보조 검증 시나리오다.
 
 ---
 

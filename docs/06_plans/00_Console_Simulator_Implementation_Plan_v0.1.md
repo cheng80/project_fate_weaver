@@ -280,7 +280,7 @@ Validation checks:
 - All result status keys exist.
 - Filtered event count satisfies `validation_targets.min_events`.
 - Filtered combat event count satisfies `validation_targets.min_combat_events`.
-- Filtered curse-tagged event count satisfies `validation_targets.min_curse_events`.
+- Filtered auxiliary curse-tagged status/risk coverage satisfies `validation_targets.min_curse_events`.
 
 Required command:
 

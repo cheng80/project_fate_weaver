@@ -177,7 +177,7 @@ Risk 분포:
 평가:
 
 - 위험 선택은 무작위로 흩어지지 않는다.
-- `greedy_leaning`은 `answer_echo`를 선택하면서 curse 증가와 money 보상을 감수한다.
+- `greedy_leaning`은 `answer_echo`를 선택하면서 curse 같은 상태 위험 증가와 money 보상을 감수한다.
 - `desperate`는 `answer_echo`, `forage`를 통해 위험 감수와 생존 회복 선택이 같이 발생한다.
 - `safe_leaning`은 high risk를 피하고 low/none 선택만 한다.
 
@@ -217,8 +217,8 @@ profile=safe_leaning: final_score=9.7 (safety=4.0, reward=0.0, item=4.0, risk=1.
 좋은 신호:
 
 - `signal_whistle`은 길 찾기, 마을 표식, 산적 대응과 연결되어 "내가 가진 도구가 세계를 해석한다"는 느낌을 준다.
-- `flare_powder`는 산적 대응과 저주 정화에 쓰여 risk-reduction item 역할이 분명하다.
-- `answer_echo`는 curse 증가와 money 보상을 묶어 명확한 유혹을 만든다.
+- `flare_powder`는 산적 대응과 상태 위험 완화에 쓰여 risk-reduction item 역할이 분명하다.
+- `answer_echo`는 상태 위험 증가와 money 보상을 묶어 명확한 유혹을 만든다.
 - `forage`는 food 회복과 health 손실을 묶어 survival tradeoff를 만든다.
 
 약한 신호:
@@ -236,8 +236,8 @@ profile=safe_leaning: final_score=9.7 (safety=4.0, reward=0.0, item=4.0, risk=1.
 긍정:
 
 - 동일 seed/run에서도 profile별 final state가 달라진다.
-- `safe_leaning`은 money를 보존하고 curse를 낮게 유지한다.
-- `greedy_leaning`, `desperate`는 curse와 money 변동이 커진다.
+- `safe_leaning`은 money를 보존하고 상태 위험을 낮게 유지한다.
+- `greedy_leaning`, `desperate`는 상태 위험과 money 변동이 커진다.
 
 부족:
 

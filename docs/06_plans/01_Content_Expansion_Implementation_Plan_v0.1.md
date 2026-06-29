@@ -234,6 +234,8 @@ validation_targets:
   min_curse_events: 1
 ```
 
+`min_curse_events`는 메인 QA 목표가 아니라 curse가 상태/위험 요소 중 하나로 필터와 검증에 반영되는지 확인하는 보조 coverage다.
+
 Filter 기준:
 
 - `include_event_ids`만 있으면 ID 필터다.
@@ -606,6 +608,8 @@ validation_targets:
   min_combat_events: 1
   min_curse_events: 1
 ```
+
+`min_curse_events`는 메인 QA 목표가 아니라 curse가 상태/위험 요소 중 하나로 필터와 검증에 반영되는지 확인하는 보조 coverage다.
 
 - [ ] **Step 2: Apply filters intentionally**
 

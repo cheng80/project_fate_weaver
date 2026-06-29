@@ -155,6 +155,8 @@ curse_penalty
 final_score
 ```
 
+`curse_penalty`는 저주를 메인 테마로 올리는 지표가 아니라 여러 상태/위험 요소 중 하나가 선택 scoring에 반영되는지 확인하는 보조 항목이다.
+
 같은 run에서 동일한 item-based choice가 반복 선택되면 `item_usage_score` 보너스는 점진적으로 줄어든다. 반복 완화는 available choice 후보 안에서만 적용되며, unavailable choice를 선택 가능하게 만들지 않는다.
 
 동점은 seed, turn, profile, choice_id 기반 deterministic tie-break로 고른다.
@@ -476,9 +478,9 @@ run_summary:
   fairness_score: 4
   restart_intent_score: 5
   player_woven_score: 4
-  narrative_summary: "성수를 아끼다가 저주가 쌓여 실패한 런"
-  most_memorable_choice: "저주받은 우물에서 성수를 아낀 선택"
-  next_run_intent: "다음에는 성수를 초반에 쓰지 않고 저주 보상 루트를 실험해보고 싶다."
+  narrative_summary: "우회와 탐색 선택이 이어지며 식량과 상태 위험이 함께 쌓여 실패한 런"
+  most_memorable_choice: "오래된 우물에서 밧줄로 내려가 단서와 자원 보상을 노린 선택"
+  next_run_intent: "다음에는 아이템과 식량을 보존하며 다른 사건 흐름을 실험해보고 싶다."
 ```
 
 이 기준으로 `regret_score`와 `player_woven_score`를 혼동하지 않는다.

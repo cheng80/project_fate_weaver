@@ -54,7 +54,7 @@ Next focus: Content Expansion Readiness
 - [x] scenario 추가 시 `include_regions`, `include_event_ids`, `include_event_tags` 계약을 지킨다. (`include_event_ids` 4개, `include_event_tags` 미설정)
 - [x] scenario 추가 시 `exclude_event_ids`, `exclude_event_tags`가 include 이후 적용되는 계약을 지킨다. (둘 다 빈 배열)
 - [x] scenario가 노출하는 event는 `scenario_includes_event` relation으로 설명 가능해야 한다. (`content_expansion_test`가 신규 4개 event ID를 직접 포함)
-- [x] scenario가 사용하는 source file은 `scenario_uses_content_source` relation으로 설명 가능해야 한다. (`content_sources`에 base + forest/curse + signal_grove pack 명시)
+- [x] scenario가 사용하는 source file은 `scenario_uses_content_source` relation으로 설명 가능해야 한다. (`content_sources`에 base + forest/status-risk + signal_grove pack 명시)
 
 ---
 
@@ -192,7 +192,7 @@ Phase 2 체크:
 - [x] 신규 아이템은 2~4개 범위 안이다. (`4`)
 - [x] 모든 신규 이벤트는 choice 3개를 가진다.
 - [x] item 없이 선택 가능한 `investigate`/curiosity choice를 여러 이벤트에 추가했다.
-- [x] 위험/보상 tradeoff와 curse 증가 선택지를 추가했다.
+- [x] 위험/보상 tradeoff와 자원/상태 변화 선택지를 추가했다.
 - [x] `signal_whistle` 외에 `signal_mirror`, `forest_charm`, `trail_ribbon`, `smoke_pellet` item route를 추가했다.
 - [x] `content_expansion_test`가 신규 이벤트 9개를 직접 include한다.
 - [x] `src`, `tools`, `tests`, `data/core`는 변경하지 않았다.

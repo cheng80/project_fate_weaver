@@ -17,10 +17,12 @@ data/
     base/
     packs/
       forest_pack/
-      curse_pack/
+      status_risk_pack/
   scenarios/
     mvp0_console_test.yaml
 ```
+
+현재 데이터의 legacy 경로명 `curse_pack`은 후속 data migration에서 `status_risk_pack`로 바꿀 대상이며, 문서와 후속 설계에서는 상태/위험 보조 콘텐츠 팩으로 취급한다.
 
 ---
 
@@ -52,6 +54,6 @@ data/scenarios/mvp0_console_test.yaml
 - content/base/events.yaml 존재
 - scenarios/mvp0_console_test.yaml 존재
 - scenario 기준 이벤트 12개 이상
-- scenario 기준 저주 이벤트 4개 이상
+- scenario 기준 상태/위험 보조 coverage에 curse-tagged 이벤트 포함
 - scenario 기준 전투형 이벤트 2개 이상
 - 각 필수 아이템은 2개 이상 이벤트와 연결

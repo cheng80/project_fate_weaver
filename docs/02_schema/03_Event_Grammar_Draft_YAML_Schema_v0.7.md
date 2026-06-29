@@ -293,7 +293,7 @@ Event Selector는 scenario를 입력으로 받는다.
 8. max_occurrences_per_run 필터
 9. base_weight 계산
 10. result.event_weight modifier 적용
-11. curse modifier 적용
+11. status/risk modifier 적용
 12. weight <= 0 제거
 13. seed 기반 random pick
 14. repeat_count 증가
@@ -460,7 +460,7 @@ player_woven_score:
 ## Warning
 
 - scenario event 수 12개 미만
-- scenario curse event 수 4개 미만
+- scenario 상태/위험 보조 coverage의 curse-tagged event 수가 목표 미만
 - scenario combat event 수 2개 미만
 - item이 2개 미만 이벤트에서 사용됨
 - variation_rules가 있는 이벤트 3개 미만
