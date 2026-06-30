@@ -635,6 +635,411 @@ p0_cards:
       next_event_tags: [village, merchant, suspicion]
       move_to_region: village
       message: 장신구를 숨긴 덕분에 돈은 늘었지만 상인의 신뢰는 흔들렸다.
+  - id: inspect_sick_well
+    title: 병든 우물을 조사한다
+    description: 마을 우물 벽과 물 냄새를 살펴 오염의 흔적을 찾는다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, well, clue, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    applies_to_storylet_tags: [sick_well, well_contamination, local_problem]
+    progress_key: well_contamination_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [well_contamination]
+      quest_progress: {well_contamination_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [village, well, local_problem]
+      message: 우물 안쪽에서 약재로 정화할 수 있는 검은 침전물을 찾았다.
+  - id: purify_well_with_herbs
+    title: 약재로 우물을 정화한다
+    description: 약초와 깨끗한 천으로 우물 가장자리의 오염을 걷어낸다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, well, repair, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    requires_progress: {well_contamination_found: {min: 1}}
+    applies_to_storylet_tags: [sick_well, repair_opportunity, local_problem]
+    progress_key: well_safety_restored
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1, reputation: 1}
+      quest_progress: {well_safety_restored: 1}
+      score_changes: {quest_progress: 12, reputation: 4}
+      next_event_tags: [village, report, quest_complete]
+      message: 우물의 검은 침전물이 가라앉고 주민들이 안도의 숨을 쉬었다.
+  - id: report_well_restored
+    title: 우물 복구를 보고한다
+    description: 촌장에게 오염 원인과 정화 결과를 알린다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    requires_progress: {well_safety_restored: {min: 1}}
+    progress_key: well_reported_to_village
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {well_reported_to_village: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      message: 촌장은 우물이 다시 안전해졌다는 보고를 받고 보수를 건넸다.
+  - id: copy_ruin_mark
+    title: 폐허 표식을 베껴 적는다
+    description: 부서진 돌문에 남은 반복 표식을 종이에 옮긴다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [ruin, clue, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [ruin_mark, ancient_symbol, investigation]
+    progress_key: ruin_mark_copied
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [ruin_mark]
+      quest_progress: {ruin_mark_copied: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [ruin, omen, investigation]
+      move_to_region: ruin
+      message: 표식은 같은 방향을 세 번 가리키며 폐허 안쪽의 징조를 남겼다.
+  - id: interpret_omen_pattern
+    title: 징조의 배열을 해석한다
+    description: 표식 주변의 검은 새 깃털과 금 간 돌을 대조한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, omen, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    requires_progress: {ruin_mark_copied: {min: 1}}
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    progress_key: ruin_omen_interpreted
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      quest_progress: {ruin_omen_interpreted: 1}
+      score_changes: {quest_progress: 12, discovery: 5}
+      next_event_tags: [village, report, omen]
+      message: 표식은 단순한 낙서가 아니라 봉인이 약해졌다는 경고였다.
+  - id: inspect_ruin_shadow
+    title: 폐허 그림자를 살핀다
+    description: 표식 주변에 드리운 이상한 그림자와 금 간 바닥을 확인한다.
+    slot_role: risk_discovery
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, omen, investigation]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_omens: [ruin_shadow]
+      score_changes: {discovery: 5, penalty: -2}
+      next_event_tags: [ruin, omen]
+      message: 표식 아래 그림자가 실제 빛과 다르게 움직이는 것을 보았다.
+  - id: preserve_ruin_notes
+    title: 폐허 조사 기록을 보존한다
+    description: 젖은 종이를 말리고 표식 사본을 다시 정리한다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, investigation, resource_management]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [ruin, report]
+      message: 표식 사본을 잃어버리지 않도록 정리했다.
+  - id: report_ruin_mark
+    title: 폐허 표식을 보고한다
+    description: 베낀 표식과 해석한 징조를 마을의 현자에게 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    requires_progress: {ruin_omen_interpreted: {min: 1}}
+    progress_key: ruin_mark_reported
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {ruin_mark_reported: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 현자는 표식의 의미를 듣고 폐허를 더 조사해야 한다고 말했다.
+  - id: raise_village_barricade
+    title: 마을 방책을 세운다
+    description: 울타리 틈을 막으며 밤에 다가올 위협의 방향을 확인한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, defense, night, quest_related]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    applies_to_storylet_tags: [night_threat, barricade, defense]
+    progress_key: night_threat_identified
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [night_threat_tracks]
+      quest_progress: {night_threat_identified: 1}
+      score_changes: {discovery: 8, quest_progress: 8}
+      next_event_tags: [village, defense, night]
+      message: 울타리 밖 진흙에서 같은 방향으로 모인 발자국을 확인했다.
+  - id: evacuate_border_homes
+    title: 외곽 집 사람들을 대피시킨다
+    description: 가장 취약한 집의 주민들을 광장 쪽으로 모은다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [village, civilian, defense, optional_objective]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    applies_to_storylet_tags: [civilian, evacuation, defense]
+    progress_key: border_homes_evacuated
+    weight_modifiers: {quest_objective_match: 35, storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {reputation: 1}
+      quest_progress: {border_homes_evacuated: 1}
+      score_changes: {reputation: 5, survival: 3}
+      next_event_tags: [village, defense]
+      message: 외곽 주민들이 안전한 곳으로 옮겨 마을의 동요가 줄었다.
+  - id: hold_night_watch
+    title: 밤 경계를 버틴다
+    description: 방책 뒤에서 위협이 물러날 때까지 경계를 유지한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, defense, night, quest_related]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    requires_progress: {night_threat_identified: {min: 1}}
+    applies_to_storylet_tags: [night_watch, threat, defense]
+    progress_key: village_defense_held
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1, reputation: 1}
+      quest_progress: {village_defense_held: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      message: 긴 밤 끝에 위협은 물러났고 마을 사람들은 버텨 냈다.
+  - id: take_medicine_bundle
+    title: 약 꾸러미를 챙긴다
+    description: 약사의 봉인된 꾸러미와 투약 순서를 확인한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, medicine, delivery, quest_related]
+    quest_ids: [ghost_town_medicine_run]
+    regions: [village]
+    applies_to_storylet_tags: [medicine_bundle, delivery, travel]
+    progress_key: medicine_bundle_secured
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      quest_progress: {medicine_bundle_secured: 1}
+      score_changes: {quest_progress: 8, resource_management: 4}
+      next_event_tags: [forest, road, delivery]
+      move_to_region: forest
+      message: 약 꾸러미를 단단히 묶고 유령 마을로 향하는 길에 올랐다.
+  - id: cross_silent_road
+    title: 적막한 길을 건넌다
+    description: 말소리도 끊긴 숲길에서 유령 마을로 이어지는 표식을 찾는다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, road, delivery, quest_related]
+    quest_ids: [ghost_town_medicine_run]
+    regions: [forest]
+    requires_progress: {medicine_bundle_secured: {min: 1}}
+    applies_to_storylet_tags: [silent_road, ghost_town_route, travel]
+    progress_key: ghost_town_route_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      gain_clues: [ghost_town_route]
+      quest_progress: {ghost_town_route_found: 1}
+      score_changes: {discovery: 8, quest_progress: 8}
+      next_event_tags: [forest, delivery, medicine]
+      message: 낡은 이정표가 유령 마을로 이어지는 샛길을 가리켰다.
+  - id: deliver_ghost_town_medicine
+    title: 유령 마을에 약을 전달한다
+    description: 닫힌 문틈으로 약 꾸러미와 복용법을 안전하게 남긴다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, medicine, delivery, quest_related]
+    quest_ids: [ghost_town_medicine_run]
+    regions: [forest]
+    requires_progress: {ghost_town_route_found: {min: 1}}
+    applies_to_storylet_tags: [ghost_town, medicine_delivery, delivery]
+    progress_key: medicine_delivered
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {reputation: 1}
+      quest_progress: {medicine_delivered: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [quest_complete]
+      message: 문 안쪽에서 작은 감사 인사가 들리고 약 꾸러미가 사라졌다.
+  - id: descend_old_well
+    title: 오래된 우물 아래로 내려간다
+    description: 밧줄을 고정하고 우물 아래의 금 간 봉인을 확인한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, ruin, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    progress_key: cracked_well_seal_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_clues: [cracked_well_seal]
+      quest_progress: {cracked_well_seal_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [ruin, dungeon, seal]
+      move_to_region: ruin
+      message: 우물 아래 금 간 봉인에서 차가운 바람이 새어 나왔다.
+  - id: read_cracked_seal
+    title: 금 간 봉인을 해석한다
+    description: 균열을 따라 새겨진 오래된 글자를 읽는다.
+    slot_role: risk_discovery
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, seal, dungeon]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    applies_to_storylet_tags: [cracked_seal, ancient_symbol, dungeon]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_omens: [seal_weakening]
+      score_changes: {discovery: 6, penalty: -2}
+      next_event_tags: [ruin, seal]
+      message: 봉인은 아직 버티지만 한 번 더 흔들리면 열릴 듯했다.
+  - id: brace_old_well_rope
+    title: 우물 밧줄을 보강한다
+    description: 내려온 길을 잃지 않도록 밧줄과 표시를 다시 묶는다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, dungeon, resource_management]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [ruin, seal]
+      message: 밧줄을 다시 묶어 우물 밖으로 나갈 길을 분명히 했다.
+  - id: reseal_well_awakening
+    title: 우물 봉인을 다시 잠근다
+    description: 균열에 돌가루를 채우고 오래된 문양을 다시 맞춘다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, seal, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    requires_progress: {cracked_well_seal_found: {min: 1}}
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    progress_key: well_depths_resealed
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {well_depths_resealed: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [village, report, quest_complete]
+      message: 봉인의 균열이 닫히며 우물 아래의 속삭임이 멎었다.
+  - id: report_well_seal
+    title: 우물 봉인 상태를 보고한다
+    description: 우물 아래에서 본 균열과 재봉인 결과를 마을에 전한다.
+    slot_role: quest_progress
+    base_weight: 115
+    tier_hint: critical
+    tags: [village, report, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    requires_progress: {well_depths_resealed: {min: 1}}
+    progress_key: well_seal_reported
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 3, reputation: 1}
+      quest_progress: {well_seal_reported: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 마을은 오래된 우물이 다시 잠잠해졌다는 보고를 받았다.
+  - id: read_storm_pass_sky
+    title: 산길 하늘을 읽는다
+    description: 구름의 속도와 바람 방향을 보고 피난처 위치를 가늠한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, survival, weather, quest_related]
+    quest_ids: [survive_the_storm_pass]
+    regions: [village, forest]
+    applies_to_storylet_tags: [storm_pass, weather, shelter]
+    progress_key: storm_shelter_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [storm_shelter]
+      quest_progress: {storm_shelter_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [forest, survival, storm]
+      move_to_region: forest
+      message: 바람이 꺾이는 능선 아래에 비를 피할 바위틈을 찾았다.
+  - id: secure_storm_shelter
+    title: 폭풍 피난처를 확보한다
+    description: 젖은 장비를 정리하고 바위틈 입구를 막아 체온을 지킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, survival, weather, quest_related]
+    quest_ids: [survive_the_storm_pass]
+    regions: [forest]
+    requires_progress: {storm_shelter_found: {min: 1}}
+    applies_to_storylet_tags: [storm_pass, shelter, survival]
+    progress_key: survival_route_secured
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1, health: 1}
+      quest_progress: {survival_route_secured: 1}
+      score_changes: {quest_progress: 14, survival: 6}
+      next_event_tags: [forest, return_report]
+      message: 피난처가 버틸 만해졌고 돌아갈 길도 눈에 들어왔다.
+  - id: return_from_storm_pass
+    title: 폭풍 산길에서 귀환한다
+    description: 바람이 잦아든 틈을 타 마을로 내려간다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, survival, report, quest_related]
+    quest_ids: [survive_the_storm_pass]
+    regions: [forest]
+    requires_progress: {survival_route_secured: {min: 1}}
+    progress_key: storm_pass_returned
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {storm_pass_returned: 1}
+      score_changes: {quest_progress: 12, survival: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 폭풍 산길에서 살아 돌아와 안전한 피난처 위치를 알렸다.
 
 multi_select_rules:
   max_selected_cards: 2

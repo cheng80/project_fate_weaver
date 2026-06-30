@@ -332,3 +332,441 @@ quests:
         exploration: 6
         trade: 8
         survival: 3
+  - id: village_well_trouble
+    title: 병든 우물
+    rank: novice
+    quest_type: local_problem
+    start_region: village
+    target_regions: [village]
+    recommended_days: 2
+    max_days: 3
+    max_turns: 8
+    primary_objectives:
+      - id: find_well_contamination
+        type: discover_clue
+        target: well_contamination
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: restore_well_safety
+        type: optional_action
+        target: well_safety_restored
+        progress_key: well_safety_restored
+        required: true
+        value: 1
+        failure_reason: local_problem_failed
+        partial_reason: local_problem_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_to_village
+        type: return_to_region
+        target: village
+        progress_key: well_reported_to_village
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: keep_village_trust
+        type: keep_resource_at_least
+        target: reputation
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_reputation
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 3
+    rewards:
+      money: 2
+      reputation: 2
+      score: 45
+    event_bias:
+      tags:
+        village: 10
+        rumor: 6
+        local_problem: 8
+  - id: ruin_mark_investigation_intro
+    title: 폐허 표식 조사
+    rank: novice
+    quest_type: investigation
+    start_region: village
+    target_regions: [ruin]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: discover_ruin_mark
+        type: discover_clue
+        target: ruin_mark
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: interpret_ruin_omen
+        type: optional_action
+        target: ruin_omen_interpreted
+        progress_key: ruin_omen_interpreted
+        required: true
+        value: 1
+        failure_reason: investigation_failed
+        partial_reason: investigation_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_to_sage
+        type: return_to_region
+        target: village
+        progress_key: ruin_mark_reported
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_notes
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        ruin: 10
+        investigation: 8
+        omen: 6
+  - id: defend_the_village_night
+    title: 마을 방어의 밤
+    rank: novice
+    quest_type: defense
+    start_region: village
+    target_regions: [village]
+    recommended_days: 1
+    max_days: 2
+    max_turns: 8
+    primary_objectives:
+      - id: identify_night_threat
+        type: discover_clue
+        target: night_threat_tracks
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: hold_village_defense
+        type: optional_action
+        target: village_defense_held
+        progress_key: village_defense_held
+        required: true
+        value: 1
+        failure_reason: defense_failed
+        partial_reason: defense_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: protect_village_morale
+        type: keep_resource_at_least
+        target: reputation
+        required: true
+        value: 1
+        failure_reason: reputation_collapse
+        partial_reason: reputation_collapse
+        score_key: objective_reputation
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: evacuate_border_homes
+        type: optional_action
+        target: border_homes_evacuated
+        progress_key: border_homes_evacuated
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_aid
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 2
+    rewards:
+      money: 2
+      reputation: 2
+      score: 50
+    event_bias:
+      tags:
+        village: 10
+        defense: 10
+        night: 8
+  - id: ghost_town_medicine_run
+    title: 유령 마을 약 전달
+    rank: novice
+    quest_type: delivery
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: secure_medicine_bundle
+        type: optional_action
+        target: medicine_bundle_secured
+        progress_key: medicine_bundle_secured
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: find_ghost_town_route
+        type: discover_clue
+        target: ghost_town_route
+        required: true
+        value: 1
+        failure_reason: route_failed
+        partial_reason: route_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: deliver_medicine
+        type: optional_action
+        target: medicine_delivered
+        progress_key: medicine_delivered
+        required: true
+        value: 1
+        failure_reason: delivery_failed
+        partial_reason: delivery_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_food
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 3
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        road: 10
+        delivery: 10
+        travel: 8
+  - id: old_well_awakening
+    title: 오래된 우물 각성
+    rank: novice
+    quest_type: dungeon_crawl
+    start_region: village
+    target_regions: [ruin]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: discover_well_seal
+        type: discover_clue
+        target: cracked_well_seal
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: reseal_well_depths
+        type: optional_action
+        target: well_depths_resealed
+        progress_key: well_depths_resealed
+        required: true
+        value: 1
+        failure_reason: dungeon_failed
+        partial_reason: dungeon_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: return_with_seal_report
+        type: return_to_region
+        target: village
+        progress_key: well_seal_reported
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: keep_food
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 3
+      reputation: 1
+      score: 50
+    event_bias:
+      tags:
+        ruin: 10
+        dungeon: 10
+        seal: 8
+  - id: survive_the_storm_pass
+    title: 폭풍 산길 생존 귀환
+    rank: novice
+    quest_type: survival
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_storm_shelter
+        type: discover_clue
+        target: storm_shelter
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: secure_survival_route
+        type: optional_action
+        target: survival_route_secured
+        progress_key: survival_route_secured
+        required: true
+        value: 1
+        failure_reason: survival_failed
+        partial_reason: survival_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: return_from_storm_pass
+        type: return_to_region
+        target: village
+        progress_key: storm_pass_returned
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: keep_food
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        survival: 10
+        weather: 8

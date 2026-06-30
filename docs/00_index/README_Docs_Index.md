@@ -223,6 +223,8 @@ docs/
   - Gameplay P0 이후 Quest 추가 순서와 첫 추가 Quest 설계 방향을 정리한 계획 문서다.
 - `docs/06_plans/06_Quest_Type_Catalog_v0.1.md`
   - Quest Design Guide와 Quest Base Research Collection에 나열된 Quest 후보를 Type별로 분류하고, 다음 Batch 구성 기준을 정리한 계획 문서다.
+- `docs/06_plans/07_Quest_Category_Probe_And_Bulk_Loop_Plan_v0.1.md`
+  - Quest Type Catalog 기반 Category Probe, Stability Review, Bulk Fill의 실행 순서와 게이트를 잠근 ULW Loop 계획 문서다.
 
 ---
 
@@ -283,6 +285,10 @@ docs/
   - Gameplay P0의 failure 의미를 정리하고 merchant failure fixture를 생존 실패와 Quest 고유 실패로 분리한 결과를 보관한다.
 - `docs/07_reviews/31_Text_MUD_Log_Section_Refactor_Result_v0.1.md`
   - `text_mud_log.py`의 출력 섹션을 분리하고 LOC warning band를 해소한 결과를 보관한다.
+- `docs/07_reviews/32_Quest_Category_Probe_Result_v0.1.md`
+  - Quest Category별 대표 Probe 구현 결과와 success / partial_success / failure, 로그, storylet hint 회귀 검증을 보관한다.
+- `docs/07_reviews/33_Quest_Category_Stability_Review_v0.1.md`
+  - Category Probe 결과를 바탕으로 Bulk Fill 가능 여부와 Stable 판정을 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

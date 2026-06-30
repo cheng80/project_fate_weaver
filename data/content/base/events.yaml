@@ -239,6 +239,126 @@ events:
         result:
           message: 정직하게 돌려주면 신뢰를 얻고, 몰래 챙기면 돈만 남을 것이다.
 
+  - id: village_sick_well_hint
+    name: 병든 우물의 웅성거림
+    description: 마을 사람들이 검게 흐려진 우물 주변에서 서로 다른 증언을 내놓는다.
+    region_tags: [village]
+    event_tags: [exploration]
+    danger_tags: [hunger]
+    storylet_tags: [village, sick_well, well_contamination, repair_opportunity, local_problem, quest_related]
+    card_candidate_hints: [inspect_sick_well, purify_well_with_herbs, report_well_restored]
+    cooldown_tags: [village_well, local_problem]
+    repeat_group: village_well_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 우물 주변 증언을 듣는다
+        type: safe
+        risk_level: low
+        result:
+          message: 주민들은 우물 안쪽 검은 침전물을 두려워하고 있다.
+
+  - id: ruin_mark_probe_hint
+    name: 폐허 표식의 이상한 반복
+    description: 폐허 입구 돌문에 같은 표식이 세 번 반복되어 있다.
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [ancient]
+    storylet_tags: [ruin_mark, ruin_omen, ancient_symbol, investigation, quest_related]
+    card_candidate_hints: [copy_ruin_mark, interpret_omen_pattern, report_ruin_mark]
+    cooldown_tags: [ruin_mark, investigation]
+    repeat_group: ruin_mark_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 표식의 방향을 살핀다
+        type: safe
+        risk_level: low
+        result:
+          message: 표식은 폐허 안쪽의 봉인 방향을 가리킨다.
+
+  - id: village_night_defense_hint
+    name: 밤 방어를 준비하는 마을
+    description: 외곽 울타리 너머로 같은 발자국이 반복해서 찍혀 있다.
+    region_tags: [village]
+    event_tags: [survival]
+    danger_tags: [beast]
+    storylet_tags: [night_threat, barricade, night_watch, civilian, evacuation, defense, quest_related]
+    card_candidate_hints: [raise_village_barricade, evacuate_border_homes, hold_night_watch]
+    cooldown_tags: [night_defense, village_threat]
+    repeat_group: village_defense_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 울타리 주변을 살핀다
+        type: risky
+        risk_level: medium
+        result:
+          message: 위협은 밤이 깊으면 마을 외곽으로 다시 올 것이다.
+
+  - id: ghost_town_medicine_hint
+    name: 유령 마을로 가는 약 꾸러미
+    description: 약사가 닫힌 마을까지 약을 옮길 길과 복용법을 알려준다.
+    region_tags: [village, forest]
+    event_tags: [trade]
+    danger_tags: [lost]
+    storylet_tags: [medicine_bundle, silent_road, ghost_town_route, ghost_town, medicine_delivery, delivery, travel, quest_related]
+    card_candidate_hints: [take_medicine_bundle, cross_silent_road, deliver_ghost_town_medicine]
+    cooldown_tags: [medicine_delivery, ghost_town]
+    repeat_group: medicine_run_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 약 꾸러미의 봉인을 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 약 꾸러미는 길을 잃지만 않으면 제때 전할 수 있다.
+
+  - id: old_well_awakening_hint
+    name: 오래된 우물 아래의 균열
+    description: 마을의 오래된 우물 아래에서 차가운 바람과 희미한 문양이 올라온다.
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [well, darkness, ancient]
+    storylet_tags: [old_well, cracked_seal, ancient_symbol, dungeon, quest_related]
+    card_candidate_hints: [descend_old_well, read_cracked_seal, reseal_well_awakening]
+    cooldown_tags: [old_well, cracked_seal]
+    repeat_group: old_well_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 우물 아래의 바람을 확인한다
+        type: risky
+        risk_level: medium
+        result:
+          message: 균열은 작지만 더 깊은 곳에서 깨어나는 기척이 있다.
+
+  - id: storm_pass_shelter_hint
+    name: 폭풍 산길의 피난처
+    description: 능선 위 구름이 빠르게 낮아지고 바람이 바위틈으로 몰린다.
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [storm, hunger]
+    storylet_tags: [storm_pass, weather, shelter, survival, quest_related]
+    card_candidate_hints: [read_storm_pass_sky, secure_storm_shelter, return_from_storm_pass]
+    cooldown_tags: [storm_pass, shelter]
+    repeat_group: storm_pass_probe
+    base_weight: 16
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 바람의 방향을 읽는다
+        type: safe
+        risk_level: low
+        result:
+          message: 폭풍은 오래가지 않겠지만 피할 곳을 잡지 못하면 위험하다.
+
   - id: cursed_well
     name: 저주받은 우물
     description: 검은 물이 고인 우물에서 낮은 속삭임이 들린다.

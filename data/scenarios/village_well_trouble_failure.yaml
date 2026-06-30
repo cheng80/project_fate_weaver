@@ -1,0 +1,15 @@
+id: village_well_trouble_failure
+name: Village Well Trouble Failure
+gameplay_mode: p0_foundation
+active_quest_id: village_well_trouble
+content_sources: [data/content/base/regions.yaml, data/content/base/items.yaml, data/content/base/events.yaml, data/content/base/endings.yaml]
+include_regions: [village]
+include_event_ids: [village_sick_well_hint, village_market, suspicious_merchant]
+exclude_event_ids: []
+exclude_event_tags: []
+initial_status: {health: 7, food: 5, money: 2, reputation: 1, curse: 1}
+initial_items: [torch]
+run_clock: {day: 1, turn: 1, turns_today: 0, time_of_day: morning, act: 1, max_days: 3, max_turns: 0, turns_per_day: 4}
+target_turns: 0
+seed: 42
+validation_targets: {min_events: 1, min_item_count: 5}
