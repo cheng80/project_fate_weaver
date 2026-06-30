@@ -62,3 +62,68 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: storm_pass_pack1_enrichment
+  name: 폭풍 산길 추가 생존 표식
+  description: 폭풍 산길 추가 생존 표식가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - storm_pass
+  - shelter
+  - pack1_enrichment
+  card_candidate_hints:
+  - find_dry_refuge
+  - ration_the_last_supplies
+  - signal_from_high_ground
+  cooldown_tags:
+  - survive_the_storm_pass
+  - pack1_enrichment
+  repeat_group: survive_the_storm_pass_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: hidden_grove_pack1_enrichment
+  name: 숨은 숲 추가 자연 징후
+  description: 숨은 숲 추가 자연 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - hidden_grove_discovery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - lost
+  storylet_tags:
+  - hidden_grove
+  - water
+  - pack1_enrichment
+  card_candidate_hints:
+  - read_animal_silence
+  - follow_water_insects
+  cooldown_tags:
+  - hidden_grove_discovery
+  - pack1_enrichment
+  repeat_group: hidden_grove_discovery_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.

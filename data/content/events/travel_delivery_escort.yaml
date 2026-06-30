@@ -188,3 +188,130 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: border_caravan_pack1_enrichment
+  name: 상단 추가 길 정보
+  description: 상단 추가 길 정보가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - caravan_to_border_fort
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - caravan
+  - watch
+  - pack1_enrichment
+  card_candidate_hints:
+  - choose_sheltered_detour
+  - listen_to_border_gossip
+  - split_the_caravan_watch
+  cooldown_tags:
+  - caravan_to_border_fort
+  - pack1_enrichment
+  repeat_group: caravan_to_border_fort_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: winter_wagon_pack1_enrichment
+  name: 겨울 마차 추가 날씨 표식
+  description: 겨울 마차 추가 날씨 표식가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - winter_wagon_delivery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - winter_wagon
+  - weather
+  - pack1_enrichment
+  card_candidate_hints:
+  - repair_load_straps
+  - read_weather_marks
+  cooldown_tags:
+  - winter_wagon_delivery
+  - pack1_enrichment
+  repeat_group: winter_wagon_delivery_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: sealed_parcel_pack1_enrichment
+  name: 봉인 소포 추가 징후
+  description: 봉인 소포 추가 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - deliver_the_sealed_parcel
+  region_tags:
+  - village
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - sealed_parcel
+  - oath
+  - pack1_enrichment
+  card_candidate_hints:
+  - secure_the_sealed_bag
+  - avoid_parcel_tamper
+  cooldown_tags:
+  - deliver_the_sealed_parcel
+  - pack1_enrichment
+  repeat_group: deliver_the_sealed_parcel_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: ghost_town_medicine_pack1_enrichment
+  name: 유령 마을 추가 통행 소문
+  description: 유령 마을 추가 통행 소문가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - ghost_town_medicine_run
+  region_tags:
+  - village
+  event_tags:
+  - survival
+  danger_tags:
+  - lost
+  storylet_tags:
+  - medicine_bundle
+  - travel
+  - pack1_enrichment
+  card_candidate_hints:
+  - negotiate_safe_passage
+  - take_medicine_bundle
+  cooldown_tags:
+  - ghost_town_medicine_run
+  - pack1_enrichment
+  repeat_group: ghost_town_medicine_run_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.

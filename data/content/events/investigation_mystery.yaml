@@ -188,3 +188,129 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: vanishing_village_pack1_enrichment
+  name: 사라지는 마을 추가 증언
+  description: 사라지는 마을 추가 증언가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - vanishing_village
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - vanishing
+  - testimony
+  - pack1_enrichment
+  card_candidate_hints:
+  - map_conflicting_testimony
+  - preserve_uncertain_evidence
+  cooldown_tags:
+  - vanishing_village
+  - pack1_enrichment
+  repeat_group: vanishing_village_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: lighthouse_signal_pack1_enrichment
+  name: 등대 추가 신호 단서
+  description: 등대 추가 신호 단서가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - abandoned_lighthouse_signal
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - lighthouse
+  - false_signal
+  - pack1_enrichment
+  card_candidate_hints:
+  - reconstruct_last_known_path
+  - test_the_false_signal
+  cooldown_tags:
+  - abandoned_lighthouse_signal
+  - pack1_enrichment
+  repeat_group: abandoned_lighthouse_signal_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: ruin_mark_pack1_enrichment
+  name: 폐허 표식 추가 기록
+  description: 폐허 표식 추가 기록가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - ruin_mark_investigation_intro
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - ruin_mark
+  - symbol
+  - pack1_enrichment
+  card_candidate_hints:
+  - consult_old_case_notes
+  - trace_symbol_repetition
+  cooldown_tags:
+  - ruin_mark_investigation_intro
+  - pack1_enrichment
+  repeat_group: ruin_mark_investigation_intro_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: portal_canvas_pack1_enrichment
+  name: 화폭 추가 목격 단서
+  description: 화폭 추가 목격 단서가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - painted_portal_canvas
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - canvas
+  - witness
+  - pack1_enrichment
+  card_candidate_hints:
+  - interview_reluctant_witness
+  - stage_a_small_decoy
+  cooldown_tags:
+  - painted_portal_canvas
+  - pack1_enrichment
+  repeat_group: painted_portal_canvas_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.

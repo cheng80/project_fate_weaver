@@ -309,6 +309,8 @@ docs/
   - Card Rules / Quest Data / Event Hint split 이후 loaded inventory와 cross-reference 정합성 감사 결과를 보관한다.
 - `docs/07_reviews/42_Content_Enrichment_Ultraresearch_Notes_v0.1.md`
   - FateWeaver Content Enrichment Catalog 작성을 위한 외부 자료 조사와 변환 원칙을 보관한다.
+- `docs/07_reviews/43_Enrichment_Pack_1_Card_Clue_Omen_Result_v0.1.md`
+  - Content Enrichment Pack 1의 Card Candidate / Clue / Omen 데이터 확장 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

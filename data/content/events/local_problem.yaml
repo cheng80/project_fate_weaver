@@ -121,3 +121,97 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: village_well_pack1_enrichment
+  name: 병든 우물 추가 단서
+  description: 병든 우물 추가 단서가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - village_well_trouble
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - well
+  storylet_tags:
+  - well
+  - water
+  - pack1_enrichment
+  card_candidate_hints:
+  - ask_old_vendor_about_pattern
+  - inspect_shared_water_source
+  cooldown_tags:
+  - village_well_trouble
+  - pack1_enrichment
+  repeat_group: village_well_trouble_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: village_wrongness_pack1_enrichment
+  name: 초보 마을 추가 이상 징후
+  description: 초보 마을 추가 이상 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - beginner_village_wrongness
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - curse
+  storylet_tags:
+  - wrongness
+  - rumor
+  - pack1_enrichment
+  card_candidate_hints:
+  - compare_household_rumors
+  - offer_public_help
+  - search_back_alley_marks
+  cooldown_tags:
+  - beginner_village_wrongness
+  - pack1_enrichment
+  repeat_group: beginner_village_wrongness_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: festival_racer_pack1_enrichment
+  name: 축제 추가 목격 단서
+  description: 축제 추가 목격 단서가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - festival_missing_racer
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - festival
+  - witness
+  - pack1_enrichment
+  card_candidate_hints:
+  - quiet_the_crowd
+  - follow_the_small_witness
+  cooldown_tags:
+  - festival_missing_racer
+  - pack1_enrichment
+  repeat_group: festival_missing_racer_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.

@@ -62,3 +62,69 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: old_well_pack1_enrichment
+  name: 오래된 우물 추가 봉인 징후
+  description: 오래된 우물 추가 봉인 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - old_well_awakening
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - well_seal
+  - seal
+  - pack1_enrichment
+  card_candidate_hints:
+  - tap_the_hollow_wall
+  - brace_the_old_stairs
+  - listen_beyond_the_seal
+  cooldown_tags:
+  - old_well_awakening
+  - pack1_enrichment
+  repeat_group: old_well_awakening_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: old_gate_pack1_enrichment
+  name: 오래된 문 추가 룬 반응
+  description: 오래된 문 추가 룬 반응가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - activate_the_old_gate
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - old_gate
+  - rune
+  - pack1_enrichment
+  card_candidate_hints:
+  - copy_the_rune_sequence
+  - test_the_ritual_component
+  - leave_a_return_marker
+  cooldown_tags:
+  - activate_the_old_gate
+  - pack1_enrichment
+  repeat_group: activate_the_old_gate_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.

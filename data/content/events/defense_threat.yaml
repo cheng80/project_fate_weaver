@@ -125,3 +125,99 @@ events:
     risk_level: low
     result:
       message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: village_defense_pack1_enrichment
+  name: 마을 방어 추가 경계
+  description: 마을 방어 추가 경계가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - defend_the_village_night
+  region_tags:
+  - village
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - night_threat
+  - watch
+  - pack1_enrichment
+  card_candidate_hints:
+  - raise_night_watch
+  - mark_weak_fence_line
+  - move_children_to_cellar
+  cooldown_tags:
+  - defend_the_village_night
+  - pack1_enrichment
+  repeat_group: defend_the_village_night_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: zarechka_beast_pack1_enrichment
+  name: 자레치카 추가 위협 징후
+  description: 자레치카 추가 위협 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - beast_of_zarechka
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - zarechka_beast
+  - watch
+  - pack1_enrichment
+  card_candidate_hints:
+  - bait_the_threat_path
+  - prepare_quiet_signal
+  cooldown_tags:
+  - beast_of_zarechka
+  - pack1_enrichment
+  repeat_group: beast_of_zarechka_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: stone_circle_pack1_enrichment
+  name: 돌 원 추가 유인 징후
+  description: 돌 원 추가 유인 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
+  quest_ids:
+  - cattle_mutilation_stone_circle
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - stone_circle
+  - false_trail
+  - pack1_enrichment
+  card_candidate_hints:
+  - count_missing_livestock
+  - burn_false_trail
+  cooldown_tags:
+  - cattle_mutilation_stone_circle
+  - pack1_enrichment
+  repeat_group: cattle_mutilation_stone_circle_pack1_enrichment
+  base_weight: 6
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 추가 단서와 징조를 살핀다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
