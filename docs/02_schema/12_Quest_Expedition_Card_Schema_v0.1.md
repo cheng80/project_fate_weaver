@@ -328,6 +328,21 @@ Storylet/Event Hint(스토리 조각/이벤트 힌트) 기준:
 - `repeat_group`: 같은 사건군 반복을 줄이기 위한 group key다.
 - `card_candidate_hints`에 있는 card id는 `storylet_hint_bonus`를 받지만, `requires_*`, `completed_objective`, `blocked` 조건을 우회하지 않는다.
 
+Event Hint는 다음 위치에서 읽을 수 있다.
+
+- `data/content/base/events.yaml`: 기존 호환과 shared/foundation/probe Event Hint의 기본 위치다.
+- `data/content/events/*.yaml`: Category별 quest-specific Event Hint를 분리해 보관하는 위치다.
+
+Loader는 scenario `content_sources`가 `data/content/base/events.yaml`을 포함할 때 base file을 먼저 읽고, `data/content/events/*.yaml` split file을 파일명 정렬 순서로 병합한다. 모든 loaded Event의 `id`는 전체 병합 결과에서 유일해야 하며, duplicate event id가 있으면 최초 source path와 중복 source path를 포함한 error를 낸다.
+
+현재 적용된 Event split file은 `foundation`, `local_problem`, `investigation_mystery`, `defense_threat`, `travel_delivery_escort`, `ruin_dungeon_ritual`, `survival_exploration`이다. `foundation.yaml`은 Category 구조 고정을 위한 빈 split file이다. Bulk Fill 이후 추가된 quest-specific Event Hint는 split file에 있고 `quest_ids`를 갖는다. 기존 shared/foundation/probe Event Hint는 호환성을 위해 base file에 남아 있으며 `quest_ids`가 없을 수 있다.
+
+Event 정합성 기준:
+
+- split Event의 `quest_ids`는 loaded Quest id에 존재해야 한다.
+- Event의 `card_candidate_hints`는 loaded Card Rule id에 존재해야 한다.
+- shared/foundation/probe Event는 base file에 남을 수 있으며, 이 경우 `quest_ids`가 없을 수 있다.
+
 Repeat Cooldown Memory(반복 쿨다운 기억) 기준:
 
 - P0는 run 내부에서만 memory를 유지한다.

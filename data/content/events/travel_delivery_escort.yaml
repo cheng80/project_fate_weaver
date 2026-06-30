@@ -1,0 +1,190 @@
+events:
+- id: border_caravan_hint
+  name: 국경 요새로 가는 상단 첫 단서
+  description: 국경 요새로 가는 상단와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - caravan_to_border_fort
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - caravan
+  - quest_related
+  card_candidate_hints:
+  - secure_caravan_manifest
+  - cross_border_road
+  cooldown_tags:
+  - caravan
+  - bulk_fill
+  repeat_group: caravan_to_border_fort_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: border_caravan_followup
+  name: 국경 요새로 가는 상단 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - caravan_to_border_fort
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - caravan
+  - report
+  - quest_related
+  card_candidate_hints:
+  - cross_border_road
+  - deliver_fort_supplies
+  cooldown_tags:
+  - caravan
+  - bulk_fill
+  repeat_group: caravan_to_border_fort_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: winter_wagon_hint
+  name: 겨울 마차 배송 첫 단서
+  description: 겨울 마차 배송와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - winter_wagon_delivery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - winter_wagon
+  - quest_related
+  card_candidate_hints:
+  - prepare_winter_wagon
+  - cross_snow_road
+  cooldown_tags:
+  - winter_wagon
+  - bulk_fill
+  repeat_group: winter_wagon_delivery_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: winter_wagon_followup
+  name: 겨울 마차 배송 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - winter_wagon_delivery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - winter_wagon
+  - report
+  - quest_related
+  card_candidate_hints:
+  - cross_snow_road
+  - deliver_winter_goods
+  cooldown_tags:
+  - winter_wagon
+  - bulk_fill
+  repeat_group: winter_wagon_delivery_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: sealed_parcel_hint
+  name: 봉인된 소포 배달 첫 단서
+  description: 봉인된 소포 배달와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - deliver_the_sealed_parcel
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - sealed_parcel
+  - quest_related
+  card_candidate_hints:
+  - receive_sealed_parcel
+  - avoid_parcel_tamper
+  cooldown_tags:
+  - sealed_parcel
+  - bulk_fill
+  repeat_group: deliver_the_sealed_parcel_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: sealed_parcel_followup
+  name: 봉인된 소포 배달 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - deliver_the_sealed_parcel
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - sealed_parcel
+  - report
+  - quest_related
+  card_candidate_hints:
+  - avoid_parcel_tamper
+  - deliver_sealed_parcel
+  cooldown_tags:
+  - sealed_parcel
+  - bulk_fill
+  repeat_group: deliver_the_sealed_parcel_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

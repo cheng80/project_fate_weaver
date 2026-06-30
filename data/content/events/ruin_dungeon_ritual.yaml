@@ -1,0 +1,64 @@
+events:
+- id: old_gate_hint
+  name: 오래된 문 작동 첫 단서
+  description: 오래된 문 작동와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - activate_the_old_gate
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - old_gate
+  - quest_related
+  card_candidate_hints:
+  - find_gate_runes
+  - align_old_gate
+  cooldown_tags:
+  - old_gate
+  - bulk_fill
+  repeat_group: activate_the_old_gate_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: old_gate_followup
+  name: 오래된 문 작동 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - activate_the_old_gate
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - old_gate
+  - report
+  - quest_related
+  card_candidate_hints:
+  - align_old_gate
+  - return_gate_report
+  cooldown_tags:
+  - old_gate
+  - bulk_fill
+  repeat_group: activate_the_old_gate_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

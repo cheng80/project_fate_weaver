@@ -1,0 +1,123 @@
+events:
+- id: village_wrongness_hint
+  name: 초보 마을의 이상 징후 첫 단서
+  description: 초보 마을의 이상 징후와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - beginner_village_wrongness
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - curse
+  storylet_tags:
+  - wrongness
+  - quest_related
+  card_candidate_hints:
+  - read_village_wrongness
+  - calm_square_rumors
+  cooldown_tags:
+  - wrongness
+  - bulk_fill
+  repeat_group: beginner_village_wrongness_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: village_wrongness_followup
+  name: 초보 마을의 이상 징후 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - beginner_village_wrongness
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - curse
+  storylet_tags:
+  - wrongness
+  - report
+  - quest_related
+  card_candidate_hints:
+  - calm_square_rumors
+  - report_wrongness_resolved
+  cooldown_tags:
+  - wrongness
+  - bulk_fill
+  repeat_group: beginner_village_wrongness_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: festival_racer_hint
+  name: 축제의 사라진 주자 첫 단서
+  description: 축제의 사라진 주자와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - festival_missing_racer
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - festival
+  - quest_related
+  card_candidate_hints:
+  - find_racer_track
+  - guide_missing_racer
+  cooldown_tags:
+  - festival
+  - bulk_fill
+  repeat_group: festival_missing_racer_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: festival_racer_followup
+  name: 축제의 사라진 주자 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - festival_missing_racer
+  region_tags:
+  - village
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - festival
+  - report
+  - quest_related
+  card_candidate_hints:
+  - guide_missing_racer
+  - report_festival_safe
+  cooldown_tags:
+  - festival
+  - bulk_fill
+  repeat_group: festival_missing_racer_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

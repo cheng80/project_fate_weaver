@@ -24,9 +24,11 @@ from fateweaver.models import (
 @dataclass(frozen=True, slots=True)
 class DuplicateEventIdError(ValueError):
     event_id: str
+    first_source: Path
+    duplicate_source: Path
 
     def __str__(self) -> str:
-        return f"Duplicate event id: {self.event_id}"
+        return f"Duplicate event id {self.event_id}: {self.first_source} and {self.duplicate_source}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,18 +49,19 @@ def load_project_data(project_root: Path, scenario_path: Path) -> LoadedProject:
     items: dict[str, Item] = {}
     events: list[Event] = []
     endings: dict[str, Ending] = {}
-    seen_event_ids: set[str] = set()
+    event_sources: dict[str, Path] = {}
     for source in scenario.content_sources:
         source_path = root / source
         raw = _read_mapping(source_path)
         if "items" in raw:
             items.update(_load_items(raw))
         if "events" in raw:
-            for event in _load_events(raw, source):
-                if event.id in seen_event_ids:
-                    raise DuplicateEventIdError(event.id)
-                seen_event_ids.add(event.id)
-                events.append(event)
+            for event_raw, event_source in _event_mappings(root, source, raw):
+                for event in _load_events(event_raw, event_source):
+                    if event.id in event_sources:
+                        raise DuplicateEventIdError(event.id, event_sources[event.id], event_source)
+                    event_sources[event.id] = event_source
+                    events.append(event)
         if "endings" in raw:
             endings.update(_load_endings(raw))
     tags = _mapping_at(core_tags, "tags")
@@ -136,6 +139,20 @@ def _load_items(raw: JsonMap) -> dict[str, Item]:
             counters=tuple(_optional_string_list(item, "counters")),
         )
     return items
+
+
+def _event_mappings(project_root: Path, source: Path, raw: JsonMap) -> tuple[tuple[JsonMap, Path], ...]:
+    event_mappings: list[tuple[JsonMap, Path]] = [(raw, source)]
+    if source != Path("data/content/base/events.yaml"):
+        return tuple(event_mappings)
+
+    split_dir = project_root / "data/content/events"
+    if not split_dir.exists():
+        return tuple(event_mappings)
+
+    for split_path in sorted(split_dir.glob("*.yaml")):
+        event_mappings.append((_read_mapping(split_path), Path("data/content/events") / split_path.name))
+    return tuple(event_mappings)
 
 
 def _load_events(raw: JsonMap, source_path: Path) -> tuple[Event, ...]:

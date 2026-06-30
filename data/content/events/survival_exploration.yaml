@@ -1,0 +1,64 @@
+events:
+- id: hidden_grove_hint
+  name: 숨은 숲 빈터 발견 첫 단서
+  description: 숨은 숲 빈터 발견와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - hidden_grove_discovery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - lost
+  storylet_tags:
+  - hidden_grove
+  - quest_related
+  card_candidate_hints:
+  - find_hidden_grove
+  - map_grove_path
+  cooldown_tags:
+  - hidden_grove
+  - bulk_fill
+  repeat_group: hidden_grove_discovery_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: hidden_grove_followup
+  name: 숨은 숲 빈터 발견 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - hidden_grove_discovery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - lost
+  storylet_tags:
+  - hidden_grove
+  - report
+  - quest_related
+  card_candidate_hints:
+  - map_grove_path
+  - report_hidden_grove
+  cooldown_tags:
+  - hidden_grove
+  - bulk_fill
+  repeat_group: hidden_grove_discovery_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

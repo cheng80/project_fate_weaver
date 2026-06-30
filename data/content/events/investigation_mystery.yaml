@@ -1,0 +1,190 @@
+events:
+- id: lighthouse_signal_hint
+  name: 버려진 등대의 신호 첫 단서
+  description: 버려진 등대의 신호와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - abandoned_lighthouse_signal
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - lighthouse
+  - quest_related
+  card_candidate_hints:
+  - inspect_signal_lamp
+  - decode_lighthouse_signal
+  cooldown_tags:
+  - lighthouse
+  - bulk_fill
+  repeat_group: abandoned_lighthouse_signal_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: lighthouse_signal_followup
+  name: 버려진 등대의 신호 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - abandoned_lighthouse_signal
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - lighthouse
+  - report
+  - quest_related
+  card_candidate_hints:
+  - decode_lighthouse_signal
+  - report_lighthouse_warning
+  cooldown_tags:
+  - lighthouse
+  - bulk_fill
+  repeat_group: abandoned_lighthouse_signal_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: portal_canvas_hint
+  name: 그려진 문 너머의 화폭 첫 단서
+  description: 그려진 문 너머의 화폭와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - painted_portal_canvas
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - canvas
+  - quest_related
+  card_candidate_hints:
+  - inspect_canvas_paint
+  - stabilize_portal_canvas
+  cooldown_tags:
+  - canvas
+  - bulk_fill
+  repeat_group: painted_portal_canvas_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: portal_canvas_followup
+  name: 그려진 문 너머의 화폭 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - painted_portal_canvas
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - canvas
+  - report
+  - quest_related
+  card_candidate_hints:
+  - stabilize_portal_canvas
+  - report_canvas_truth
+  cooldown_tags:
+  - canvas
+  - bulk_fill
+  repeat_group: painted_portal_canvas_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: vanishing_village_hint
+  name: 사라지는 마을의 흔적 첫 단서
+  description: 사라지는 마을의 흔적와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - vanishing_village
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - vanishing
+  - quest_related
+  card_candidate_hints:
+  - find_vanishing_trace
+  - anchor_village_memory
+  cooldown_tags:
+  - vanishing
+  - bulk_fill
+  repeat_group: vanishing_village_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: vanishing_village_followup
+  name: 사라지는 마을의 흔적 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - vanishing_village
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - vanishing
+  - report
+  - quest_related
+  card_candidate_hints:
+  - anchor_village_memory
+  - report_vanishing_village
+  cooldown_tags:
+  - vanishing
+  - bulk_fill
+  repeat_group: vanishing_village_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

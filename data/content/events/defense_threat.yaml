@@ -1,0 +1,127 @@
+events:
+- id: zarechka_beast_hint
+  name: 자레치카의 짐승 첫 단서
+  description: 자레치카의 짐승와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - beast_of_zarechka
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - zarechka_beast
+  - quest_related
+  card_candidate_hints:
+  - identify_beast_tracks
+  - drive_beast_back
+  cooldown_tags:
+  - zarechka_beast
+  - bulk_fill
+  repeat_group: beast_of_zarechka_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: zarechka_beast_followup
+  name: 자레치카의 짐승 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - beast_of_zarechka
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - zarechka_beast
+  - report
+  - quest_related
+  card_candidate_hints:
+  - drive_beast_back
+  - reassure_zarechka
+  cooldown_tags:
+  - zarechka_beast
+  - bulk_fill
+  repeat_group: beast_of_zarechka_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+- id: stone_circle_cattle_hint
+  name: 돌 원의 소 떼 상처 첫 단서
+  description: 돌 원의 소 떼 상처와 관련된 첫 흔적이 현재 지역에 드러난다.
+  quest_ids:
+  - cattle_mutilation_stone_circle
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - stone_circle
+  - quest_related
+  card_candidate_hints:
+  - inspect_cattle_circle
+  - break_stone_circle_lure
+  cooldown_tags:
+  - stone_circle
+  - bulk_fill
+  repeat_group: cattle_mutilation_stone_circle_bulk
+  base_weight: 16
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 단서를 확인한다
+    type: safe
+    risk_level: low
+    result:
+      message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+- id: stone_circle_cattle_followup
+  name: 돌 원의 소 떼 상처 후속 확인
+  description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+  quest_ids:
+  - cattle_mutilation_stone_circle
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - forbidden
+  storylet_tags:
+  - stone_circle
+  - report
+  - quest_related
+  card_candidate_hints:
+  - break_stone_circle_lure
+  - warn_herders
+  cooldown_tags:
+  - stone_circle
+  - bulk_fill
+  repeat_group: cattle_mutilation_stone_circle_bulk
+  base_weight: 14
+  cooldown_turns: 1
+  choices:
+  - id: pass
+    text: 후속 조치를 정리한다
+    type: safe
+    risk_level: low
+    result:
+      message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

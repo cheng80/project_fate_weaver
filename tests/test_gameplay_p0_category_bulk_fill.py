@@ -126,7 +126,7 @@ class GameplayP0CategoryBulkFillTests(unittest.TestCase):
     def test_bulk_fill_quest_ids_gate_done_quest_regression(self) -> None:
         raw_quests = _load_all_quests()
         raw_cards = _load_all_card_rules()
-        raw_events = yaml.safe_load((PROJECT_ROOT / "data/content/base/events.yaml").read_text(encoding="utf-8"))["events"]
+        raw_events = _load_all_events()
         quest_ids = {quest["id"] for quest in raw_quests}
         bulk_cards = set().union(*(definition["cards"] for definition in BULK_QUESTS.values()))
 
@@ -153,7 +153,7 @@ class GameplayP0CategoryBulkFillTests(unittest.TestCase):
         loaded = load_project_data(PROJECT_ROOT, PROJECT_ROOT / scenario)
         bulk_event_ids = {
             event["id"]
-            for event in yaml.safe_load((PROJECT_ROOT / "data/content/base/events.yaml").read_text(encoding="utf-8"))["events"]
+            for event in _load_all_events()
             if event.get("quest_ids")
         }
 
@@ -245,6 +245,14 @@ def _load_all_quests() -> list[JsonMap]:
     for path in sorted(split_dir.glob("*.yaml")):
         raw_quests.extend(yaml.safe_load(path.read_text(encoding="utf-8"))["quests"])
     return raw_quests
+
+
+def _load_all_events() -> list[JsonMap]:
+    raw_events = list(yaml.safe_load((PROJECT_ROOT / "data/content/base/events.yaml").read_text(encoding="utf-8"))["events"])
+    split_dir = PROJECT_ROOT / "data/content/events"
+    for path in sorted(split_dir.glob("*.yaml")):
+        raw_events.extend(yaml.safe_load(path.read_text(encoding="utf-8"))["events"])
+    return raw_events
 
 
 if __name__ == "__main__":
