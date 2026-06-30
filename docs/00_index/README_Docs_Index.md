@@ -131,7 +131,8 @@ docs/
   - Phase 3 entity 후보와 Ontology-lite v0.2 trial entity/relation 채택 기준을 정의한다.
 - `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
   - Quest, Expedition Clock, Storylet, Card Candidate, Multi-Select, Result, Score, Quest Report를 데이터 계약으로 정의한다.
-
+- `docs/02_schema/13_Quest_Design_Guide_v0.1.md`
+  - Quest를 목적, 제한 시간, 지역, Objective, 3-Card 패턴, Storylet tag, 자원 변화, 성공/부분 성공/실패, 보상/해금으로 설계하기 위한 제작 기준 문서다.
 ---
 
 # 5. 03_specs
@@ -264,7 +265,8 @@ docs/
   - Gameplay P0 Card Candidate Pool에 tier / weight 기반 후보 선택 구조를 도입한 결과를 보관한다.
 - `docs/07_reviews/24_Gameplay_P0_Seeded_Tier_Variety_Result_v0.1.md`
   - Gameplay P0 Card Candidate Pool에 seed 기반 tier variety를 도입한 결과를 보관한다.
-
+- `docs/07_reviews/25_Quest_Base_Research_Collection_v0.1.md`
+  - 판타지 TRPG 시나리오, 모험 Hook, Adventure Seed를 FateWeaver Quest 제작 양식으로 재가공한 리서치 자료다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
