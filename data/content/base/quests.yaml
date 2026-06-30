@@ -9,18 +9,53 @@ quests:
     max_days: 3
     max_turns: 12
     primary_objectives:
-      - type: quest_progress_at_least
-        key: herbs_collected
-        value: 3
-      - type: quest_progress_at_least
-        key: reported_to_apothecary
+      - id: collect_herbs
+        type: collect_item
+        target: herbs_collected
+        required: true
+        count: 3
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_collect
+        reward_weight: 3
+      - id: report_to_apothecary
+        type: return_to_region
+        target: village
+        progress_key: reported_to_apothecary
+        required: true
         value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
     optional_objectives:
-      - type: discover_clue
-        clue_id: old_hunter_trail
-      - type: keep_resource_at_least
-        resource: food
+      - id: discover_old_hunter_trail
+        type: discover_clue
+        target: old_hunter_trail
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_discovery
+        reward_weight: 1
+      - id: preserve_food
+        type: keep_resource_at_least
+        target: food
+        required: false
         value: 2
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
     failure_conditions:
       - type: resource_lte
         resource: health

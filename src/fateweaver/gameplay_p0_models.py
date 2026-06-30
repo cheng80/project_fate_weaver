@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, Protocol
+from typing import Final, Literal, Protocol
 
 from fateweaver.models import Event, JsonMap, ProjectData, Scenario, StatusMap
 
 
 TIME_OF_DAY: Final = ("morning", "afternoon", "evening", "night")
+ObjectiveType = Literal["collect_item", "return_to_region", "survive_expedition", "keep_resource_at_least", "discover_clue", "optional_action"]
 
 
 class InputPort(Protocol):
@@ -52,7 +53,23 @@ class Quest:
     start_region: str
     max_days: int
     max_turns: int
+    objectives: tuple["QuestObjective", ...]
     rewards: JsonMap
+
+
+@dataclass(frozen=True, slots=True)
+class QuestObjective:
+    id: str
+    objective_type: ObjectiveType
+    target: str
+    required: bool
+    count: int
+    value: int
+    progress_key: str
+    failure_reason: str
+    partial_reason: str
+    score_key: str
+    reward_weight: int
 
 
 @dataclass(frozen=True, slots=True)

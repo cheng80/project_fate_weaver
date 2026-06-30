@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from fateweaver.gameplay_p0_models import CardRule, CardRules, ComboRule, ConflictRule, Foundation, Quest
+from fateweaver.gameplay_p0_models import CardRule, CardRules, ComboRule, ConflictRule, Foundation, ObjectiveType, Quest, QuestObjective
 from fateweaver.models import JsonMap, JsonValue, ProjectData, Scenario
 
 
@@ -52,9 +52,42 @@ def _load_quest(raw: JsonMap, quest_id: str) -> Quest:
                 start_region=str(quest["start_region"]),
                 max_days=int(quest["max_days"]),
                 max_turns=int(quest["max_turns"]),
+                objectives=_load_objectives(quest),
                 rewards=_mapping_at(quest, "rewards"),
             )
     raise ValueError(f"Unknown P0 quest: {quest_id}")
+
+
+def _load_objectives(quest: JsonMap) -> tuple[QuestObjective, ...]:
+    primary = tuple(_load_objective(item, True) for item in _list_at(quest, "primary_objectives"))
+    optional = tuple(_load_objective(item, False) for item in _list_at(quest, "optional_objectives"))
+    return (*primary, *optional)
+
+
+def _load_objective(raw_value: JsonValue, default_required: bool) -> QuestObjective:
+    raw = _as_mapping(raw_value)
+    objective_type = _objective_type(str(raw["type"]))
+    return QuestObjective(
+        id=str(raw["id"]),
+        objective_type=objective_type,
+        target=str(raw["target"]),
+        required=bool(raw.get("required", default_required)),
+        count=int(raw.get("count", raw.get("value", 1))),
+        value=int(raw.get("value", raw.get("count", 1))),
+        progress_key=str(raw.get("progress_key", raw["target"])),
+        failure_reason=str(raw["failure_reason"]),
+        partial_reason=str(raw.get("partial_reason", raw["failure_reason"])),
+        score_key=str(raw["score_key"]),
+        reward_weight=int(raw.get("reward_weight", 1)),
+    )
+
+
+def _objective_type(value: str) -> ObjectiveType:
+    match value:
+        case "collect_item" | "return_to_region" | "survive_expedition" | "keep_resource_at_least" | "discover_clue" | "optional_action":
+            return value
+        case _:
+            raise ValueError(f"Unknown P0 objective type: {value}")
 
 
 def _load_card_rules(raw: JsonMap) -> CardRules:

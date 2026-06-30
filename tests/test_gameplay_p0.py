@@ -62,6 +62,8 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertIn("Quest Progress:", text_log)
         self.assertIn("Score Change:", text_log)
         self.assertIn("Quest Report:", text_log)
+        self.assertIn("objective_results", payload["quest_report"])
+        self.assertIn("목표 평가:", text_log)
 
     def test_tutorial_herb_quest_cli_covers_success_partial_and_failure_outcomes(self) -> None:
         # Given
@@ -138,15 +140,27 @@ class GameplayP0Tests(unittest.TestCase):
                 self.assertIn("result_reason", payload["quest_report"])
                 self.assertIn("partial_reasons", payload["quest_report"])
                 self.assertIn("failure_reasons", payload["quest_report"])
+                self.assertIn("objective_results", payload["quest_report"])
                 self.assertIn("reward_status", payload["quest_report"])
                 self.assertTrue(expected_partial.issubset(set(payload["quest_report"]["partial_reasons"])))
                 self.assertTrue(expected_failure.issubset(set(payload["quest_report"]["failure_reasons"])))
+                objective_results = payload["quest_report"]["objective_results"]
+                objective_by_id = {item["objective_id"]: item for item in objective_results}
+                self.assertIn("collect_herbs", objective_by_id)
+                self.assertIn("report_to_apothecary", objective_by_id)
+                self.assertIn("survive_expedition", objective_by_id)
+                self.assertIn("objective_completion", payload["quest_report"]["score_breakdown"])
                 self.assertIn(f"결과 유형: {expected_result_type}", text_log)
                 self.assertIn("결과 이유:", text_log)
+                self.assertIn("목표 평가:", text_log)
                 self.assertIn(payload["quest_report"]["review_text"], text_log)
                 partial_reasons.update(payload["quest_report"]["partial_reasons"])
                 failure_reasons.update(payload["quest_report"]["failure_reasons"])
                 reports.setdefault(expected_result_type, payload["quest_report"])
+                if scenario_path.endswith("partial_optional_failed.yaml"):
+                    reports["partial_optional_failed"] = payload["quest_report"]
+                if scenario_path.endswith("failure_health_zero.yaml"):
+                    reports["health_zero_failure"] = payload["quest_report"]
 
         # Then
         self.assertGreater(int(reports["success"]["score"]), int(reports["partial_success"]["score"]))
@@ -156,13 +170,30 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertEqual(["collect_herbs"], reports["partial_success"]["completed_objectives"])
         self.assertEqual(["report_to_apothecary"], reports["partial_success"]["failed_objectives"])
         self.assertEqual([], reports["failure"]["completed_objectives"])
-        self.assertIn("survive_expedition", reports["failure"]["failed_objectives"])
+        self.assertIn("survive_expedition", reports["health_zero_failure"]["failed_objectives"])
+        self.assertEqual("completed", _objective_status(reports["success"], "collect_herbs"))
+        self.assertEqual("completed", _objective_status(reports["success"], "report_to_apothecary"))
+        self.assertEqual("completed", _objective_status(reports["success"], "survive_expedition"))
+        self.assertEqual("completed", _objective_status(reports["partial_success"], "collect_herbs"))
+        self.assertEqual("failed", _objective_status(reports["partial_success"], "report_to_apothecary"))
+        self.assertEqual("partial", _objective_status(reports["partial_optional_failed"], "collect_herbs"))
+        self.assertEqual("failed", _objective_status(reports["failure"], "collect_herbs"))
+        self.assertEqual("failed", _objective_status(reports["failure"], "report_to_apothecary"))
+        self.assertEqual("completed", _objective_status(reports["failure"], "survive_expedition"))
+        self.assertEqual("failed", _objective_status(reports["health_zero_failure"], "survive_expedition"))
         self.assertTrue(reports["success"]["rewards"])
         self.assertEqual({}, reports["partial_success"]["rewards"])
         self.assertEqual({}, reports["failure"]["rewards"])
         self.assertLess(int(reports["failure"]["score_breakdown"]["outcome_adjustment"]), 0)
         self.assertGreaterEqual(len(partial_reasons), 2)
         self.assertGreaterEqual(len(failure_reasons), 3)
+
+
+def _objective_status(report: dict, objective_id: str) -> str:
+    for objective in report["objective_results"]:
+        if objective["objective_id"] == objective_id:
+            return str(objective["status"])
+    raise AssertionError(f"missing objective result: {objective_id}")
 
 
 if __name__ == "__main__":

@@ -3,10 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
-from typing import assert_never
 
 from fateweaver.gameplay_p0_data import load_foundation
 from fateweaver.gameplay_p0_models import CardRule, ComboRule, GameplayRunRequest, Quest, RunState
+from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
 from fateweaver.gameplay_p0_rules import (
     advance_clock,
     apply_turn_result,
@@ -22,7 +22,7 @@ from fateweaver.gameplay_p0_rules import (
     select_storylet,
 )
 from fateweaver.logger import save_run_log
-from fateweaver.models import Event, JsonMap, ProjectData
+from fateweaver.models import Event, JsonMap
 from fateweaver.state_manager import is_failed
 from fateweaver.text_mud_log import save_text_mud_log
 
@@ -41,10 +41,10 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         before = state
         state = apply_turn_result(state, result, request.bundle)
         turns.append(_turn_log(foundation.quest, before, state, event, cards, selected_cards, combo, result))
-        if _quest_success(state) or is_failed(state.status, request.bundle.statuses):
+        if quest_completed(foundation.quest, state, request.bundle) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
-    quest_report = _quest_report(foundation.quest, state, request.bundle, foundation.score_rules)
+    quest_report = build_quest_report(QuestReportRequest(foundation.quest, state, request.bundle, foundation.score_rules))
     log = _run_log(request, foundation.quest, turns, state, quest_report)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     filename = f"run_{request.scenario.id}_{request.profile}_{request.seed}_{timestamp}_{request.run_number:04d}.json"
@@ -111,33 +111,6 @@ def _turn_log(
     }
 
 
-def _quest_report(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> JsonMap:
-    failed = is_failed(state.status, bundle.statuses)
-    success = _quest_success(state)
-    result_type = _result_type(failed, success, state.quest_progress)
-    partial_reasons = _partial_reasons(state, result_type)
-    failure_reasons = _failure_reasons(state, result_type, bundle)
-    result_reasons = partial_reasons if result_type == "partial_success" else failure_reasons
-    result_reason = result_reasons[0] if result_reasons else "quest_completed"
-    score_breakdown = _score_breakdown(state, result_type, score_rules)
-    return {
-        "quest_id": quest.id,
-        "result_type": result_type,
-        "result_reason": result_reason,
-        "completed_objectives": _completed_objectives(state),
-        "failed_objectives": _failed_objectives(state, result_type),
-        "partial_reasons": partial_reasons,
-        "failure_reasons": failure_reasons,
-        "resource_summary": dict(state.status),
-        "score": sum(score_breakdown.values()),
-        "score_breakdown": score_breakdown,
-        "reward_status": _reward_status(result_type),
-        "rewards": quest.rewards if result_type == "success" else {},
-        "unlocked_or_suggested_next": ["missing_porter_search"] if result_type == "success" else ["retry_herb_gathering"],
-        "review_text": _review_text(result_type, result_reason),
-    }
-
-
 def _run_log(request: GameplayRunRequest, quest: Quest, turns: list[JsonMap], state: RunState, report: JsonMap) -> JsonMap:
     return {
         "schema_version": "console_validation_log_v0.1",
@@ -158,124 +131,3 @@ def _run_log(request: GameplayRunRequest, quest: Quest, turns: list[JsonMap], st
             "next_run_intent": "review quest report",
         },
     }
-
-
-def _quest_success(state: RunState) -> bool:
-    return state.quest_progress.get("herbs_collected", 0) >= 3 and state.quest_progress.get("reported_to_apothecary", 0) >= 1
-
-
-def _result_type(failed: bool, success: bool, progress: dict[str, int]) -> str:
-    match failed, success, progress.get("herbs_collected", 0) > 0:
-        case True, _, _:
-            return "failure"
-        case _, True, _:
-            return "success"
-        case _, _, True:
-            return "partial_success"
-        case False, False, False:
-            return "failure"
-        case unreachable:
-            assert_never(unreachable)
-
-
-def _score_breakdown(state: RunState, result_type: str, score_rules: JsonMap) -> dict[str, int]:
-    breakdown = dict(state.score)
-    outcome_score = _outcome_score(result_type, score_rules)
-    if outcome_score != 0:
-        breakdown["outcome_adjustment"] = outcome_score
-    return breakdown
-
-
-def _outcome_score(result_type: str, score_rules: JsonMap) -> int:
-    raw_bonus = score_rules.get("ending_bonus", {})
-    if not isinstance(raw_bonus, dict):
-        return 0
-    return int(raw_bonus.get(result_type, 0))
-
-
-def _partial_reasons(state: RunState, result_type: str) -> list[str]:
-    if result_type != "partial_success":
-        return []
-    reasons: list[str] = []
-    if 0 < state.quest_progress.get("herbs_collected", 0) < 3:
-        reasons.append("primary_partial")
-    if state.quest_progress.get("reported_to_apothecary", 0) < 1:
-        reasons.append("report_failed")
-    if "old_hunter_trail" not in state.clues:
-        reasons.append("optional_failed")
-    if _clock_exceeded(state):
-        reasons.append("return_late")
-    reasons.append("reduced_reward")
-    if state.status.get("food", 0) <= 0:
-        reasons.append("resource_depleted")
-    return reasons
-
-
-def _failure_reasons(state: RunState, result_type: str, bundle: ProjectData) -> list[str]:
-    if result_type != "failure":
-        return []
-    reasons: list[str] = []
-    if _status_failed(state, bundle, "health"):
-        reasons.append("health_zero")
-    if state.clock.day > state.clock.max_days:
-        reasons.append("max_day_exceeded")
-    if state.clock.turn > state.clock.max_turns:
-        reasons.append("max_turn_exceeded")
-    if state.quest_progress.get("reported_to_apothecary", 0) < 1:
-        reasons.append("return_failed")
-    if state.quest_progress.get("herbs_collected", 0) < 3 or state.quest_progress.get("reported_to_apothecary", 0) < 1:
-        reasons.append("primary_objective_failed")
-    return reasons or ["primary_objective_failed"]
-
-
-def _status_failed(state: RunState, bundle: ProjectData, status_id: str) -> bool:
-    definition = bundle.statuses.get(status_id)
-    if definition is None or definition.fail_when is None:
-        return False
-    return state.status.get(status_id, definition.initial) <= definition.fail_when
-
-
-def _clock_exceeded(state: RunState) -> bool:
-    return state.clock.turn > state.clock.max_turns or state.clock.day > state.clock.max_days
-
-
-def _reward_status(result_type: str) -> str:
-    return {"success": "full_reward", "partial_success": "reduced_reward", "failure": "no_reward"}[result_type]
-
-
-def _completed_objectives(state: RunState) -> list[str]:
-    completed: list[str] = []
-    if state.quest_progress.get("herbs_collected", 0) >= 3:
-        completed.append("collect_herbs")
-    if state.quest_progress.get("reported_to_apothecary", 0) >= 1:
-        completed.append("report_to_apothecary")
-    if "old_hunter_trail" in state.clues:
-        completed.append("discover_old_hunter_trail")
-    return completed
-
-
-def _failed_objectives(state: RunState, result_type: str) -> list[str]:
-    failed: list[str] = []
-    if state.quest_progress.get("herbs_collected", 0) < 3:
-        failed.append("collect_herbs")
-    if state.quest_progress.get("reported_to_apothecary", 0) < 1:
-        failed.append("report_to_apothecary")
-    if result_type == "failure":
-        failed.append("survive_expedition")
-    return failed
-
-
-def _review_text(result_type: str, result_reason: str) -> str:
-    match result_type:
-        case "success":
-            return "약초를 모아 보고했고 다음 의뢰의 실마리를 얻었다."
-        case "partial_success":
-            if result_reason == "primary_partial":
-                return "약초 일부와 단서는 얻었지만 주 목표 수량을 채우지 못했다."
-            return "일부 목표는 달성했지만 보고나 보조 목표를 완전히 끝내지 못했다."
-        case "failure":
-            if result_reason == "health_zero":
-                return "체력이 바닥나 원정이 중단됐고 자원 관리와 위험 판단을 다시 봐야 한다."
-            return "원정은 실패했고 자원 관리와 귀환 판단을 다시 봐야 한다."
-        case unreachable:
-            assert_never(unreachable)

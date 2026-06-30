@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Final, assert_never
 
 from fateweaver.models import JsonMap, JsonValue
+from fateweaver.text_mud_objectives import objective_lines
 
 
 MISSING: Final = "-"
@@ -85,9 +86,7 @@ def _choice_lines(turn: JsonMap) -> list[str]:
 def _place(turn: JsonMap) -> str:
     regions = _text(turn.get("region_tags"))
     event_name = _text(turn.get("event_name"))
-    if regions == MISSING:
-        return event_name
-    return f"{regions} / {event_name}"
+    return event_name if regions == MISSING else f"{regions} / {event_name}"
 
 
 def _turn_heading(turn: JsonMap) -> str:
@@ -103,17 +102,13 @@ def _turn_heading(turn: JsonMap) -> str:
 
 def _region(turn: JsonMap) -> str:
     values = _json_values(turn.get("region_tags"))
-    if not values:
-        return MISSING
-    return _text(values[0])
+    return MISSING if not values else _text(values[0])
 
 
 def _event_line(turn: JsonMap) -> str:
     name = _text(turn.get("event_name"))
     description = _text(turn.get("event_description"))
-    if description == MISSING:
-        return name
-    return f"{name} - {description}"
+    return name if description == MISSING else f"{name} - {description}"
 
 
 def _selected_choice(turn: JsonMap) -> JsonMap:
@@ -184,9 +179,7 @@ def _clues(turn: JsonMap) -> str:
 
 def _omens(turn: JsonMap) -> str:
     danger = _text(turn.get("danger_tags"))
-    if danger == MISSING:
-        return "뚜렷한 징조 없음"
-    return danger
+    return "뚜렷한 징조 없음" if danger == MISSING else danger
 
 
 def _first_turn(log: JsonMap) -> JsonMap:
@@ -217,6 +210,7 @@ def _render_summary(summary: JsonMap, quest_report: JsonMap) -> list[str]:
                 f"점수: {_text(quest_report.get('score'))}",
             ]
         )
+        lines.extend(objective_lines(quest_report))
     return lines
 
 
