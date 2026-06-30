@@ -160,3 +160,89 @@ quests:
         exploration: 8
         survival: 4
         beast: 3
+  - id: missing_porter_search_intro
+    title: 실종된 짐꾼 수색
+    rank: novice
+    quest_type: rescue
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 10
+    primary_objectives:
+      - id: find_porter_trace
+        type: discover_clue
+        target: porter_trace
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: resolve_porter_fate
+        type: optional_action
+        target: porter_fate_resolved
+        progress_key: porter_fate_resolved
+        required: true
+        value: 1
+        failure_reason: rescue_failed
+        partial_reason: rescue_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: return_to_village
+        type: return_to_region
+        target: village
+        progress_key: porter_reported
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: recover_lost_pack
+        type: optional_action
+        target: recovered_lost_pack
+        progress_key: recovered_lost_pack
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_optional_action
+        reward_weight: 1
+      - id: keep_food
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 2
+      score: 45
+      unlock_quests:
+        - merchant_lost_pack_recovery
+    event_bias:
+      tags:
+        forest: 10
+        exploration: 8
+        survival: 4
+        trade: 2

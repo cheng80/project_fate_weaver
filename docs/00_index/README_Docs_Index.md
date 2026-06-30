@@ -273,6 +273,8 @@ docs/
   - Gameplay P0에 Storylet/Event card candidate hints와 repeat cooldown memory를 도입한 결과를 보관한다.
 - `docs/07_reviews/27_Forest_Path_Scouting_Quest_Result_v0.1.md`
   - `forest_path_scouting_tutorial` Quest를 실제 data fixture로 추가하고 success / partial_success / failure 시나리오를 검증한 결과를 보관한다.
+- `docs/07_reviews/28_Missing_Porter_Search_Quest_Result_v0.1.md`
+  - `missing_porter_search_intro` Quest를 실제 data fixture로 추가하고 rescue / time pressure / partial_success 경로를 검증한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

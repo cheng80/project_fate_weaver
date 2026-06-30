@@ -93,7 +93,8 @@ Quest(퀘스트)는 고정 줄거리가 아니라 게임 구조 단위다.
 현재 구현 상태:
 
 - `forest_path_scouting_tutorial`: data fixture(데이터 고정물) 구현 및 success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오) 검증 완료.
-- 다음 후보: `missing_porter_search_intro`.
+- `missing_porter_search_intro`: data fixture(데이터 고정물) 구현 및 rescue / time pressure / partial_success(구조 / 시간 압박 / 부분 성공) scenario(시나리오) 검증 완료.
+- 다음 후보: `merchant_lost_pack_recovery`.
 
 ## 8. 첫 추가 Quest: forest_path_scouting_tutorial
 
@@ -183,27 +184,45 @@ unlock_quests:
 
 위 YAML은 설계 초안이었고, 이후 `data/content/base/quests.yaml`에 실제 fixture(고정 데이터)로 추가됐다.
 
-## 9. 두 번째 Quest 이후 후보
+## 9. 두 번째 Quest: missing_porter_search_intro
 
-- `missing_porter_search_intro`: Rescue(구조), Partial Success(부분 성공), Time Pressure(시간 압박) 검증.
+두 번째 Quest(퀘스트)는 `missing_porter_search_intro`로 구현했다.
+
+이유:
+
+- `forest_path_scouting_tutorial` 다음 단계로 rescue(구조)와 time pressure(시간 압박)를 검증하기 좋다.
+- 기존 `discover_clue`, `optional_action`, `return_to_region`, `keep_resource_at_least` objective(목표)를 재사용한다.
+- Storylet/Event Hint(스토리 조각/이벤트 힌트)가 Quest(퀘스트) 전용 Card Candidate(카드 후보)를 밀어주는 구조를 검증한다.
+- `quest_ids` gate(퀘스트 ID 게이트)로 기존 herb/forest tutorial(약초/숲길 튜토리얼)을 오염시키지 않는다.
+
+구현 결과:
+
+- `find_porter_trace`: `porter_trace` clue(단서) 발견.
+- `resolve_porter_fate`: `porter_fate_resolved` optional_action(선택 행동)을 required(필수) objective(목표)로 사용.
+- `return_to_village`: `porter_reported` progress(진행도)로 마을 보고 완료.
+- `recover_lost_pack`: optional_action(선택 행동) 보조 목표.
+- success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오)를 각각 검증했다.
+
+## 10. 세 번째 Quest 이후 후보
+
 - `merchant_lost_pack_recovery`: Money(돈), Reputation(평판), Recovery(회수) 도입.
 - `ruin_mark_investigation_intro`: Clue(단서), Omen(징조), Ruin(폐허) 확장.
 - `village_well_trouble`: Village(마을) 지역 이벤트 확장과 local problem(지역 문제) 검증.
 
-## 10. Quest 구현 전 필요한 점검
+## 11. Quest 구현 전 필요한 점검
 
 - 새로운 Quest(퀘스트)가 기존 objective evaluator(목표 평가기)로 처리 가능한가?
 - `discover_clue` objective(목표)가 실제 progress/clue(진행도/단서)와 연결 가능한가?
 - `keep_resource_at_least` objective(목표)가 현재 resource snapshot(자원 스냅샷)과 연결 가능한가?
-- `mark_beast_tracks` optional_action(선택 행동)을 card_rules로 만들 수 있는가?
+- 신규 optional_action(선택 행동)을 card_rules로 만들 수 있는가?
 - forest/trail/beast_tracks storylet/context tag(스토리 조각/컨텍스트 태그)를 공급할 수 있는가?
 - 3-card slot이 `quest_progress` / `risk_discovery` / `resource_alternative`로 구성 가능한가?
 - success / partial_success / failure fixture(성공 / 부분 성공 / 실패 픽스처)를 만들 수 있는가?
 - 기존 `herb_gathering_tutorial`이 깨지지 않는가?
+- 기존 `forest_path_scouting_tutorial`이 깨지지 않는가?
 
-## 11. 다음 Codex 작업 제안
+## 12. 다음 Codex 작업 제안
 
-1. `missing_porter_search_intro` Quest(퀘스트)를 data fixture(데이터 픽스처)로 1개만 추가한다.
-2. 해당 Quest(퀘스트)의 success / partial_success / failure scenario(시나리오)를 만든다.
-3. rescue(구조), time pressure(시간 압박), partial success(부분 성공) 구조가 기존 evaluator(평가기)로 충분한지 검증한다.
-4. 기존 `herb_gathering_tutorial`과 `forest_path_scouting_tutorial`이 깨지지 않는지 회귀 검증한다.
+1. `merchant_lost_pack_recovery` Quest(퀘스트)를 data fixture(데이터 픽스처)로 1개만 추가한다.
+2. Money / Reputation / Recovery(돈 / 평판 / 회수) 흐름이 기존 evaluator(평가기)로 충분한지 검증한다.
+3. `herb_gathering_tutorial`, `forest_path_scouting_tutorial`, `missing_porter_search_intro`가 깨지지 않는지 회귀 검증한다.

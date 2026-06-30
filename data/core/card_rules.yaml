@@ -285,6 +285,168 @@ p0_cards:
       next_event_tags: [village, report, quest_complete]
       move_to_region: village
       message: 마을에 숲길의 안전 구간과 위험 흔적을 보고했다.
+  - id: track_porter_footprints
+    title: 짐꾼의 발자국을 추적한다
+    description: 오래된 짐수레 길에 남은 발자국과 끌린 자국을 따라간다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, porter, trail, clue, rescue, quest_related]
+    quest_ids: [missing_porter_search_intro]
+    regions: [village, forest]
+    applies_to_storylet_tags: [old_road, porter, tracks, tracking_opportunity]
+    progress_key: porter_trace_found
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      gain_clues: [porter_trace]
+      quest_progress: {porter_trace_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [forest, rescue, porter]
+      move_to_region: forest
+      message: 짐꾼이 숲길 쪽으로 끌려간 흔적을 찾았다.
+  - id: inspect_broken_cart
+    title: 부서진 수레를 조사한다
+    description: 숲 가장자리의 부서진 수레에서 짐꾼과 짐의 흔적을 찾는다.
+    slot_role: risk_discovery
+    base_weight: 75
+    tier_hint: strong
+    tags: [forest, porter, broken_cart, clue, recovery]
+    quest_ids: [missing_porter_search_intro]
+    regions: [forest]
+    applies_to_storylet_tags: [broken_cart, porter, tracking_opportunity]
+    weight_modifiers:
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {health: -1}
+      gain_clues: [broken_cart]
+      gain_omens: [fresh_struggle_marks]
+      score_changes: {discovery: 6, penalty: -2}
+      next_event_tags: [forest, rescue, recovery]
+      message: 부서진 수레에서 급히 끌려간 흔적과 흩어진 짐을 확인했다.
+  - id: rescue_injured_porter
+    title: 다친 짐꾼을 구조한다
+    description: 숲길 아래에서 들리는 작은 구조 요청을 따라 내려간다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, porter, rescue, npc, quest_related]
+    quest_ids: [missing_porter_search_intro]
+    regions: [forest]
+    requires_progress: {porter_trace_found: {min: 1}}
+    applies_to_storylet_tags: [injured_porter, rescue_opportunity, time_pressure]
+    progress_key: porter_fate_resolved
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {health: -1, reputation: 1}
+      quest_progress: {porter_fate_resolved: 1}
+      score_changes: {quest_progress: 14, reputation: 4, survival: 3}
+      next_event_tags: [forest, rescue, report]
+      message: 다친 짐꾼을 안전한 길가까지 끌어올리고 생사를 확인했다.
+  - id: recover_lost_pack
+    title: 잃어버린 짐 꾸러미를 회수한다
+    description: 나무뿌리 아래에 걸린 상단의 짐 꾸러미를 꺼낸다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [forest, porter, lost_pack, optional_objective, recovery]
+    quest_ids: [missing_porter_search_intro]
+    regions: [forest]
+    requires_progress: {porter_trace_found: {min: 1}}
+    applies_to_storylet_tags: [lost_pack, recovery, roots]
+    applies_to_quest_objectives: [recover_lost_pack]
+    progress_key: recovered_lost_pack
+    weight_modifiers:
+      quest_objective_match: 35
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      cooldown_tag_penalty: -15
+      repeat_group_penalty: -30
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      add_item: [lost_pack]
+      quest_progress: {recovered_lost_pack: 1}
+      score_changes: {resource_management: 6, reputation: 3}
+      next_event_tags: [forest, recovery, report]
+      message: 상단의 잃어버린 짐 꾸러미를 회수했다.
+  - id: return_with_porter_report
+    title: 짐꾼의 행방을 마을에 보고한다
+    description: 확인한 생사와 짐의 행방을 들고 마을로 돌아간다.
+    slot_role: quest_progress
+    base_weight: 130
+    tier_hint: critical
+    tags: [village, porter, report, quest_related]
+    quest_ids: [missing_porter_search_intro]
+    regions: [forest]
+    requires_progress: {porter_fate_resolved: {min: 1}}
+    applies_to_storylet_tags: [return_report, porter, time_pressure]
+    progress_key: porter_reported
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {porter_reported: 1}
+      score_changes: {quest_progress: 16, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, report, quest_complete]
+      move_to_region: village
+      message: 마을에 짐꾼의 생사와 잃어버린 짐의 행방을 보고했다.
+  - id: buy_hunter_information
+    title: 사냥꾼에게 길 정보를 산다
+    description: 돈을 내고 오래된 짐수레 길의 최근 흔적을 묻는다.
+    slot_role: resource_alternative
+    base_weight: 60
+    tier_hint: normal
+    tags: [village, porter, clue, trade, rescue]
+    quest_ids: [missing_porter_search_intro]
+    regions: [village]
+    requires_status: {money: {min: 1}}
+    applies_to_storylet_tags: [old_road, porter, tracking_opportunity]
+    progress_key: porter_trace_found
+    weight_modifiers:
+      storylet_tag_match: 15
+      storylet_hint_bonus: 20
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: -1}
+      gain_clues: [porter_trace]
+      quest_progress: {porter_trace_found: 1}
+      score_changes: {discovery: 5, resource_management: -1}
+      next_event_tags: [forest, rescue, porter]
+      move_to_region: forest
+      message: 사냥꾼에게서 짐꾼이 향한 숲길 정보를 샀다.
 
 multi_select_rules:
   max_selected_cards: 2

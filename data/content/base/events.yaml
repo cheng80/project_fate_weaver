@@ -79,6 +79,86 @@ events:
         result:
           message: 마을로 돌아갈 길이 충분히 분명해졌다.
 
+  - id: old_road_footprints_hint
+    name: 오래된 짐수레 길의 발자국
+    description: 마을 밖 오래된 짐수레 길에 낯선 발자국과 끌린 자국이 남아 있다.
+    region_tags: [village, forest]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [old_road, porter, tracks, rescue, time_pressure, tracking_opportunity, quest_related]
+    card_candidate_hints: [track_porter_footprints, inspect_broken_cart, buy_hunter_information]
+    cooldown_tags: [porter_tracks, old_road_clue]
+    repeat_group: porter_search_tracking
+    base_weight: 15
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 흔적을 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 흔적은 숲 가장자리의 낡은 길로 이어진다.
+
+  - id: broken_cart_near_forest_hint
+    name: 숲가의 부서진 수레
+    description: 숲길 초입에 부서진 수레와 찢긴 상단 표식이 흩어져 있다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [trap]
+    storylet_tags: [broken_cart, porter, recovery, rescue, tracking_opportunity, quest_related]
+    card_candidate_hints: [inspect_broken_cart, recover_lost_pack, rescue_injured_porter]
+    cooldown_tags: [broken_cart, porter_search_clue]
+    repeat_group: porter_search_tracking
+    base_weight: 13
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 수레 주변을 살핀다
+        type: risky
+        risk_level: medium
+        result:
+          message: 수레 아래의 피 묻은 천 조각이 더 깊은 숲길을 가리킨다.
+
+  - id: injured_porter_call_hint
+    name: 다친 짐꾼의 작은 외침
+    description: 숲길 아래쪽에서 거의 들리지 않는 구조 요청이 반복된다.
+    region_tags: [forest]
+    event_tags: [survival]
+    danger_tags: [physical]
+    storylet_tags: [injured_porter, rescue_opportunity, time_pressure, porter, quest_related]
+    card_candidate_hints: [rescue_injured_porter, recover_lost_pack]
+    cooldown_tags: [injured_porter, rescue_call]
+    repeat_group: porter_search_rescue
+    base_weight: 14
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 외침의 방향을 잡는다
+        type: risky
+        risk_level: medium
+        result:
+          message: 구조 요청은 아직 가까이 있지만 오래 버티기는 어려워 보인다.
+
+  - id: lost_pack_under_roots_hint
+    name: 나무뿌리 아래의 잃어버린 짐
+    description: 비탈진 나무뿌리 아래에 상단 표식이 찍힌 짐 꾸러미가 걸려 있다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [trap]
+    storylet_tags: [lost_pack, recovery, roots, porter, quest_related]
+    card_candidate_hints: [recover_lost_pack, return_with_porter_report]
+    cooldown_tags: [lost_pack, porter_recovery]
+    repeat_group: porter_search_recovery
+    base_weight: 10
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 짐의 위치를 기억한다
+        type: safe
+        risk_level: low
+        result:
+          message: 짐은 회수할 수 있지만 시간을 더 써야 한다.
+
   - id: cursed_well
     name: 저주받은 우물
     description: 검은 물이 고인 우물에서 낮은 속삭임이 들린다.
