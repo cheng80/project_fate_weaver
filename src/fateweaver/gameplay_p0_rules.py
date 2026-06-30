@@ -45,9 +45,10 @@ def run_clock(scenario: Scenario, quest: Quest) -> RunClock:
     )
 
 
-def select_storylet(events: tuple[Event, ...], state: RunState, rng: Random) -> Event:
-    regional = tuple(event for event in events if state.region in event.region_tags)
-    pool = regional if regional else events
+def select_storylet(events: tuple[Event, ...], state: RunState, rng: Random, quest_id: str = "") -> Event:
+    gated = tuple(event for event in events if not event.quest_ids or quest_id in event.quest_ids)
+    regional = tuple(event for event in gated if state.region in event.region_tags)
+    pool = regional if regional else gated
     return select_event(pool, state.status, state.inventory, state.run_tags, rng, state.recent_event_ids)
 
 

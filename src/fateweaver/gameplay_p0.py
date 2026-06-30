@@ -38,7 +38,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         and state.clock.turn <= state.clock.max_turns
         and not is_failed(state.status, request.bundle.statuses)
     ):
-        event = select_storylet(request.events, state, rng)
+        event = select_storylet(request.events, state, rng, foundation.quest.id)
         context = card_candidate_context(foundation.quest, event, state)
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
         selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))

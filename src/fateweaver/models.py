@@ -77,6 +77,7 @@ class Event:
     card_candidate_hints: tuple[str, ...] = ()
     cooldown_tags: tuple[str, ...] = ()
     repeat_group: str = ""
+    quest_ids: tuple[str, ...] = ()
 
     def __getitem__(self, key: str) -> JsonValue:
         match key:  # noqa: MATCH_OK - Event mapping keys are data compatibility surface.
@@ -100,6 +101,8 @@ class Event:
                 return list(self.cooldown_tags)
             case "repeat_group":
                 return self.repeat_group
+            case "quest_ids":
+                return list(self.quest_ids)
             case "base_weight":
                 return self.base_weight
             case _:

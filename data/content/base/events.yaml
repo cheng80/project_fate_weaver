@@ -812,3 +812,506 @@ events:
         result:
           event_weight: {survival: +1}
           message: 당신은 시간을 아끼기로 했다.
+  - id: village_wrongness_hint
+    name: 초보 마을의 이상 징후 첫 단서
+    description: 초보 마을의 이상 징후와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [beginner_village_wrongness]
+    region_tags: [village]
+    event_tags: [exploration]
+    danger_tags: [curse]
+    storylet_tags: [wrongness, quest_related]
+    card_candidate_hints: [read_village_wrongness, calm_square_rumors]
+    cooldown_tags: [wrongness, bulk_fill]
+    repeat_group: beginner_village_wrongness_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: village_wrongness_followup
+    name: 초보 마을의 이상 징후 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [beginner_village_wrongness]
+    region_tags: [village]
+    event_tags: [exploration]
+    danger_tags: [curse]
+    storylet_tags: [wrongness, report, quest_related]
+    card_candidate_hints: [calm_square_rumors, report_wrongness_resolved]
+    cooldown_tags: [wrongness, bulk_fill]
+    repeat_group: beginner_village_wrongness_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: festival_racer_hint
+    name: 축제의 사라진 주자 첫 단서
+    description: 축제의 사라진 주자와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [festival_missing_racer]
+    region_tags: [village]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [festival, quest_related]
+    card_candidate_hints: [find_racer_track, guide_missing_racer]
+    cooldown_tags: [festival, bulk_fill]
+    repeat_group: festival_missing_racer_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: festival_racer_followup
+    name: 축제의 사라진 주자 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [festival_missing_racer]
+    region_tags: [village]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [festival, report, quest_related]
+    card_candidate_hints: [guide_missing_racer, report_festival_safe]
+    cooldown_tags: [festival, bulk_fill]
+    repeat_group: festival_missing_racer_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: lighthouse_signal_hint
+    name: 버려진 등대의 신호 첫 단서
+    description: 버려진 등대의 신호와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [abandoned_lighthouse_signal]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [ancient]
+    storylet_tags: [lighthouse, quest_related]
+    card_candidate_hints: [inspect_signal_lamp, decode_lighthouse_signal]
+    cooldown_tags: [lighthouse, bulk_fill]
+    repeat_group: abandoned_lighthouse_signal_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: lighthouse_signal_followup
+    name: 버려진 등대의 신호 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [abandoned_lighthouse_signal]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [ancient]
+    storylet_tags: [lighthouse, report, quest_related]
+    card_candidate_hints: [decode_lighthouse_signal, report_lighthouse_warning]
+    cooldown_tags: [lighthouse, bulk_fill]
+    repeat_group: abandoned_lighthouse_signal_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: portal_canvas_hint
+    name: 그려진 문 너머의 화폭 첫 단서
+    description: 그려진 문 너머의 화폭와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [painted_portal_canvas]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [forbidden]
+    storylet_tags: [canvas, quest_related]
+    card_candidate_hints: [inspect_canvas_paint, stabilize_portal_canvas]
+    cooldown_tags: [canvas, bulk_fill]
+    repeat_group: painted_portal_canvas_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: portal_canvas_followup
+    name: 그려진 문 너머의 화폭 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [painted_portal_canvas]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [forbidden]
+    storylet_tags: [canvas, report, quest_related]
+    card_candidate_hints: [stabilize_portal_canvas, report_canvas_truth]
+    cooldown_tags: [canvas, bulk_fill]
+    repeat_group: painted_portal_canvas_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: vanishing_village_hint
+    name: 사라지는 마을의 흔적 첫 단서
+    description: 사라지는 마을의 흔적와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [vanishing_village]
+    region_tags: [village, forest]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [vanishing, quest_related]
+    card_candidate_hints: [find_vanishing_trace, anchor_village_memory]
+    cooldown_tags: [vanishing, bulk_fill]
+    repeat_group: vanishing_village_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: vanishing_village_followup
+    name: 사라지는 마을의 흔적 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [vanishing_village]
+    region_tags: [village, forest]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [vanishing, report, quest_related]
+    card_candidate_hints: [anchor_village_memory, report_vanishing_village]
+    cooldown_tags: [vanishing, bulk_fill]
+    repeat_group: vanishing_village_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: zarechka_beast_hint
+    name: 자레치카의 짐승 첫 단서
+    description: 자레치카의 짐승와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [beast_of_zarechka]
+    region_tags: [village, forest]
+    event_tags: [combat]
+    danger_tags: [beast]
+    storylet_tags: [zarechka_beast, quest_related]
+    card_candidate_hints: [identify_beast_tracks, drive_beast_back]
+    cooldown_tags: [zarechka_beast, bulk_fill]
+    repeat_group: beast_of_zarechka_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: zarechka_beast_followup
+    name: 자레치카의 짐승 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [beast_of_zarechka]
+    region_tags: [village, forest]
+    event_tags: [combat]
+    danger_tags: [beast]
+    storylet_tags: [zarechka_beast, report, quest_related]
+    card_candidate_hints: [drive_beast_back, reassure_zarechka]
+    cooldown_tags: [zarechka_beast, bulk_fill]
+    repeat_group: beast_of_zarechka_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: stone_circle_cattle_hint
+    name: 돌 원의 소 떼 상처 첫 단서
+    description: 돌 원의 소 떼 상처와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [cattle_mutilation_stone_circle]
+    region_tags: [village, forest]
+    event_tags: [combat]
+    danger_tags: [forbidden]
+    storylet_tags: [stone_circle, quest_related]
+    card_candidate_hints: [inspect_cattle_circle, break_stone_circle_lure]
+    cooldown_tags: [stone_circle, bulk_fill]
+    repeat_group: cattle_mutilation_stone_circle_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: stone_circle_cattle_followup
+    name: 돌 원의 소 떼 상처 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [cattle_mutilation_stone_circle]
+    region_tags: [village, forest]
+    event_tags: [combat]
+    danger_tags: [forbidden]
+    storylet_tags: [stone_circle, report, quest_related]
+    card_candidate_hints: [break_stone_circle_lure, warn_herders]
+    cooldown_tags: [stone_circle, bulk_fill]
+    repeat_group: cattle_mutilation_stone_circle_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: border_caravan_hint
+    name: 국경 요새로 가는 상단 첫 단서
+    description: 국경 요새로 가는 상단와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [caravan_to_border_fort]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [bandit]
+    storylet_tags: [caravan, quest_related]
+    card_candidate_hints: [secure_caravan_manifest, cross_border_road]
+    cooldown_tags: [caravan, bulk_fill]
+    repeat_group: caravan_to_border_fort_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: border_caravan_followup
+    name: 국경 요새로 가는 상단 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [caravan_to_border_fort]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [bandit]
+    storylet_tags: [caravan, report, quest_related]
+    card_candidate_hints: [cross_border_road, deliver_fort_supplies]
+    cooldown_tags: [caravan, bulk_fill]
+    repeat_group: caravan_to_border_fort_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: winter_wagon_hint
+    name: 겨울 마차 배송 첫 단서
+    description: 겨울 마차 배송와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [winter_wagon_delivery]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [storm]
+    storylet_tags: [winter_wagon, quest_related]
+    card_candidate_hints: [prepare_winter_wagon, cross_snow_road]
+    cooldown_tags: [winter_wagon, bulk_fill]
+    repeat_group: winter_wagon_delivery_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: winter_wagon_followup
+    name: 겨울 마차 배송 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [winter_wagon_delivery]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [storm]
+    storylet_tags: [winter_wagon, report, quest_related]
+    card_candidate_hints: [cross_snow_road, deliver_winter_goods]
+    cooldown_tags: [winter_wagon, bulk_fill]
+    repeat_group: winter_wagon_delivery_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: sealed_parcel_hint
+    name: 봉인된 소포 배달 첫 단서
+    description: 봉인된 소포 배달와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [deliver_the_sealed_parcel]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [bandit]
+    storylet_tags: [sealed_parcel, quest_related]
+    card_candidate_hints: [receive_sealed_parcel, avoid_parcel_tamper]
+    cooldown_tags: [sealed_parcel, bulk_fill]
+    repeat_group: deliver_the_sealed_parcel_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: sealed_parcel_followup
+    name: 봉인된 소포 배달 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [deliver_the_sealed_parcel]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [bandit]
+    storylet_tags: [sealed_parcel, report, quest_related]
+    card_candidate_hints: [avoid_parcel_tamper, deliver_sealed_parcel]
+    cooldown_tags: [sealed_parcel, bulk_fill]
+    repeat_group: deliver_the_sealed_parcel_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: old_gate_hint
+    name: 오래된 문 작동 첫 단서
+    description: 오래된 문 작동와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [activate_the_old_gate]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [ancient]
+    storylet_tags: [old_gate, quest_related]
+    card_candidate_hints: [find_gate_runes, align_old_gate]
+    cooldown_tags: [old_gate, bulk_fill]
+    repeat_group: activate_the_old_gate_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: old_gate_followup
+    name: 오래된 문 작동 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [activate_the_old_gate]
+    region_tags: [village, ruin]
+    event_tags: [exploration]
+    danger_tags: [ancient]
+    storylet_tags: [old_gate, report, quest_related]
+    card_candidate_hints: [align_old_gate, return_gate_report]
+    cooldown_tags: [old_gate, bulk_fill]
+    repeat_group: activate_the_old_gate_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.
+
+  - id: hidden_grove_hint
+    name: 숨은 숲 빈터 발견 첫 단서
+    description: 숨은 숲 빈터 발견와 관련된 첫 흔적이 현재 지역에 드러난다.
+    quest_ids: [hidden_grove_discovery]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [lost]
+    storylet_tags: [hidden_grove, quest_related]
+    card_candidate_hints: [find_hidden_grove, map_grove_path]
+    cooldown_tags: [hidden_grove, bulk_fill]
+    repeat_group: hidden_grove_discovery_bulk
+    base_weight: 16
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 단서를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 단서는 아직 작지만 퀘스트 방향을 충분히 좁혀 준다.
+
+  - id: hidden_grove_followup
+    name: 숨은 숲 빈터 발견 후속 확인
+    description: 앞서 확인한 단서가 보고와 마무리 행동으로 이어진다.
+    quest_ids: [hidden_grove_discovery]
+    region_tags: [village, forest]
+    event_tags: [survival]
+    danger_tags: [lost]
+    storylet_tags: [hidden_grove, report, quest_related]
+    card_candidate_hints: [map_grove_path, report_hidden_grove]
+    cooldown_tags: [hidden_grove, bulk_fill]
+    repeat_group: hidden_grove_discovery_bulk
+    base_weight: 14
+    cooldown_turns: 1
+    choices:
+      - id: pass
+        text: 후속 조치를 정리한다
+        type: safe
+        risk_level: low
+        result:
+          message: 남은 조치는 간단하지만 시간을 놓치면 보상이 줄어든다.

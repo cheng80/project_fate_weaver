@@ -770,3 +770,879 @@ quests:
         forest: 10
         survival: 10
         weather: 8
+  - id: beginner_village_wrongness
+    title: 초보 마을의 이상 징후
+    rank: novice
+    quest_type: local_problem
+    start_region: village
+    target_regions: [village]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_wrongness_sign
+        type: discover_clue
+        target: wrongness_sign
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: calm_village_square
+        type: optional_action
+        target: calm_village_square
+        progress_key: calm_village_square
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_wrongness_resolved
+        type: return_to_region
+        target: village
+        progress_key: report_wrongness_resolved
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        village: 10
+        wrongness: 10
+        survival: 4
+  - id: festival_missing_racer
+    title: 축제의 사라진 주자
+    rank: novice
+    quest_type: local_problem
+    start_region: village
+    target_regions: [village]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_racer_track
+        type: discover_clue
+        target: racer_track
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: guide_missing_racer
+        type: optional_action
+        target: guide_missing_racer
+        progress_key: guide_missing_racer
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_festival_safe
+        type: return_to_region
+        target: village
+        progress_key: report_festival_safe
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        village: 10
+        festival: 10
+        survival: 4
+  - id: abandoned_lighthouse_signal
+    title: 버려진 등대의 신호
+    rank: novice
+    quest_type: investigation
+    start_region: village
+    target_regions: [village, ruin]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: inspect_signal_lamp
+        type: discover_clue
+        target: lighthouse_signal
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: decode_lighthouse_signal
+        type: optional_action
+        target: decode_lighthouse_signal
+        progress_key: decode_lighthouse_signal
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_lighthouse_warning
+        type: return_to_region
+        target: village
+        progress_key: report_lighthouse_warning
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        ruin: 10
+        lighthouse: 10
+        survival: 4
+  - id: painted_portal_canvas
+    title: 그려진 문 너머의 화폭
+    rank: novice
+    quest_type: investigation
+    start_region: village
+    target_regions: [village, ruin]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: inspect_canvas_paint
+        type: discover_clue
+        target: portal_canvas_paint
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: stabilize_portal_canvas
+        type: optional_action
+        target: stabilize_portal_canvas
+        progress_key: stabilize_portal_canvas
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_canvas_truth
+        type: return_to_region
+        target: village
+        progress_key: report_canvas_truth
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        ruin: 10
+        canvas: 10
+        survival: 4
+  - id: vanishing_village
+    title: 사라지는 마을의 흔적
+    rank: novice
+    quest_type: investigation
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_vanishing_trace
+        type: discover_clue
+        target: vanishing_trace
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: anchor_village_memory
+        type: optional_action
+        target: anchor_village_memory
+        progress_key: anchor_village_memory
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_vanishing_village
+        type: return_to_region
+        target: village
+        progress_key: report_vanishing_village
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        vanishing: 10
+        survival: 4
+  - id: beast_of_zarechka
+    title: 자레치카의 짐승
+    rank: novice
+    quest_type: defense
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: identify_beast_tracks
+        type: discover_clue
+        target: beast_tracks
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: drive_beast_back
+        type: optional_action
+        target: drive_beast_back
+        progress_key: drive_beast_back
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: reassure_zarechka
+        type: return_to_region
+        target: village
+        progress_key: reassure_zarechka
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        zarechka_beast: 10
+        survival: 4
+  - id: cattle_mutilation_stone_circle
+    title: 돌 원의 소 떼 상처
+    rank: novice
+    quest_type: defense
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: inspect_cattle_circle
+        type: discover_clue
+        target: stone_circle_lure
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: break_stone_circle_lure
+        type: optional_action
+        target: break_stone_circle_lure
+        progress_key: break_stone_circle_lure
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: warn_herders
+        type: return_to_region
+        target: village
+        progress_key: warn_herders
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        stone_circle: 10
+        survival: 4
+  - id: caravan_to_border_fort
+    title: 국경 요새로 가는 상단
+    rank: novice
+    quest_type: delivery
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: secure_caravan_manifest
+        type: discover_clue
+        target: caravan_manifest
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: cross_border_road
+        type: optional_action
+        target: cross_border_road
+        progress_key: cross_border_road
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: deliver_fort_supplies
+        type: return_to_region
+        target: village
+        progress_key: deliver_fort_supplies
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        caravan: 10
+        survival: 4
+  - id: winter_wagon_delivery
+    title: 겨울 마차 배송
+    rank: novice
+    quest_type: delivery
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: prepare_winter_wagon
+        type: discover_clue
+        target: winter_route
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: cross_snow_road
+        type: optional_action
+        target: cross_snow_road
+        progress_key: cross_snow_road
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: deliver_winter_goods
+        type: return_to_region
+        target: village
+        progress_key: deliver_winter_goods
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        winter_wagon: 10
+        survival: 4
+  - id: deliver_the_sealed_parcel
+    title: 봉인된 소포 배달
+    rank: novice
+    quest_type: delivery
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: receive_sealed_parcel
+        type: discover_clue
+        target: sealed_parcel_mark
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: avoid_parcel_tamper
+        type: optional_action
+        target: avoid_parcel_tamper
+        progress_key: avoid_parcel_tamper
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: deliver_sealed_parcel
+        type: return_to_region
+        target: village
+        progress_key: deliver_sealed_parcel
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        sealed_parcel: 10
+        survival: 4
+  - id: activate_the_old_gate
+    title: 오래된 문 작동
+    rank: novice
+    quest_type: dungeon_crawl
+    start_region: village
+    target_regions: [village, ruin]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_gate_runes
+        type: discover_clue
+        target: gate_runes
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: align_old_gate
+        type: optional_action
+        target: align_old_gate
+        progress_key: align_old_gate
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: return_gate_report
+        type: return_to_region
+        target: village
+        progress_key: return_gate_report
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        ruin: 10
+        old_gate: 10
+        survival: 4
+  - id: hidden_grove_discovery
+    title: 숨은 숲 빈터 발견
+    rank: novice
+    quest_type: exploration
+    start_region: village
+    target_regions: [village, forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 8
+    primary_objectives:
+      - id: find_hidden_grove
+        type: discover_clue
+        target: hidden_grove
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: map_grove_path
+        type: optional_action
+        target: map_grove_path
+        progress_key: map_grove_path
+        required: true
+        value: 1
+        failure_reason: quest_progress_failed
+        partial_reason: quest_progress_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: report_hidden_grove
+        type: return_to_region
+        target: village
+        progress_key: report_hidden_grove
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: preserve_supplies
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 45
+    event_bias:
+      tags:
+        forest: 10
+        hidden_grove: 10
+        survival: 4

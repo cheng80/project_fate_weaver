@@ -155,6 +155,7 @@ def _load_events(raw: JsonMap, source_path: Path) -> tuple[Event, ...]:
                 card_candidate_hints=tuple(_optional_string_list(event, "card_candidate_hints")),
                 cooldown_tags=tuple(_optional_string_list(event, "cooldown_tags")),
                 repeat_group=str(event.get("repeat_group", "")),
+                quest_ids=tuple(_optional_string_list(event, "quest_ids")),
                 base_weight=int(event.get("base_weight", 1)),
                 choices=tuple(_load_choice(raw_choice) for raw_choice in _list_at(event, "choices")),
                 max_occurrences_per_run=_optional_int(event, "max_occurrences_per_run"),
