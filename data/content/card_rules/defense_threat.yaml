@@ -648,6 +648,7 @@ p0_cards:
   - zarechka_beast
   - bait
   - pack1_enrichment
+  requires_item: beast_scent_tar
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25

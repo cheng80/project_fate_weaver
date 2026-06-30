@@ -338,6 +338,7 @@ p0_cards:
   - storm_pass
   - shelter
   - pack1_enrichment
+  requires_item: camp_tarp
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -423,6 +424,7 @@ p0_cards:
   - storm_pass
   - ration
   - pack1_enrichment
+  requires_item: spare_ration_cache
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -509,6 +511,7 @@ p0_cards:
   - storm_pass
   - signal
   - pack1_enrichment
+  requires_item: reed_whistle
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25

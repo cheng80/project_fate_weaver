@@ -1,4 +1,69 @@
 endings:
+  - id: clear_report_return
+    name: 납득된 보고
+    condition:
+      result_type: success
+      character_outcome: alive
+      min_clues: 1
+      min_reputation: 1
+      required_any_clues: [shared_cup_sediment, false_signal_interval, hollow_wall_echo, sealed_thread_shifted]
+
+  - id: costly_truth_return
+    name: 대가를 치른 진실
+    condition:
+      result_type: partial_success
+      character_outcome: alive
+      min_clues: 1
+      max_food: 1
+      required_partial_reasons: [primary_partial, reduced_reward, report_failed]
+
+  - id: sealed_danger_left_behind
+    name: 남겨진 봉인 위험
+    condition:
+      result_type: [success, partial_success]
+      character_outcome: alive
+      min_omens: 1
+      required_any_omens: [seal_breaths_at_dusk, old_water_flows_uphill, rune_glows_before_touch, watch_fire_burns_blue]
+
+  - id: rescued_but_hunted
+    name: 구했지만 추격받는 귀환
+    condition:
+      result_type: [success, partial_success]
+      character_outcome: alive
+      required_any_omens: [dogs_face_the_old_road, no_crows_on_battlefield, wagon_wheel_sings_low]
+      required_completed_objectives: [resolve_porter_fate, protect_villagers, escort_caravan]
+
+  - id: rich_but_distrusted
+    name: 돈은 벌었지만 잃은 신뢰
+    condition:
+      result_type: [success, partial_success]
+      min_money: 4
+      max_reputation: 0
+
+  - id: prepared_frontier_route
+    name: 준비된 변경의 길
+    condition:
+      result_type: success
+      character_outcome: alive
+      min_clues: 1
+      required_any_items: [chalk_marker_set, oilcloth_map_case, reed_whistle, camp_tarp, oath_coin]
+
+  - id: ritual_interrupted_not_understood
+    name: 멈췄지만 이해하지 못한 의식
+    condition:
+      result_type: partial_success
+      character_outcome: alive
+      required_any_omens: [rune_glows_before_touch, old_water_flows_uphill, bell_echo_arrives_first]
+      required_partial_reasons: [primary_partial, reduced_reward]
+
+  - id: survivor_without_answer
+    name: 답 없는 생존자
+    condition:
+      result_type: failure
+      character_outcome: alive
+      failure_kind: [objective_failed, return_failed, time_expired]
+      max_clues: 0
+
   - id: survival_return
     name: 생존 귀환
     condition:

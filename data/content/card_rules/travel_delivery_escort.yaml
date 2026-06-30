@@ -758,6 +758,7 @@ p0_cards:
   - winter_wagon
   - repair
   - pack1_enrichment
+  requires_item: spare_wheel_pin
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -921,6 +922,7 @@ p0_cards:
   - sealed_parcel
   - oath
   - pack1_enrichment
+  requires_item: waxed_thread_spool
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -964,6 +966,7 @@ p0_cards:
   - medicine_bundle
   - travel
   - pack1_enrichment
+  requires_item: oath_coin
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25

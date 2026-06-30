@@ -411,6 +411,7 @@ p0_cards:
   - well_seal
   - hollow_wall
   - pack1_enrichment
+  requires_item: folding_probe_rod
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -497,6 +498,7 @@ p0_cards:
   - well_seal
   - stairs
   - pack1_enrichment
+  requires_item: tarred_rope_hook
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -537,6 +539,7 @@ p0_cards:
   - well_seal
   - seal
   - pack1_enrichment
+  requires_item: copper_listening_cup
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25
@@ -625,6 +628,7 @@ p0_cards:
   - old_gate
   - return_marker
   - pack1_enrichment
+  requires_item: chalk_marker_set
   weight_modifiers:
     storylet_tag_match: 20
     storylet_hint_bonus: 25

@@ -29,3 +29,450 @@ items:
     roles: [risk_reduce]
     tags: [weapon]
     counters: [beast, bandit, physical]
+  - id: waxed_thread_spool
+    name: 밀랍 먹인 실타래
+    roles: [unlock]
+    tags: [tool]
+    counters: [trap, ancient]
+    item_role: unlock
+    rarity: common
+    uses: 2
+    related_quest_types: [delivery, ritual, dungeon_crawl]
+    unlocks_cards: [secure_the_sealed_bag, copy_the_rune_sequence]
+    modifies_results:
+      quest_progress: 1
+    resource_effects:
+      money: 0
+    risk_effects:
+      trap: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return, prepared_frontier_route]
+  - id: chalk_marker_set
+    name: 분필 표식 세트
+    roles: [future_weight]
+    tags: [tool]
+    counters: [lost, ruin]
+    item_role: future_weight
+    rarity: common
+    uses: 3
+    related_quest_types: [exploration, survival, dungeon_crawl]
+    unlocks_cards: [leave_a_return_marker]
+    modifies_results:
+      next_event_tags: [marked_return]
+    resource_effects:
+      food: 0
+    risk_effects:
+      lost: -2
+    can_affect_ending: true
+    ending_links: [prepared_frontier_route]
+  - id: folding_probe_rod
+    name: 접이식 탐침봉
+    roles: [information]
+    tags: [tool]
+    counters: [trap, well]
+    item_role: information
+    rarity: common
+    uses: 3
+    related_quest_types: [dungeon_crawl, investigation]
+    unlocks_cards: [tap_the_hollow_wall]
+    modifies_results:
+      gain_clues: [hollow_wall_echo]
+    resource_effects:
+      health: 0
+    risk_effects:
+      trap: -1
+    can_affect_ending: false
+  - id: oilcloth_map_case
+    name: 유포 지도집
+    roles: [risk_reduce]
+    tags: [tool, travel]
+    counters: [storm, lost]
+    item_role: risk_reduce
+    rarity: common
+    uses: 2
+    related_quest_types: [travel, delivery, exploration]
+    unlocks_cards: [read_weather_marks]
+    modifies_results:
+      next_event_tags: [weather_read]
+    resource_effects:
+      food: 1
+    risk_effects:
+      storm: -1
+    can_affect_ending: true
+    ending_links: [prepared_frontier_route]
+  - id: village_token
+    name: 마을 징표
+    roles: [cost_convert]
+    tags: [tool]
+    counters: [bandit]
+    item_role: cost_convert
+    rarity: common
+    uses: 1
+    related_quest_types: [local_problem, investigation]
+    unlocks_cards: [interview_reluctant_witness, offer_public_help]
+    modifies_results:
+      reputation: 1
+    resource_effects:
+      money: 1
+    risk_effects:
+      social_hostility: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return, rich_but_distrusted]
+  - id: small_signal_bell
+    name: 작은 신호종
+    roles: [unlock]
+    tags: [tool]
+    counters: [bandit, beast]
+    item_role: unlock
+    rarity: common
+    uses: 2
+    related_quest_types: [defense, escort]
+    unlocks_cards: [prepare_quiet_signal, raise_night_watch]
+    modifies_results:
+      next_event_tags: [warning_signal]
+    resource_effects:
+      reputation: 1
+    risk_effects:
+      ambush: -1
+    can_affect_ending: true
+    ending_links: [rescued_but_hunted]
+  - id: dried_bitterroot
+    name: 말린 쓴뿌리
+    roles: [risk_reduce]
+    tags: [consumable, healing]
+    counters: [hunger]
+    item_role: risk_reduce
+    rarity: common
+    uses: 1
+    related_quest_types: [local_problem, survival]
+    unlocks_cards: [inspect_shared_water_source]
+    modifies_results:
+      status: {health: 1}
+    resource_effects:
+      health: 1
+    risk_effects:
+      poison: -1
+    can_affect_ending: false
+  - id: mirror_shard
+    name: 거울 조각
+    roles: [information]
+    tags: [tool, light]
+    counters: [darkness]
+    item_role: information
+    rarity: common
+    uses: 2
+    related_quest_types: [investigation, mystery]
+    unlocks_cards: [test_the_false_signal]
+    modifies_results:
+      gain_omens: [signal_light_skips_count]
+    resource_effects:
+      money: 0
+    risk_effects:
+      false_signal: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return]
+  - id: ash_salt_pouch
+    name: 잿소금 주머니
+    roles: [risk_reduce]
+    tags: [holy, consumable]
+    counters: [curse, undead]
+    item_role: risk_reduce
+    rarity: uncommon
+    uses: 1
+    related_quest_types: [ritual, defense, dungeon_crawl]
+    unlocks_cards: [test_the_ritual_component]
+    modifies_results:
+      status: {curse: -1}
+    resource_effects:
+      health: 0
+    risk_effects:
+      curse: -2
+    can_affect_ending: true
+    ending_links: [sealed_danger_left_behind, ritual_interrupted_not_understood]
+  - id: spare_wheel_pin
+    name: 예비 바퀴핀
+    roles: [unlock]
+    tags: [tool, travel]
+    counters: [physical]
+    item_role: unlock
+    rarity: common
+    uses: 1
+    related_quest_types: [delivery, escort]
+    unlocks_cards: [repair_load_straps]
+    modifies_results:
+      quest_progress: 1
+    resource_effects:
+      food: 1
+    risk_effects:
+      wagon_break: -2
+    can_affect_ending: true
+    ending_links: [prepared_frontier_route]
+  - id: warm_lantern_oil
+    name: 따뜻한 등잔기름
+    roles: [cost_convert]
+    tags: [consumable, light, travel]
+    counters: [darkness, storm]
+    item_role: cost_convert
+    rarity: common
+    uses: 1
+    related_quest_types: [travel, dungeon_crawl]
+    unlocks_cards: [listen_beyond_the_seal]
+    modifies_results:
+      status: {food: 1}
+    resource_effects:
+      food: 1
+    risk_effects:
+      cold: -1
+    can_affect_ending: false
+  - id: reed_whistle
+    name: 갈대 호각
+    roles: [unlock]
+    tags: [tool, travel]
+    counters: [lost, bandit]
+    item_role: unlock
+    rarity: common
+    uses: 2
+    related_quest_types: [escort, exploration, travel]
+    unlocks_cards: [signal_from_high_ground]
+    modifies_results:
+      next_event_tags: [high_ground_signal]
+    resource_effects:
+      reputation: 1
+    risk_effects:
+      lost: -1
+    can_affect_ending: true
+    ending_links: [rescued_but_hunted, prepared_frontier_route]
+  - id: tarred_rope_hook
+    name: 역청 바른 밧줄갈고리
+    roles: [unlock]
+    tags: [tool, travel]
+    counters: [cliff, well, trap]
+    item_role: unlock
+    rarity: uncommon
+    uses: 2
+    related_quest_types: [dungeon_crawl, survival, local_problem]
+    unlocks_cards: [brace_the_old_stairs]
+    modifies_results:
+      status: {health: 1}
+    resource_effects:
+      health: 1
+    risk_effects:
+      cliff: -2
+    can_affect_ending: true
+    ending_links: [survivor_without_answer]
+  - id: sealed_letter_copy
+    name: 봉인 서신 사본
+    roles: [information]
+    tags: [tool]
+    counters: [bandit]
+    item_role: information
+    rarity: uncommon
+    uses: 1
+    related_quest_types: [delivery, investigation]
+    unlocks_cards: [secure_the_sealed_bag, listen_to_border_gossip]
+    modifies_results:
+      gain_clues: [sealed_thread_shifted]
+    resource_effects:
+      money: 1
+    risk_effects:
+      intrigue: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return, rich_but_distrusted]
+  - id: soft_boot_wraps
+    name: 부드러운 장화감개
+    roles: [risk_reduce]
+    tags: [tool, travel]
+    counters: [trap, physical]
+    item_role: risk_reduce
+    rarity: common
+    uses: 2
+    related_quest_types: [investigation, dungeon_crawl]
+    unlocks_cards: [reconstruct_last_known_path]
+    modifies_results:
+      status: {health: 1}
+    resource_effects:
+      health: 1
+    risk_effects:
+      trap: -1
+    can_affect_ending: false
+  - id: camp_tarp
+    name: 야영 방수포
+    roles: [risk_reduce]
+    tags: [tool, travel]
+    counters: [storm, hunger]
+    item_role: risk_reduce
+    rarity: common
+    uses: 2
+    related_quest_types: [survival, travel]
+    unlocks_cards: [find_dry_refuge]
+    modifies_results:
+      status: {food: 1}
+    resource_effects:
+      food: 1
+    risk_effects:
+      storm: -2
+    can_affect_ending: true
+    ending_links: [prepared_frontier_route, survivor_without_answer]
+  - id: copper_listening_cup
+    name: 구리 청음잔
+    roles: [information]
+    tags: [tool]
+    counters: [well, ancient]
+    item_role: information
+    rarity: uncommon
+    uses: 2
+    related_quest_types: [ritual, dungeon_crawl, investigation]
+    unlocks_cards: [listen_beyond_the_seal]
+    modifies_results:
+      gain_omens: [seal_breaths_at_dusk]
+    resource_effects:
+      health: 0
+    risk_effects:
+      seal_failure: -1
+    can_affect_ending: true
+    ending_links: [sealed_danger_left_behind, ritual_interrupted_not_understood]
+  - id: red_thread_charm
+    name: 붉은 실 부적
+    roles: [cost_convert]
+    tags: [holy, tool]
+    counters: [lost, curse]
+    item_role: cost_convert
+    rarity: uncommon
+    uses: 1
+    related_quest_types: [exploration, mystery]
+    unlocks_cards: [follow_water_insects]
+    modifies_results:
+      next_event_tags: [safe_return_mark]
+    resource_effects:
+      reputation: 0
+    risk_effects:
+      lost: -1
+    can_affect_ending: true
+    ending_links: [prepared_frontier_route]
+  - id: spare_ration_cache
+    name: 예비 건량 꾸러미
+    roles: [cost_convert]
+    tags: [consumable, travel]
+    counters: [hunger, storm]
+    item_role: cost_convert
+    rarity: common
+    uses: 1
+    related_quest_types: [survival, escort, delivery]
+    unlocks_cards: [ration_the_last_supplies]
+    modifies_results:
+      status: {food: 2}
+    resource_effects:
+      food: 2
+    risk_effects:
+      hunger: -2
+    can_affect_ending: true
+    ending_links: [costly_truth_return, survivor_without_answer]
+  - id: beast_scent_tar
+    name: 짐승 냄새 역청
+    roles: [risk_reduce]
+    tags: [consumable]
+    counters: [beast]
+    item_role: risk_reduce
+    rarity: uncommon
+    uses: 1
+    related_quest_types: [defense, monster_hunt]
+    unlocks_cards: [bait_the_threat_path]
+    modifies_results:
+      gain_clues: [livestock_refused_gate]
+    resource_effects:
+      health: 1
+    risk_effects:
+      beast: -2
+    can_affect_ending: true
+    ending_links: [rescued_but_hunted]
+  - id: ink_fixing_powder
+    name: 잉크 고정 가루
+    roles: [information]
+    tags: [tool]
+    counters: [storm, ancient]
+    item_role: information
+    rarity: common
+    uses: 1
+    related_quest_types: [investigation, travel]
+    unlocks_cards: [map_conflicting_testimony]
+    modifies_results:
+      gain_omens: [map_ink_moves_after_rain]
+    resource_effects:
+      money: 0
+    risk_effects:
+      route_shift: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return]
+  - id: smoke_cord
+    name: 연기 매듭끈
+    roles: [future_weight]
+    tags: [tool]
+    counters: [bandit, beast]
+    item_role: future_weight
+    rarity: common
+    uses: 2
+    related_quest_types: [defense, travel]
+    unlocks_cards: [burn_false_trail]
+    modifies_results:
+      next_event_tags: [pursuit_blunted]
+    resource_effects:
+      money: -1
+    risk_effects:
+      pursuit: -2
+    can_affect_ending: true
+    ending_links: [rescued_but_hunted, sealed_danger_left_behind]
+  - id: iron_nail_bundle
+    name: 쇠못 묶음
+    roles: [unlock]
+    tags: [tool, weapon]
+    counters: [physical, beast]
+    item_role: unlock
+    rarity: common
+    uses: 2
+    related_quest_types: [defense, local_problem]
+    unlocks_cards: [mark_weak_fence_line, move_children_to_cellar]
+    modifies_results:
+      quest_progress: 1
+    resource_effects:
+      reputation: 1
+    risk_effects:
+      breach: -1
+    can_affect_ending: true
+    ending_links: [clear_report_return]
+  - id: clear_water_vial
+    name: 맑은 물 유리병
+    roles: [information]
+    tags: [tool]
+    counters: [hunger, well]
+    item_role: information
+    rarity: common
+    uses: 1
+    related_quest_types: [local_problem, survival]
+    unlocks_cards: [inspect_shared_water_source, follow_water_insects]
+    modifies_results:
+      gain_clues: [shared_cup_sediment]
+    resource_effects:
+      health: 1
+    risk_effects:
+      poison: -2
+    can_affect_ending: true
+    ending_links: [clear_report_return]
+  - id: oath_coin
+    name: 맹세 동전
+    roles: [cost_convert]
+    tags: [tool]
+    counters: [bandit]
+    item_role: cost_convert
+    rarity: uncommon
+    uses: 1
+    related_quest_types: [delivery, escort, social_contract]
+    unlocks_cards: [negotiate_safe_passage]
+    modifies_results:
+      status: {money: -1, reputation: 1}
+    resource_effects:
+      money: -1
+      reputation: 1
+    risk_effects:
+      bargain: -1
+    can_affect_ending: true
+    ending_links: [rich_but_distrusted, prepared_frontier_route]

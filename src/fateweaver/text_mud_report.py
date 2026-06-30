@@ -33,6 +33,9 @@ def format_quest_report(quest_report: JsonMap) -> list[str]:
         f"보상 상태: {text(quest_report.get('reward_status'))}",
         f"점수: {text(quest_report.get('score'))}",
     ]
+    ending = quest_report.get("ending")
+    if isinstance(ending, dict):
+        lines.append(f"Run Ending: {text(ending.get('id'))} / {text(ending.get('name'))}")
     score_breakdown = format_score_breakdown(quest_report)
     if score_breakdown != MISSING:
         lines.append(f"점수 상세: {score_breakdown}")

@@ -52,7 +52,7 @@ def build_quest_report(request: QuestReportRequest) -> JsonMap:
     result_reasons = partial_reasons if result_type == "partial_success" else failure_reasons
     result_reason = result_reasons[0] if result_reasons else "quest_completed"
     score_breakdown = _score_breakdown(request, evaluations, result_type)
-    return {
+    report = {
         "quest_id": request.quest.id,
         "result_type": result_type,
         "result_reason": result_reason,
@@ -71,6 +71,10 @@ def build_quest_report(request: QuestReportRequest) -> JsonMap:
         "unlocked_or_suggested_next": ["missing_porter_search"] if result_type == "success" else ["retry_herb_gathering"],
         "review_text": _review_text(result_type, result_reason),
     }
+    ending = _selected_ending(report, request.state, request.bundle)
+    if ending:
+        report["ending"] = ending
+    return report
 
 
 def evaluate_objectives(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> tuple[ObjectiveEvaluation, ...]:
@@ -260,6 +264,150 @@ def _review_text(result_type: ResultType, result_reason: str) -> str:
             return "원정은 실패했고 자원 관리와 귀환 판단을 다시 봐야 한다."
         case unreachable:
             assert_never(unreachable)
+
+
+def _selected_ending(report: JsonMap, state: RunState, bundle: ProjectData) -> JsonMap:
+    for ending in bundle.endings.values():
+        if _ending_matches(ending.condition, report, state):
+            return {"id": ending.id, "name": ending.name, "condition": dict(ending.condition)}
+    return {}
+
+
+def _ending_matches(condition: JsonMap, report: JsonMap, state: RunState) -> bool:
+    return (
+        _uses_supported_condition_keys(condition, state)
+        and _matches_value(condition, "result_type", str(report.get("result_type", "")))
+        and _matches_value(condition, "failure_kind", str(report.get("failure_kind", "")))
+        and _matches_value(condition, "character_outcome", str(report.get("character_outcome", "")))
+        and _matches_value(condition, "reward_status", str(report.get("reward_status", "")))
+        and _matches_bounds(condition, "score", int(report.get("score", 0)))
+        and _matches_bounds(condition, "reputation", state.status.get("reputation", 0))
+        and _matches_bounds(condition, "money", state.status.get("money", 0))
+        and _matches_status_bounds(condition, state)
+        and _matches_count(condition, "clues", len(state.clues))
+        and _matches_count(condition, "omens", len(state.omens))
+        and _matches_collection(condition, "required_any_clues", state.clues, any)
+        and _matches_collection(condition, "required_all_clues", state.clues, all)
+        and _matches_collection(condition, "required_any_omens", state.omens, any)
+        and _matches_collection(condition, "required_all_omens", state.omens, all)
+        and _matches_collection(condition, "forbidden_omens", state.omens, _none)
+        and _matches_collection(condition, "required_any_items", state.inventory, any)
+        and _matches_collection(condition, "required_all_items", state.inventory, all)
+        and _matches_collection(condition, "required_partial_reasons", _string_list(report.get("partial_reasons", [])), any)
+        and _matches_collection(condition, "required_failure_reasons", _string_list(report.get("failure_reasons", [])), any)
+        and _matches_collection(condition, "required_completed_objectives", _string_list(report.get("completed_objectives", [])), any)
+        and _matches_collection(condition, "required_failed_objectives", _string_list(report.get("failed_objectives", [])), any)
+        and _matches_target_turns(condition, state)
+        and _matches_status_conditions(condition, state)
+    )
+
+
+def _uses_supported_condition_keys(condition: JsonMap, state: RunState) -> bool:
+    supported = {
+        "result_type",
+        "failure_kind",
+        "character_outcome",
+        "reward_status",
+        "min_score",
+        "max_score",
+        "min_reputation",
+        "max_reputation",
+        "min_money",
+        "max_money",
+        "min_clues",
+        "max_clues",
+        "min_omens",
+        "max_omens",
+        "required_any_clues",
+        "required_all_clues",
+        "required_any_omens",
+        "required_all_omens",
+        "forbidden_omens",
+        "required_any_items",
+        "required_all_items",
+        "required_partial_reasons",
+        "required_failure_reasons",
+        "required_completed_objectives",
+        "required_failed_objectives",
+        "target_turns_reached",
+    }
+    return all(key in supported or key in state.status or _is_status_bound_key(key, state) for key in condition)
+
+
+def _is_status_bound_key(key: str, state: RunState) -> bool:
+    return any(key in {f"min_{status_id}", f"max_{status_id}"} for status_id in state.status)
+
+
+def _matches_value(condition: JsonMap, key: str, value: str) -> bool:
+    expected = condition.get(key)
+    if expected is None:
+        return True
+    if isinstance(expected, list):
+        return value in {str(item) for item in expected}
+    return value == str(expected)
+
+
+def _matches_bounds(condition: JsonMap, key: str, value: int) -> bool:
+    minimum = condition.get(f"min_{key}")
+    maximum = condition.get(f"max_{key}")
+    if minimum is not None and value < int(minimum):
+        return False
+    return not (maximum is not None and value > int(maximum))
+
+
+def _matches_count(condition: JsonMap, key: str, value: int) -> bool:
+    return _matches_bounds(condition, key, value)
+
+
+def _matches_status_bounds(condition: JsonMap, state: RunState) -> bool:
+    return all(_matches_bounds(condition, status_id, value) for status_id, value in state.status.items())
+
+
+def _matches_collection(condition: JsonMap, key: str, values: tuple[str, ...], matcher: object) -> bool:
+    expected = _string_list(condition.get(key, []))
+    if not expected:
+        return True
+    value_set = set(values)
+    matches = [item in value_set for item in expected]
+    if matcher is any:
+        return any(matches)
+    if matcher is all:
+        return all(matches)
+    return _none(matches)
+
+
+def _matches_target_turns(condition: JsonMap, state: RunState) -> bool:
+    expected = condition.get("target_turns_reached")
+    if expected is None:
+        return True
+    reached = state.clock.turn >= state.clock.max_turns
+    return reached if bool(expected) else not reached
+
+
+def _matches_status_conditions(condition: JsonMap, state: RunState) -> bool:
+    for key, raw_bounds in condition.items():
+        if key not in state.status:
+            continue
+        if not isinstance(raw_bounds, dict):
+            return False
+        minimum = raw_bounds.get("min")
+        maximum = raw_bounds.get("max")
+        value = state.status.get(key, 0)
+        if minimum is not None and value < int(minimum):
+            return False
+        if maximum is not None and value > int(maximum):
+            return False
+    return True
+
+
+def _none(values: list[bool]) -> bool:
+    return not any(values)
+
+
+def _string_list(value: object) -> tuple[str, ...]:
+    if isinstance(value, list):
+        return tuple(str(item) for item in value)
+    return ()
 
 
 def _dedupe(values: list[str]) -> list[str]:
