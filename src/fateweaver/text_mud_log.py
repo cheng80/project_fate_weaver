@@ -191,9 +191,7 @@ def _omens(turn: JsonMap) -> str:
 
 def _first_turn(log: JsonMap) -> JsonMap:
     turns = _json_maps(log.get("turns"))
-    if not turns:
-        return {}
-    return turns[0]
+    return turns[0] if turns else {}
 
 
 def _render_summary(summary: JsonMap, quest_report: JsonMap) -> list[str]:
@@ -210,8 +208,12 @@ def _render_summary(summary: JsonMap, quest_report: JsonMap) -> list[str]:
             [
                 "Quest Report:",
                 f"결과 유형: {_text(quest_report.get('result_type'))}",
+                f"결과 이유: {_text(quest_report.get('result_reason'))} / {_text(quest_report.get('review_text'))}",
+                f"부분 성공 이유: {_text(quest_report.get('partial_reasons'))}",
+                f"실패 이유: {_text(quest_report.get('failure_reasons'))}",
                 f"완료 목표: {_text(quest_report.get('completed_objectives'))}",
                 f"실패 목표: {_text(quest_report.get('failed_objectives'))}",
+                f"보상 상태: {_text(quest_report.get('reward_status'))}",
                 f"점수: {_text(quest_report.get('score'))}",
             ]
         )
@@ -231,9 +233,7 @@ def _influences(turn: JsonMap) -> str:
 def _selected_cards(turn: JsonMap) -> str:
     selected = _text(turn.get("selected_cards"))
     multi = _json_map(turn.get("multi_select"))
-    if multi.get("selected") is True:
-        return f"{selected} (Multi-Select: {_text(multi.get('rule_id'))})"
-    return selected
+    return f"{selected} (Multi-Select: {_text(multi.get('rule_id'))})" if multi.get("selected") is True else selected
 
 
 def _inventory_changes(before: tuple[JsonValue, ...], after: tuple[JsonValue, ...]) -> str:

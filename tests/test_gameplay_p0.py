@@ -66,13 +66,37 @@ class GameplayP0Tests(unittest.TestCase):
     def test_tutorial_herb_quest_cli_covers_success_partial_and_failure_outcomes(self) -> None:
         # Given
         cases = (
-            ("data/scenarios/tutorial_herb_quest.yaml", "success"),
-            ("data/scenarios/tutorial_herb_quest_partial.yaml", "partial_success"),
-            ("data/scenarios/tutorial_herb_quest_failure.yaml", "failure"),
+            ("data/scenarios/tutorial_herb_quest.yaml", "success", set(), set()),
+            (
+                "data/scenarios/tutorial_herb_quest_partial.yaml",
+                "partial_success",
+                {"report_failed", "optional_failed", "return_late", "reduced_reward"},
+                set(),
+            ),
+            (
+                "data/scenarios/tutorial_herb_quest_partial_optional_failed.yaml",
+                "partial_success",
+                {"primary_partial", "optional_failed", "return_late", "reduced_reward"},
+                set(),
+            ),
+            (
+                "data/scenarios/tutorial_herb_quest_failure.yaml",
+                "failure",
+                set(),
+                {"max_turn_exceeded", "return_failed", "primary_objective_failed"},
+            ),
+            (
+                "data/scenarios/tutorial_herb_quest_failure_health_zero.yaml",
+                "failure",
+                set(),
+                {"health_zero", "return_failed", "primary_objective_failed"},
+            ),
         )
         reports = {}
+        partial_reasons: set[str] = set()
+        failure_reasons: set[str] = set()
 
-        for scenario_path, expected_result_type in cases:
+        for scenario_path, expected_result_type, expected_partial, expected_failure in cases:
             with self.subTest(scenario_path=scenario_path), tempfile.TemporaryDirectory() as tmp:
                 # When
                 result = subprocess.run(
@@ -111,9 +135,18 @@ class GameplayP0Tests(unittest.TestCase):
                 self.assertIn("completed_objectives", payload["quest_report"])
                 self.assertIn("failed_objectives", payload["quest_report"])
                 self.assertIn("review_text", payload["quest_report"])
+                self.assertIn("result_reason", payload["quest_report"])
+                self.assertIn("partial_reasons", payload["quest_report"])
+                self.assertIn("failure_reasons", payload["quest_report"])
+                self.assertIn("reward_status", payload["quest_report"])
+                self.assertTrue(expected_partial.issubset(set(payload["quest_report"]["partial_reasons"])))
+                self.assertTrue(expected_failure.issubset(set(payload["quest_report"]["failure_reasons"])))
                 self.assertIn(f"결과 유형: {expected_result_type}", text_log)
+                self.assertIn("결과 이유:", text_log)
                 self.assertIn(payload["quest_report"]["review_text"], text_log)
-                reports[expected_result_type] = payload["quest_report"]
+                partial_reasons.update(payload["quest_report"]["partial_reasons"])
+                failure_reasons.update(payload["quest_report"]["failure_reasons"])
+                reports.setdefault(expected_result_type, payload["quest_report"])
 
         # Then
         self.assertGreater(int(reports["success"]["score"]), int(reports["partial_success"]["score"]))
@@ -128,6 +161,8 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertEqual({}, reports["partial_success"]["rewards"])
         self.assertEqual({}, reports["failure"]["rewards"])
         self.assertLess(int(reports["failure"]["score_breakdown"]["outcome_adjustment"]), 0)
+        self.assertGreaterEqual(len(partial_reasons), 2)
+        self.assertGreaterEqual(len(failure_reasons), 3)
 
 
 if __name__ == "__main__":
