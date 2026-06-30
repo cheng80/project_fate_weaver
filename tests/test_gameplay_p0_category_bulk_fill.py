@@ -125,7 +125,7 @@ class GameplayP0CategoryBulkFillTests(unittest.TestCase):
 
     def test_bulk_fill_quest_ids_gate_done_quest_regression(self) -> None:
         raw_quests = yaml.safe_load((PROJECT_ROOT / "data/content/base/quests.yaml").read_text(encoding="utf-8"))["quests"]
-        raw_cards = yaml.safe_load((PROJECT_ROOT / "data/core/card_rules.yaml").read_text(encoding="utf-8"))["p0_cards"]
+        raw_cards = _load_all_card_rules()
         raw_events = yaml.safe_load((PROJECT_ROOT / "data/content/base/events.yaml").read_text(encoding="utf-8"))["events"]
         quest_ids = {quest["id"] for quest in raw_quests}
         bulk_cards = set().union(*(definition["cards"] for definition in BULK_QUESTS.values()))
@@ -229,6 +229,14 @@ def _all_presented_and_selected_cards(payload: JsonMap) -> set[str]:
     presented = {card["card_id"] for turn in payload["turns"] for card in turn["presented_cards"]}
     selected = {card_id for turn in payload["turns"] for card_id in turn["selected_cards"]}
     return presented.union(selected)
+
+
+def _load_all_card_rules() -> list[JsonMap]:
+    raw_cards = list(yaml.safe_load((PROJECT_ROOT / "data/core/card_rules.yaml").read_text(encoding="utf-8"))["p0_cards"])
+    split_dir = PROJECT_ROOT / "data/content/card_rules"
+    for path in sorted(split_dir.glob("*.yaml")):
+        raw_cards.extend(yaml.safe_load(path.read_text(encoding="utf-8"))["p0_cards"])
+    return raw_cards
 
 
 if __name__ == "__main__":

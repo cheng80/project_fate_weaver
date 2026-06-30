@@ -249,7 +249,14 @@ effects:
 risk_hint: 식량을 소모하지만 평판과 단서를 얻을 수 있다.
 ```
 
-현재 P0 구현의 `data/core/card_rules.yaml`은 위 스키마의 최소 실행형 subset을 사용한다.
+현재 P0 구현의 `data/core/card_rules.yaml`과 `data/content/card_rules/*.yaml`은 위 스키마의 최소 실행형 subset을 사용한다.
+
+Card Rule은 다음 위치에서 읽을 수 있다.
+
+- `data/core/card_rules.yaml`: shared/core card, combo rule, conflict rule의 기본 위치다.
+- `data/content/card_rules/*.yaml`: Category별 quest-specific card를 분리해 보관하는 위치다.
+
+Loader는 core file을 먼저 읽고, split file을 파일명 정렬 순서로 병합한다. 모든 loaded Card Rule의 `id`는 전체 병합 결과에서 유일해야 한다. Split file에 들어간 Card Rule은 quest-specific rule로 보며 `quest_ids`를 반드시 가져야 한다. Core file의 shared/foundation card는 기존 호환성을 위해 `quest_ids`가 없을 수 있다.
 
 - `tags`: 카드의 온톨로지식 의미 태그다. 예: `aid`, `npc`, `optional_objective`, `reputation`, `forest`, `quest_related`.
 - `quest_ids`: 값이 있으면 해당 active Quest(활성 퀘스트)에서만 후보가 된다. 값이 없으면 기존 전역 카드처럼 모든 Quest에서 후보가 될 수 있다.

@@ -1,0 +1,234 @@
+p0_cards:
+  - id: inspect_sick_well
+    title: 병든 우물을 조사한다
+    description: 마을 우물 벽과 물 냄새를 살펴 오염의 흔적을 찾는다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, well, clue, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    applies_to_storylet_tags: [sick_well, well_contamination, local_problem]
+    progress_key: well_contamination_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [well_contamination]
+      quest_progress: {well_contamination_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [village, well, local_problem]
+      message: 우물 안쪽에서 약재로 정화할 수 있는 검은 침전물을 찾았다.
+  - id: purify_well_with_herbs
+    title: 약재로 우물을 정화한다
+    description: 약초와 깨끗한 천으로 우물 가장자리의 오염을 걷어낸다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, well, repair, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    requires_progress: {well_contamination_found: {min: 1}}
+    applies_to_storylet_tags: [sick_well, repair_opportunity, local_problem]
+    progress_key: well_safety_restored
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1, reputation: 1}
+      quest_progress: {well_safety_restored: 1}
+      score_changes: {quest_progress: 12, reputation: 4}
+      next_event_tags: [village, report, quest_complete]
+      message: 우물의 검은 침전물이 가라앉고 주민들이 안도의 숨을 쉬었다.
+  - id: report_well_restored
+    title: 우물 복구를 보고한다
+    description: 촌장에게 오염 원인과 정화 결과를 알린다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, local_problem, quest_related]
+    quest_ids: [village_well_trouble]
+    regions: [village]
+    requires_progress: {well_safety_restored: {min: 1}}
+    progress_key: well_reported_to_village
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {well_reported_to_village: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      message: 촌장은 우물이 다시 안전해졌다는 보고를 받고 보수를 건넸다.
+  - id: read_village_wrongness
+    title: 초보 마을의 이상 징후 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, wrongness, clue, quest_related]
+    quest_ids: [beginner_village_wrongness]
+    regions: [village]
+    applies_to_storylet_tags: [wrongness, quest_related]
+    progress_key: find_wrongness_sign
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [wrongness_sign]
+      quest_progress: {find_wrongness_sign: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [wrongness, quest_related]
+      move_to_region: village
+      message: 초보 마을의 이상 징후의 핵심 단서를 확보했다.
+  - id: calm_square_rumors
+    title: 초보 마을의 이상 징후 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, wrongness, action, quest_related]
+    quest_ids: [beginner_village_wrongness]
+    regions: [village]
+    requires_progress: {find_wrongness_sign: {min: 1}}
+    applies_to_storylet_tags: [wrongness, quest_related]
+    progress_key: calm_village_square
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {calm_village_square: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 초보 마을의 이상 징후의 위험을 당장 번지지 않게 막았다.
+  - id: report_wrongness_resolved
+    title: 초보 마을의 이상 징후 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, wrongness, quest_related]
+    quest_ids: [beginner_village_wrongness]
+    regions: [village]
+    requires_progress: {calm_village_square: {min: 1}}
+    progress_key: report_wrongness_resolved
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {report_wrongness_resolved: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 초보 마을의 이상 징후 해결 결과가 마을에 보고되었다.
+  - id: share_plain_remedy
+    title: 초보 마을의 이상 징후 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, wrongness]
+    quest_ids: [beginner_village_wrongness]
+    regions: [village]
+    applies_to_storylet_tags: [wrongness, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [wrongness]
+      message: 보급을 아껴 초보 마을의 이상 징후의 남은 위험에 대비했다.
+  - id: find_racer_track
+    title: 축제의 사라진 주자 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, festival, clue, quest_related]
+    quest_ids: [festival_missing_racer]
+    regions: [village]
+    applies_to_storylet_tags: [festival, quest_related]
+    progress_key: find_racer_track
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [racer_track]
+      quest_progress: {find_racer_track: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [festival, quest_related]
+      move_to_region: village
+      message: 축제의 사라진 주자의 핵심 단서를 확보했다.
+  - id: guide_missing_racer
+    title: 축제의 사라진 주자 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, festival, action, quest_related]
+    quest_ids: [festival_missing_racer]
+    regions: [village]
+    requires_progress: {find_racer_track: {min: 1}}
+    applies_to_storylet_tags: [festival, quest_related]
+    progress_key: guide_missing_racer
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {guide_missing_racer: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 축제의 사라진 주자의 위험을 당장 번지지 않게 막았다.
+  - id: report_festival_safe
+    title: 축제의 사라진 주자 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, festival, quest_related]
+    quest_ids: [festival_missing_racer]
+    regions: [village]
+    requires_progress: {guide_missing_racer: {min: 1}}
+    progress_key: report_festival_safe
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {report_festival_safe: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 축제의 사라진 주자 해결 결과가 마을에 보고되었다.
+  - id: organize_festival_search
+    title: 축제의 사라진 주자 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, festival]
+    quest_ids: [festival_missing_racer]
+    regions: [village]
+    applies_to_storylet_tags: [festival, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [festival]
+      message: 보급을 아껴 축제의 사라진 주자의 남은 위험에 대비했다.
+  - id: test_village_wrongness_risk
+    title: 초보 마을의 이상 징후 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, wrongness, quest_related]
+    quest_ids: [beginner_village_wrongness]
+    regions: [village]
+    applies_to_storylet_tags: [wrongness, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [wrongness]
+      message: 초보 마을의 이상 징후의 위험을 서두르기 전에 가늠했다.
+
+  - id: test_festival_risk
+    title: 축제의 사라진 주자 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, festival, quest_related]
+    quest_ids: [festival_missing_racer]
+    regions: [village]
+    applies_to_storylet_tags: [festival, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [festival]
+      message: 축제의 사라진 주자의 위험을 서두르기 전에 가늠했다.
+
