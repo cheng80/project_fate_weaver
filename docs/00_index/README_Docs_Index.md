@@ -275,6 +275,8 @@ docs/
   - `forest_path_scouting_tutorial` Quest를 실제 data fixture로 추가하고 success / partial_success / failure 시나리오를 검증한 결과를 보관한다.
 - `docs/07_reviews/28_Missing_Porter_Search_Quest_Result_v0.1.md`
   - `missing_porter_search_intro` Quest를 실제 data fixture로 추가하고 rescue / time pressure / partial_success 경로를 검증한 결과를 보관한다.
+- `docs/07_reviews/29_Merchant_Lost_Pack_Quest_Result_v0.1.md`
+  - `merchant_lost_pack_recovery` Quest를 실제 data fixture로 추가하고 economy / reputation / recovery / negotiation 경로를 검증한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

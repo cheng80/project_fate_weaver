@@ -246,3 +246,89 @@ quests:
         exploration: 8
         survival: 4
         trade: 2
+  - id: merchant_lost_pack_recovery
+    title: 상인의 잃어버린 짐
+    rank: novice
+    quest_type: recovery
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 10
+    primary_objectives:
+      - id: locate_lost_pack
+        type: discover_clue
+        target: lost_pack_location
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: resolve_pack_ownership
+        type: optional_action
+        target: pack_ownership_resolved
+        progress_key: pack_ownership_resolved
+        required: true
+        value: 1
+        failure_reason: recovery_failed
+        partial_reason: recovery_partial
+        score_key: objective_optional_action
+        reward_weight: 3
+      - id: return_to_village
+        type: return_to_region
+        target: village
+        progress_key: pack_returned_to_village
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: negotiate_bonus_payment
+        type: optional_action
+        target: bonus_payment_negotiated
+        progress_key: bonus_payment_negotiated
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+      - id: preserve_merchant_trust
+        type: keep_resource_at_least
+        target: reputation
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_reputation
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 3
+      reputation: 1
+      score: 40
+      unlock_quests:
+        - caravan_to_border_fort
+    event_bias:
+      tags:
+        forest: 8
+        exploration: 6
+        trade: 8
+        survival: 3

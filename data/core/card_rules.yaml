@@ -447,6 +447,194 @@ p0_cards:
       next_event_tags: [forest, rescue, porter]
       move_to_region: forest
       message: 사냥꾼에게서 짐꾼이 향한 숲길 정보를 샀다.
+  - id: question_merchant_about_pack
+    title: 상인에게 짐의 내역을 묻는다
+    description: 잃어버린 짐의 표식과 보상 조건을 자세히 확인한다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [village, merchant, lost_pack, negotiation, money, quest_related]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [village]
+    requires_status: {money: {min: 1}}
+    applies_to_storylet_tags: [merchant, lost_pack, negotiation]
+    weight_modifiers:
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: -1}
+      gain_clues: [merchant_pack_mark]
+      score_changes: {discovery: 4, resource_management: -1}
+      next_event_tags: [merchant, lost_pack, forest]
+      message: 상인은 짐 꾸러미의 표식과 보상 조건을 알려 주었다.
+  - id: inspect_lost_pack_tracks
+    title: 잃어버린 짐의 흔적을 조사한다
+    description: 상단 짐 끈과 수레바퀴 자국이 끊긴 방향을 살핀다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, merchant, lost_pack, clue, recovery, quest_related]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [village, forest]
+    applies_to_storylet_tags: [merchant, lost_pack, tracks, recovery_opportunity]
+    progress_key: lost_pack_location_found
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      gain_clues: [lost_pack_location]
+      quest_progress: {lost_pack_location_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [forest, recovery, bandit]
+      move_to_region: forest
+      message: 잃어버린 짐이 숲가의 비탈길로 옮겨진 흔적을 찾았다.
+  - id: follow_bandit_scuff_marks
+    title: 도적의 끌린 자국을 따라간다
+    description: 낡은 장화 자국과 흩어진 포장끈을 따라 위험한 길로 들어선다.
+    slot_role: risk_discovery
+    base_weight: 80
+    tier_hint: strong
+    tags: [forest, bandit, lost_pack, risk, recovery]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [forest]
+    requires_progress: {lost_pack_location_found: {min: 1}}
+    applies_to_storylet_tags: [bandit, scuff_marks, recovery_opportunity]
+    weight_modifiers:
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {health: -1}
+      gain_omens: [bandit_cache_nearby]
+      score_changes: {discovery: 5, penalty: -2}
+      next_event_tags: [forest, bandit, recovery]
+      message: 도적이 숨겨 둔 임시 은닉처가 가까이 있음을 알아냈다.
+  - id: recover_lost_merchant_pack
+    title: 상인의 짐 꾸러미를 회수한다
+    description: 나무뿌리와 낡은 천막 사이에 숨겨진 상단 짐을 꺼낸다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, merchant, lost_pack, recovery, quest_related]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [forest]
+    requires_progress: {lost_pack_location_found: {min: 1}}
+    applies_to_storylet_tags: [bandit_cache, lost_pack, recovery_opportunity]
+    progress_key: merchant_pack_recovered
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      add_item: [merchant_lost_pack]
+      quest_progress: {merchant_pack_recovered: 1}
+      score_changes: {quest_progress: 14, resource_management: 4}
+      next_event_tags: [recovery, merchant, negotiation]
+      message: 상인의 표식이 찍힌 잃어버린 짐 꾸러미를 회수했다.
+  - id: return_pack_honestly
+    title: 짐을 정직하게 돌려준다
+    description: 회수한 짐을 열지 않고 상인에게 돌려주며 신뢰를 지킨다.
+    slot_role: quest_progress
+    base_weight: 130
+    tier_hint: critical
+    tags: [village, merchant, lost_pack, reputation, quest_related]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [forest]
+    requires_progress: {merchant_pack_recovered: {min: 1}}
+    requires_status: {reputation: {min: 1}}
+    applies_to_storylet_tags: [merchant, honest_return, negotiation]
+    progress_key: pack_ownership_resolved
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: 3, reputation: 1}
+      quest_progress: {pack_ownership_resolved: 1, pack_returned_to_village: 1}
+      score_changes: {quest_progress: 16, reputation: 8, ending_bonus: 12}
+      next_event_tags: [village, merchant, quest_complete]
+      move_to_region: village
+      message: 짐을 온전히 돌려주자 상인은 신뢰와 보수를 함께 건넸다.
+  - id: negotiate_bonus_payment
+    title: 추가 보상을 협상한다
+    description: 짐을 되찾은 위험과 시간을 근거로 상인에게 추가 보상을 요구한다.
+    slot_role: resource_alternative
+    base_weight: 85
+    tier_hint: strong
+    tags: [village, merchant, negotiation, money, optional_objective]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [forest]
+    requires_progress: {merchant_pack_recovered: {min: 1}}
+    requires_status: {money: {min: 1}, reputation: {min: 1}}
+    applies_to_storylet_tags: [merchant, negotiation, reward_dispute]
+    applies_to_quest_objectives: [negotiate_bonus_payment]
+    progress_key: bonus_payment_negotiated
+    weight_modifiers:
+      quest_objective_match: 35
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      cooldown_tag_penalty: -15
+      repeat_group_penalty: -30
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: 2}
+      quest_progress: {bonus_payment_negotiated: 1}
+      score_changes: {resource_management: 8, reputation: 2}
+      next_event_tags: [merchant, negotiation, reward]
+      message: 위험을 설명해 상인에게서 추가 보상을 약속받았다.
+  - id: hide_valuable_trinket
+    title: 값나가는 장신구를 숨긴다
+    description: 짐 안의 작은 장신구를 몰래 챙기고 남은 짐만 돌려준다.
+    slot_role: quest_progress
+    base_weight: 115
+    tier_hint: strong
+    tags: [village, merchant, lost_pack, money, reputation, risk]
+    quest_ids: [merchant_lost_pack_recovery]
+    regions: [forest]
+    requires_progress: {merchant_pack_recovered: {min: 1}}
+    applies_to_storylet_tags: [lost_pack, moral_choice, reward_dispute]
+    progress_key: pack_returned_to_village
+    weight_modifiers:
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: 2, reputation: -1}
+      quest_progress: {pack_returned_to_village: 1, trinket_hidden: 1}
+      score_changes: {resource_management: 5, reputation: -6, penalty: -4}
+      next_event_tags: [village, merchant, suspicion]
+      move_to_region: village
+      message: 장신구를 숨긴 덕분에 돈은 늘었지만 상인의 신뢰는 흔들렸다.
 
 multi_select_rules:
   max_selected_cards: 2
@@ -461,6 +649,12 @@ multi_select_rules:
         gain_clues: [moonleaf_glow]
         next_event_tags: [herb, safe_path]
         message: 횃불빛 아래 달빛잎을 더 찾아 위험을 낮췄다.
+    - id: honest_return_plus_bonus
+      cards: [return_pack_honestly, negotiate_bonus_payment]
+      result:
+        score_changes: {resource_management: 3, reputation: 2}
+        next_event_tags: [merchant, reward, quest_complete]
+        message: 정직한 반환과 침착한 협상으로 상인의 신뢰를 잃지 않았다.
   conflict_rules:
     - id: return_vs_deep_woods
       cards: [return_to_village, enter_deep_woods]

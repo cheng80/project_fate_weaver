@@ -94,7 +94,8 @@ Quest(퀘스트)는 고정 줄거리가 아니라 게임 구조 단위다.
 
 - `forest_path_scouting_tutorial`: data fixture(데이터 고정물) 구현 및 success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오) 검증 완료.
 - `missing_porter_search_intro`: data fixture(데이터 고정물) 구현 및 rescue / time pressure / partial_success(구조 / 시간 압박 / 부분 성공) scenario(시나리오) 검증 완료.
-- 다음 후보: `merchant_lost_pack_recovery`.
+- `merchant_lost_pack_recovery`: data fixture(데이터 고정물) 구현 및 money / reputation / recovery / negotiation(돈 / 평판 / 회수 / 협상) scenario(시나리오) 검증 완료.
+- 다음 후보: `ruin_mark_investigation_intro`.
 
 ## 8. 첫 추가 Quest: forest_path_scouting_tutorial
 
@@ -203,13 +204,32 @@ unlock_quests:
 - `recover_lost_pack`: optional_action(선택 행동) 보조 목표.
 - success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오)를 각각 검증했다.
 
-## 10. 세 번째 Quest 이후 후보
+## 10. 세 번째 Quest: merchant_lost_pack_recovery
 
-- `merchant_lost_pack_recovery`: Money(돈), Reputation(평판), Recovery(회수) 도입.
+세 번째 Quest(퀘스트)는 `merchant_lost_pack_recovery`로 구현했다.
+
+이유:
+
+- `missing_porter_search_intro` 이후 회수한 짐의 처리와 보상을 자연스럽게 이어간다.
+- Money / Reputation / Recovery / Negotiation(돈 / 평판 / 회수 / 협상)을 기존 resource/status/effect(자원/상태/효과) 구조로 검증한다.
+- 정직한 반환과 추가 보상 협상을 combo(조합)로 묶어 Multi-Select(다중 선택) 의미를 만든다.
+- `quest_ids` gate(퀘스트 ID 게이트)로 기존 herb/forest/porter Quest(약초/숲길/짐꾼 퀘스트)를 오염시키지 않는다.
+
+구현 결과:
+
+- `locate_lost_pack`: `lost_pack_location` clue(단서) 발견.
+- `resolve_pack_ownership`: `pack_ownership_resolved` optional_action(선택 행동)을 required(필수) objective(목표)로 사용.
+- `return_to_village`: `pack_returned_to_village` progress(진행도)로 마을 귀환/보고 완료.
+- `negotiate_bonus_payment`: 협상 보상 optional_action(선택 행동) 보조 목표.
+- `preserve_merchant_trust`: reputation(평판) 보존 보조 목표.
+- success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오)를 각각 검증했다.
+
+## 11. 네 번째 Quest 이후 후보
+
 - `ruin_mark_investigation_intro`: Clue(단서), Omen(징조), Ruin(폐허) 확장.
 - `village_well_trouble`: Village(마을) 지역 이벤트 확장과 local problem(지역 문제) 검증.
 
-## 11. Quest 구현 전 필요한 점검
+## 12. Quest 구현 전 필요한 점검
 
 - 새로운 Quest(퀘스트)가 기존 objective evaluator(목표 평가기)로 처리 가능한가?
 - `discover_clue` objective(목표)가 실제 progress/clue(진행도/단서)와 연결 가능한가?
@@ -220,9 +240,10 @@ unlock_quests:
 - success / partial_success / failure fixture(성공 / 부분 성공 / 실패 픽스처)를 만들 수 있는가?
 - 기존 `herb_gathering_tutorial`이 깨지지 않는가?
 - 기존 `forest_path_scouting_tutorial`이 깨지지 않는가?
+- 기존 `missing_porter_search_intro`가 깨지지 않는가?
 
-## 12. 다음 Codex 작업 제안
+## 13. 다음 Codex 작업 제안
 
-1. `merchant_lost_pack_recovery` Quest(퀘스트)를 data fixture(데이터 픽스처)로 1개만 추가한다.
-2. Money / Reputation / Recovery(돈 / 평판 / 회수) 흐름이 기존 evaluator(평가기)로 충분한지 검증한다.
-3. `herb_gathering_tutorial`, `forest_path_scouting_tutorial`, `missing_porter_search_intro`가 깨지지 않는지 회귀 검증한다.
+1. `ruin_mark_investigation_intro` Quest(퀘스트)를 data fixture(데이터 픽스처)로 1개만 추가한다.
+2. Clue / Omen / Ruin(단서 / 징조 / 폐허) 흐름이 기존 evaluator(평가기)로 충분한지 검증한다.
+3. `herb_gathering_tutorial`, `forest_path_scouting_tutorial`, `missing_porter_search_intro`, `merchant_lost_pack_recovery`가 깨지지 않는지 회귀 검증한다.

@@ -1,0 +1,50 @@
+id: merchant_lost_pack_recovery_partial
+name: Merchant Lost Pack Recovery Partial Outcome
+gameplay_mode: p0_foundation
+active_quest_id: merchant_lost_pack_recovery
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+  - data/content/base/endings.yaml
+
+include_regions:
+  - village
+  - forest
+
+include_event_ids:
+  - merchant_missing_pack_hint
+  - road_scuff_marks_hint
+  - bandit_cache_near_roots_hint
+  - merchant_reward_dispute_hint
+
+exclude_event_ids: []
+exclude_event_tags: []
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 1
+
+initial_items:
+  - torch
+
+run_clock:
+  day: 1
+  turn: 1
+  turns_today: 0
+  time_of_day: morning
+  act: 1
+  max_days: 5
+  max_turns: 3
+  turns_per_day: 4
+
+target_turns: 3
+seed: 42
+
+validation_targets:
+  min_events: 4
+  min_item_count: 5
