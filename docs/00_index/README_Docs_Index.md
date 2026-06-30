@@ -303,6 +303,8 @@ docs/
   - Quest split 구조와 split-aware quest loader 지원을 도입한 결과를 보관한다.
 - `docs/07_reviews/40_Event_Hint_Split_Loader_Support_Result_v0.1.md`
   - Bulk Fill 2차 전에 Event / Storylet Hint split 구조와 split-aware event loader 지원을 도입한 결과를 보관한다.
+- `docs/07_reviews/41_Data_Split_Coverage_Audit_v0.1.md`
+  - Card Rules / Quest Data / Event Hint split 이후 loaded inventory와 cross-reference 정합성 감사 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
