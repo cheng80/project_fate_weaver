@@ -157,6 +157,134 @@ p0_cards:
       status: {food: -1, health: 1}
       score_changes: {survival: 3}
       message: 식량을 조금 쓰고 숨을 돌렸다.
+  - id: inspect_forest_marker
+    title: 숲길 표식을 조사한다
+    description: 숲 입구와 갈림길에 남은 낡은 표식을 대조한다.
+    slot_role: quest_progress
+    base_weight: 115
+    tier_hint: critical
+    tags: [forest, trail, clue, scouting, quest_related]
+    quest_ids: [forest_path_scouting_tutorial]
+    regions: [village, forest]
+    applies_to_storylet_tags: [forest_trail, trail_marker, scouting_opportunity]
+    progress_key: safe_forest_path
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      gain_clues: [safe_forest_path]
+      quest_progress: {safe_forest_path: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [forest, scouting, safe_path]
+      move_to_region: forest
+      message: 표식이 이어지는 안전한 숲길을 확인했다.
+  - id: follow_beast_tracks
+    title: 짐승 발자국을 따라간다
+    description: 숲길 옆 진흙에 남은 발자국 방향을 확인한다.
+    slot_role: risk_discovery
+    base_weight: 70
+    tier_hint: strong
+    tags: [forest, trail, beast_tracks, scouting]
+    quest_ids: [forest_path_scouting_tutorial]
+    regions: [forest]
+    applies_to_storylet_tags: [beast_tracks, scouting_opportunity]
+    weight_modifiers:
+      storylet_tag_match: 20
+      storylet_hint_bonus: 25
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {health: -1}
+      gain_omens: [fresh_beast_tracks]
+      score_changes: {discovery: 6, penalty: -2}
+      next_event_tags: [beast, forest]
+      message: 최근 지나간 짐승 발자국을 확인했지만 긴장으로 체력을 소모했다.
+  - id: mark_beast_tracks
+    title: 위험한 발자국을 표시한다
+    description: 마을 사람들이 피할 수 있도록 짐승 흔적 근처에 표시를 남긴다.
+    slot_role: resource_alternative
+    base_weight: 65
+    tier_hint: strong
+    tags: [forest, trail, beast_tracks, optional_objective, scouting]
+    quest_ids: [forest_path_scouting_tutorial]
+    regions: [forest]
+    applies_to_storylet_tags: [beast_tracks, marking_opportunity]
+    applies_to_quest_objectives: [mark_beast_tracks]
+    progress_key: marked_beast_tracks
+    weight_modifiers:
+      quest_objective_match: 35
+      storylet_tag_match: 20
+      storylet_hint_bonus: 30
+      region_match: 10
+      slot_role_bonus: 5
+      cooldown_tag_penalty: -15
+      repeat_group_penalty: -30
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {food: -1}
+      quest_progress: {marked_beast_tracks: 1}
+      score_changes: {reputation: 4, resource_management: -1}
+      next_event_tags: [beast, safe_path]
+      message: 위험한 발자국을 표시해 마을 사람들이 피할 수 있게 했다.
+  - id: conserve_food_on_trail
+    title: 숲길에서 식량을 아낀다
+    description: 짧은 우회로를 골라 이동하며 식량 소모를 줄인다.
+    slot_role: resource_alternative
+    base_weight: 55
+    tier_hint: normal
+    tags: [forest, trail, resource_management, scouting]
+    quest_ids: [forest_path_scouting_tutorial]
+    regions: [forest]
+    applies_to_storylet_tags: [forest_trail, scouting_opportunity]
+    weight_modifiers:
+      storylet_tag_match: 15
+      storylet_hint_bonus: 20
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [safe_path]
+      message: 안전한 우회로를 골라 식량을 아꼈다.
+  - id: return_to_village_report
+    title: 마을에 숲길 상황을 보고한다
+    description: 확인한 안전 표식과 위험 흔적을 마을에 알린다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, scouting, quest_related]
+    quest_ids: [forest_path_scouting_tutorial]
+    regions: [forest]
+    requires_progress: {safe_forest_path: {min: 1}}
+    progress_key: reported_safe_path
+    weight_modifiers:
+      storylet_tag_match: 25
+      storylet_hint_bonus: 35
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {reported_safe_path: 1}
+      score_changes: {quest_progress: 16, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, report, quest_complete]
+      move_to_region: village
+      message: 마을에 숲길의 안전 구간과 위험 흔적을 보고했다.
 
 multi_select_rules:
   max_selected_cards: 2

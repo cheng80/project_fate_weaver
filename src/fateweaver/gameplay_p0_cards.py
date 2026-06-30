@@ -77,7 +77,7 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
     matched_objectives = tuple(objective_id for objective_id in card.applies_to_quest_objectives if objective_id in active_optional_objectives(context.quest))
     matched_storylet_hints = (card.id,) if card.id in context.card_candidate_hints else ()
     cooldown_penalty = candidate_cooldown_penalty(card, state, context)
-    blocked_reason = card_blocked_reason(card, state)
+    blocked_reason = card_blocked_reason(card, state, context.quest.id)
     repeat_penalty = modifier(card, "recent_repeat_penalty") if recently_seen_card(card, state) else 0
     score = candidate_score(CandidateScoreInput(card, state, matched_tags, matched_objectives, matched_storylet_hints, cooldown_penalty, blocked_reason))
     return CardCandidate(
@@ -123,10 +123,10 @@ def candidate_score(candidate: CandidateScoreInput) -> int:
             assert_never(unreachable)
 
 
-def card_blocked_reason(card: CardRule, state: RunState) -> BlockedReason:
+def card_blocked_reason(card: CardRule, state: RunState, quest_id: str) -> BlockedReason:
     if card.progress_key and state.quest_progress.get(card.progress_key, 0) > 0:
         return "completed_objective"
-    if not card_available(card, state):
+    if not card_available(card, state, quest_id):
         return "unavailable_requirement"
     return ""
 
@@ -226,6 +226,7 @@ def card_json(card: CardRule) -> JsonMap:
         "description": card.description,
         "slot_role": card.slot_role,
         "choice_type": card.slot_role,
+        "quest_ids": list(card.quest_ids),
         "available": True,
         "unavailable_reason": None,
         "hidden": False,
@@ -235,9 +236,10 @@ def card_json(card: CardRule) -> JsonMap:
     }
 
 
-def card_available(card: CardRule, state: RunState) -> bool:
+def card_available(card: CardRule, state: RunState, quest_id: str) -> bool:
     return (
-        state.region in card.regions
+        (not card.quest_ids or quest_id in card.quest_ids)
+        and state.region in card.regions
         and (card.requires_item is None or card.requires_item in state.inventory)
         and progress_matches(card.requires_progress, state.quest_progress)
         and status_matches(card.requires_status, state.status)

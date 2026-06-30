@@ -271,6 +271,8 @@ docs/
   - 판타지 TRPG 시나리오, 모험 Hook, Adventure Seed를 FateWeaver Quest 제작 양식으로 재가공한 리서치 자료다.
 - `docs/07_reviews/26_Gameplay_P0_Storylet_Hints_Repeat_Cooldown_Result_v0.1.md`
   - Gameplay P0에 Storylet/Event card candidate hints와 repeat cooldown memory를 도입한 결과를 보관한다.
+- `docs/07_reviews/27_Forest_Path_Scouting_Quest_Result_v0.1.md`
+  - `forest_path_scouting_tutorial` Quest를 실제 data fixture로 추가하고 success / partial_success / failure 시나리오를 검증한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

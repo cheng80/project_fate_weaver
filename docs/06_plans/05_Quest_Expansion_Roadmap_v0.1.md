@@ -90,6 +90,11 @@ Quest(퀘스트)는 고정 줄거리가 아니라 게임 구조 단위다.
 
 실제 구현은 한 번에 1개 Quest(퀘스트)씩 한다.
 
+현재 구현 상태:
+
+- `forest_path_scouting_tutorial`: data fixture(데이터 고정물) 구현 및 success / partial_success / failure(성공 / 부분 성공 / 실패) scenario(시나리오) 검증 완료.
+- 다음 후보: `missing_porter_search_intro`.
+
 ## 8. 첫 추가 Quest: forest_path_scouting_tutorial
 
 첫 추가 Quest(퀘스트)는 `forest_path_scouting_tutorial`로 정한다.
@@ -176,7 +181,7 @@ unlock_quests:
   - missing_porter_search_intro
 ```
 
-위 YAML은 설계 초안이다. 이번 작업에서는 `data/`에 추가하지 않는다.
+위 YAML은 설계 초안이었고, 이후 `data/content/base/quests.yaml`에 실제 fixture(고정 데이터)로 추가됐다.
 
 ## 9. 두 번째 Quest 이후 후보
 
@@ -198,7 +203,7 @@ unlock_quests:
 
 ## 11. 다음 Codex 작업 제안
 
-1. `forest_path_scouting_tutorial`을 data fixture(데이터 픽스처)로 1개만 추가한다.
+1. `missing_porter_search_intro` Quest(퀘스트)를 data fixture(데이터 픽스처)로 1개만 추가한다.
 2. 해당 Quest(퀘스트)의 success / partial_success / failure scenario(시나리오)를 만든다.
-3. Storylet/Event card candidate hints(스토리 조각/이벤트 카드 후보 힌트)가 실제 후보 선택에 충분한지 검증한다.
-4. Repeat Cooldown Memory(반복 쿨다운 기억)가 새 Quest(퀘스트)의 반복 이벤트를 줄이는지 확인한다.
+3. rescue(구조), time pressure(시간 압박), partial success(부분 성공) 구조가 기존 evaluator(평가기)로 충분한지 검증한다.
+4. 기존 `herb_gathering_tutorial`과 `forest_path_scouting_tutorial`이 깨지지 않는지 회귀 검증한다.

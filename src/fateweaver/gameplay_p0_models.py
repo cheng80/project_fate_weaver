@@ -106,6 +106,7 @@ class CardRule:
     applies_to_quest_objectives: tuple[str, ...]
     progress_key: str
     weight_modifiers: JsonMap
+    quest_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

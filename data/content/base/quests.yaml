@@ -84,3 +84,79 @@ quests:
         exploration: 8
         survival: 4
         trade: 2
+  - id: forest_path_scouting_tutorial
+    title: 숲길 안전 조사
+    rank: novice
+    quest_type: scouting
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 5
+    max_turns: 10
+    primary_objectives:
+      - id: discover_safe_path
+        type: discover_clue
+        target: safe_forest_path
+        required: true
+        value: 1
+        failure_reason: primary_objective_failed
+        partial_reason: primary_partial
+        score_key: objective_discovery
+        reward_weight: 3
+      - id: return_to_village
+        type: return_to_region
+        target: village
+        progress_key: reported_safe_path
+        required: true
+        value: 1
+        failure_reason: return_failed
+        partial_reason: report_failed
+        score_key: objective_return
+        reward_weight: 2
+      - id: survive_expedition
+        type: survive_expedition
+        target: health
+        required: true
+        value: 1
+        failure_reason: health_zero
+        partial_reason: health_zero
+        score_key: objective_survival
+        reward_weight: 3
+    optional_objectives:
+      - id: mark_beast_tracks
+        type: optional_action
+        target: marked_beast_tracks
+        progress_key: marked_beast_tracks
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_optional_action
+        reward_weight: 1
+      - id: keep_food
+        type: keep_resource_at_least
+        target: food
+        required: false
+        value: 2
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_resource
+        reward_weight: 1
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 5
+    rewards:
+      money: 2
+      reputation: 1
+      score: 40
+      unlock_quests:
+        - missing_porter_search_intro
+    event_bias:
+      tags:
+        forest: 10
+        exploration: 8
+        survival: 4
+        beast: 3

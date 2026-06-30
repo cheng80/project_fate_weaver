@@ -19,6 +19,66 @@ events:
         result:
           message: 부상자를 지나치며 길의 흔적만 확인했다.
 
+  - id: forest_trail_marker_hint
+    name: 숲길의 낡은 표식
+    description: 마을 어귀에서 숲으로 이어지는 오래된 표식이 희미하게 남아 있다.
+    region_tags: [village, forest]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [forest, trail, forest_trail, trail_marker, clue, scouting_opportunity, quest_related]
+    card_candidate_hints: [inspect_forest_marker, follow_beast_tracks, conserve_food_on_trail]
+    cooldown_tags: [forest_trail, scouting_clue]
+    repeat_group: forest_trail_scouting
+    base_weight: 14
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 표식을 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 낡은 표식을 따라 숲길의 방향을 가늠했다.
+
+  - id: forest_beast_tracks_hint
+    name: 숲길의 짐승 발자국
+    description: 안전해 보이는 길 옆 진흙에 큰 발자국이 찍혀 있다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [beast]
+    storylet_tags: [forest, trail, beast_tracks, marking_opportunity, scouting_opportunity, quest_related]
+    card_candidate_hints: [follow_beast_tracks, mark_beast_tracks, conserve_food_on_trail]
+    cooldown_tags: [forest_trail, beast_tracks]
+    repeat_group: forest_trail_scouting
+    base_weight: 12
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 흔적을 살핀다
+        type: risky
+        risk_level: medium
+        result:
+          message: 발자국은 최근의 것이지만 아직 길을 막지는 않았다.
+
+  - id: forest_return_report_hint
+    name: 마을로 돌아가는 갈림길
+    description: 표식을 확인한 길이 다시 마을 쪽 능선으로 이어진다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [lost]
+    storylet_tags: [forest, trail, return_report, scouting_opportunity, quest_related]
+    card_candidate_hints: [return_to_village_report, conserve_food_on_trail]
+    cooldown_tags: [forest_trail, return_report]
+    repeat_group: forest_return_report
+    base_weight: 10
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 귀환로를 확인한다
+        type: safe
+        risk_level: low
+        result:
+          message: 마을로 돌아갈 길이 충분히 분명해졌다.
+
   - id: cursed_well
     name: 저주받은 우물
     description: 검은 물이 고인 우물에서 낮은 속삭임이 들린다.

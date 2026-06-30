@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -8,9 +9,49 @@ from fateweaver.gameplay_p0_models import CardRule, CardRules, ComboRule, Confli
 from fateweaver.models import JsonMap, JsonValue, ProjectData, Scenario
 
 
+@dataclass(frozen=True, slots=True)
+class MissingActiveQuestError(ValueError):
+    def __str__(self) -> str:
+        return "P0 scenario requires active_quest_id"
+
+
+@dataclass(frozen=True, slots=True)
+class UnknownP0QuestError(ValueError):
+    quest_id: str
+
+    def __str__(self) -> str:
+        return f"Unknown P0 quest: {self.quest_id}"
+
+
+@dataclass(frozen=True, slots=True)
+class UnknownP0ObjectiveTypeError(ValueError):
+    objective_type: str
+
+    def __str__(self) -> str:
+        return f"Unknown P0 objective type: {self.objective_type}"
+
+
+@dataclass(frozen=True, slots=True)
+class CardPairCountError(ValueError):
+    rule_id: str
+    rule_type: str
+
+    def __str__(self) -> str:
+        return f"{self.rule_type} rule requires exactly two cards: {self.rule_id}"
+
+
+@dataclass(frozen=True, slots=True)
+class GameplayP0TypeError(TypeError):
+    label: str
+    expected: str
+
+    def __str__(self) -> str:
+        return f"{self.label} must be {self.expected}"
+
+
 def load_foundation(root: Path, quest_id: str | None) -> Foundation:
     if quest_id is None:
-        raise ValueError("P0 scenario requires active_quest_id")
+        raise MissingActiveQuestError()
     quests = _read_mapping(root / "data/content/base/quests.yaml")
     cards = _read_mapping(root / "data/core/card_rules.yaml")
     score_rules = _read_mapping(root / "data/core/score_rules.yaml")
@@ -55,7 +96,7 @@ def _load_quest(raw: JsonMap, quest_id: str) -> Quest:
                 objectives=_load_objectives(quest),
                 rewards=_mapping_at(quest, "rewards"),
             )
-    raise ValueError(f"Unknown P0 quest: {quest_id}")
+    raise UnknownP0QuestError(quest_id)
 
 
 def _load_objectives(quest: JsonMap) -> tuple[QuestObjective, ...]:
@@ -83,11 +124,11 @@ def _load_objective(raw_value: JsonValue, default_required: bool) -> QuestObject
 
 
 def _objective_type(value: str) -> ObjectiveType:
-    match value:
+    match value:  # noqa: MATCH_OK - YAML objective type is parsed from boundary data.
         case "collect_item" | "return_to_region" | "survive_expedition" | "keep_resource_at_least" | "discover_clue" | "optional_action":
             return value
         case _:
-            raise ValueError(f"Unknown P0 objective type: {value}")
+            raise UnknownP0ObjectiveTypeError(value)
 
 
 def _load_card_rules(raw: JsonMap) -> CardRules:
@@ -119,6 +160,7 @@ def _load_card(raw_value: JsonValue) -> CardRule:
         applies_to_quest_objectives=_string_tuple(raw.get("applies_to_quest_objectives", [])),
         progress_key=str(raw.get("progress_key", "")),
         weight_modifiers=_mapping_at(raw, "weight_modifiers"),
+        quest_ids=_string_tuple(raw.get("quest_ids", [])),
     )
 
 
@@ -126,7 +168,7 @@ def _load_combo(raw_value: JsonValue) -> ComboRule:
     raw = _as_mapping(raw_value)
     cards = _string_tuple(raw.get("cards", []))
     if len(cards) != 2:
-        raise ValueError(f"Combo rule requires exactly two cards: {raw.get('id')}")
+        raise CardPairCountError(str(raw.get("id", "")), "Combo")
     return ComboRule(id=str(raw["id"]), cards=(cards[0], cards[1]), result=_mapping_at(raw, "result"))
 
 
@@ -134,7 +176,7 @@ def _load_conflict(raw_value: JsonValue) -> ConflictRule:
     raw = _as_mapping(raw_value)
     cards = _string_tuple(raw.get("cards", []))
     if len(cards) != 2:
-        raise ValueError(f"Conflict rule requires exactly two cards: {raw.get('id')}")
+        raise CardPairCountError(str(raw.get("id", "")), "Conflict")
     return ConflictRule(id=str(raw["id"]), cards=(cards[0], cards[1]), message=str(raw.get("message", "")))
 
 
@@ -151,7 +193,7 @@ def _mapping_at(raw: JsonMap, key: str) -> JsonMap:
 def _list_at(raw: JsonMap, key: str) -> tuple[JsonValue, ...]:
     value = raw.get(key, [])
     if not isinstance(value, list):
-        raise TypeError(f"{key} must be a list")
+        raise GameplayP0TypeError(key, "a list")
     return tuple(value)
 
 
@@ -160,7 +202,7 @@ def _optional_string(raw: JsonMap, key: str) -> str | None:
     if value is None:
         return None
     if not isinstance(value, str):
-        raise TypeError(f"{key} must be a string")
+        raise GameplayP0TypeError(key, "a string")
     return value
 
 
@@ -172,5 +214,5 @@ def _string_tuple(value: JsonValue) -> tuple[str, ...]:
 
 def _as_mapping(value: JsonValue) -> JsonMap:
     if not isinstance(value, dict):
-        raise TypeError("value must be a mapping")
+        raise GameplayP0TypeError("value", "a mapping")
     return {str(key): item for key, item in value.items()}

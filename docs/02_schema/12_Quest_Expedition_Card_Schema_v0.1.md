@@ -215,6 +215,8 @@ tags:
   - npc
   - optional_objective
   - reputation
+quest_ids:
+  - herb_gathering_tutorial
 source:
   type: storylet
   id: forest_wounded_messenger
@@ -250,6 +252,7 @@ risk_hint: 식량을 소모하지만 평판과 단서를 얻을 수 있다.
 현재 P0 구현의 `data/core/card_rules.yaml`은 위 스키마의 최소 실행형 subset을 사용한다.
 
 - `tags`: 카드의 온톨로지식 의미 태그다. 예: `aid`, `npc`, `optional_objective`, `reputation`, `forest`, `quest_related`.
+- `quest_ids`: 값이 있으면 해당 active Quest(활성 퀘스트)에서만 후보가 된다. 값이 없으면 기존 전역 카드처럼 모든 Quest에서 후보가 될 수 있다.
 - `applies_to_storylet_tags`: 현재 Storylet/Event 또는 P0 situation context tag와 하나 이상 겹치면 후보로 올라올 수 있다.
 - `applies_to_quest_objectives`: active quest의 optional objective id와 연결한다.
 - `progress_key`: 카드 선택 후 갱신되는 quest progress key다. 이미 1 이상이면 같은 optional action 카드는 다시 후보 우선권을 갖지 않는다.
