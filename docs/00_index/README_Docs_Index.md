@@ -248,6 +248,8 @@ docs/
   - Gameplay Replan 구현 전 현재 콘텐츠 볼륨과 구조 부족분을 감사한 결과 문서다.
 - `docs/07_reviews/16_Gameplay_P0_Foundation_Implementation_Result_v0.1.md`
   - Gameplay Replan P0 Foundation 최소 수직 슬라이스 구현 결과와 검증 결과를 보관한다.
+- `docs/07_reviews/17_Gameplay_P0_Outcome_Coverage_Result_v0.1.md`
+  - Gameplay P0 Foundation의 success, partial_success, failure outcome coverage 보강 결과를 보관한다.
 
 ---
 

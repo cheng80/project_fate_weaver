@@ -44,7 +44,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         if _quest_success(state) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
-    quest_report = _quest_report(foundation.quest, state, request.bundle)
+    quest_report = _quest_report(foundation.quest, state, request.bundle, foundation.score_rules)
     log = _run_log(request, foundation.quest, turns, state, quest_report)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     filename = f"run_{request.scenario.id}_{request.profile}_{request.seed}_{timestamp}_{request.run_number:04d}.json"
@@ -111,18 +111,19 @@ def _turn_log(
     }
 
 
-def _quest_report(quest: Quest, state: RunState, bundle: ProjectData) -> JsonMap:
+def _quest_report(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> JsonMap:
     failed = is_failed(state.status, bundle.statuses)
     success = _quest_success(state)
     result_type = _result_type(failed, success, state.quest_progress)
+    score_breakdown = _score_breakdown(state, result_type, score_rules)
     return {
         "quest_id": quest.id,
         "result_type": result_type,
         "completed_objectives": _completed_objectives(state),
         "failed_objectives": _failed_objectives(state, result_type),
         "resource_summary": dict(state.status),
-        "score": sum(state.score.values()),
-        "score_breakdown": dict(state.score),
+        "score": sum(score_breakdown.values()),
+        "score_breakdown": score_breakdown,
         "rewards": quest.rewards if result_type == "success" else {},
         "unlocked_or_suggested_next": ["missing_porter_search"] if result_type == "success" else ["retry_herb_gathering"],
         "review_text": _review_text(result_type),
@@ -167,6 +168,21 @@ def _result_type(failed: bool, success: bool, progress: dict[str, int]) -> str:
             return "failure"
         case unreachable:
             assert_never(unreachable)
+
+
+def _score_breakdown(state: RunState, result_type: str, score_rules: JsonMap) -> dict[str, int]:
+    breakdown = dict(state.score)
+    outcome_score = _outcome_score(result_type, score_rules)
+    if outcome_score != 0:
+        breakdown["outcome_adjustment"] = outcome_score
+    return breakdown
+
+
+def _outcome_score(result_type: str, score_rules: JsonMap) -> int:
+    raw_bonus = score_rules.get("ending_bonus", {})
+    if not isinstance(raw_bonus, dict):
+        return 0
+    return int(raw_bonus.get(result_type, 0))
 
 
 def _completed_objectives(state: RunState) -> list[str]:
