@@ -6,6 +6,7 @@ from pathlib import Path
 import yaml
 
 from fateweaver.gameplay_p0_models import CardRule, CardRules, ComboRule, ConflictRule, Foundation, ObjectiveType, Quest, QuestObjective
+from fateweaver.gameplay_p0_sources import load_card_rule_mapping, load_quest_mapping
 from fateweaver.models import JsonMap, JsonValue, ProjectData, Scenario
 
 
@@ -41,25 +42,6 @@ class CardPairCountError(ValueError):
 
 
 @dataclass(frozen=True, slots=True)
-class DuplicateCardRuleIdError(ValueError):
-    card_id: str
-    first_source: Path
-    duplicate_source: Path
-
-    def __str__(self) -> str:
-        return f"Duplicate card rule id {self.card_id}: {self.first_source} and {self.duplicate_source}"
-
-
-@dataclass(frozen=True, slots=True)
-class SplitCardRuleQuestIdsError(ValueError):
-    card_id: str
-    source: Path
-
-    def __str__(self) -> str:
-        return f"Split card rule requires quest_ids: {self.card_id} in {self.source}"
-
-
-@dataclass(frozen=True, slots=True)
 class GameplayP0TypeError(TypeError):
     label: str
     expected: str
@@ -71,8 +53,8 @@ class GameplayP0TypeError(TypeError):
 def load_foundation(root: Path, quest_id: str | None) -> Foundation:
     if quest_id is None:
         raise MissingActiveQuestError()
-    quests = _read_mapping(root / "data/content/base/quests.yaml")
-    cards = _load_card_rule_mapping(root)
+    quests = load_quest_mapping(root)
+    cards = load_card_rule_mapping(root)
     score_rules = _read_mapping(root / "data/core/score_rules.yaml")
     return Foundation(
         quest=_load_quest(quests, quest_id),
@@ -158,39 +140,6 @@ def _load_card_rules(raw: JsonMap) -> CardRules:
         combos=tuple(_load_combo(item) for item in _list_at(rules, "combo_rules")),
         conflicts=tuple(_load_conflict(item) for item in _list_at(rules, "conflict_rules")),
     )
-
-
-def _load_card_rule_mapping(root: Path) -> JsonMap:
-    core_path = root / "data/core/card_rules.yaml"
-    raw = _read_mapping(core_path)
-    cards = list(_list_at(raw, "p0_cards"))
-    card_sources: dict[str, Path] = {}
-    for card_value in cards:
-        card = _as_mapping(card_value)
-        card_id = str(card["id"])
-        if card_id in card_sources:
-            raise DuplicateCardRuleIdError(card_id, card_sources[card_id], core_path)
-        card_sources[card_id] = core_path
-
-    split_dir = root / "data/content/card_rules"
-    if not split_dir.exists():
-        return raw
-
-    for split_path in sorted(split_dir.glob("*.yaml")):
-        split_raw = _read_mapping(split_path)
-        for card_value in _list_at(split_raw, "p0_cards"):
-            card = _as_mapping(card_value)
-            card_id = str(card["id"])
-            if not _string_tuple(card.get("quest_ids", [])):
-                raise SplitCardRuleQuestIdsError(card_id, split_path)
-            if card_id in card_sources:
-                raise DuplicateCardRuleIdError(card_id, card_sources[card_id], split_path)
-            card_sources[card_id] = split_path
-            cards.append(card_value)
-
-    merged = dict(raw)
-    merged["p0_cards"] = cards
-    return merged
 
 
 def _load_card(raw_value: JsonValue) -> CardRule:

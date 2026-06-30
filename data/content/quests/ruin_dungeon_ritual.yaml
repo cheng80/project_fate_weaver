@@ -1,0 +1,150 @@
+quests:
+- id: old_well_awakening
+  title: 오래된 우물 각성
+  rank: novice
+  quest_type: dungeon_crawl
+  start_region: village
+  target_regions:
+  - ruin
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: discover_well_seal
+    type: discover_clue
+    target: cracked_well_seal
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: reseal_well_depths
+    type: optional_action
+    target: well_depths_resealed
+    progress_key: well_depths_resealed
+    required: true
+    value: 1
+    failure_reason: dungeon_failed
+    partial_reason: dungeon_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: return_with_seal_report
+    type: return_to_region
+    target: village
+    progress_key: well_seal_reported
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: keep_food
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 3
+    reputation: 1
+    score: 50
+  event_bias:
+    tags:
+      ruin: 10
+      dungeon: 10
+      seal: 8
+- id: activate_the_old_gate
+  title: 오래된 문 작동
+  rank: novice
+  quest_type: dungeon_crawl
+  start_region: village
+  target_regions:
+  - village
+  - ruin
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: find_gate_runes
+    type: discover_clue
+    target: gate_runes
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: align_old_gate
+    type: optional_action
+    target: align_old_gate
+    progress_key: align_old_gate
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: return_gate_report
+    type: return_to_region
+    target: village
+    progress_key: return_gate_report
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      ruin: 10
+      old_gate: 10
+      survival: 4

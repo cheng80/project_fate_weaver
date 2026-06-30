@@ -1,0 +1,225 @@
+quests:
+- id: defend_the_village_night
+  title: 마을 방어의 밤
+  rank: novice
+  quest_type: defense
+  start_region: village
+  target_regions:
+  - village
+  recommended_days: 1
+  max_days: 2
+  max_turns: 8
+  primary_objectives:
+  - id: identify_night_threat
+    type: discover_clue
+    target: night_threat_tracks
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: hold_village_defense
+    type: optional_action
+    target: village_defense_held
+    progress_key: village_defense_held
+    required: true
+    value: 1
+    failure_reason: defense_failed
+    partial_reason: defense_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: protect_village_morale
+    type: keep_resource_at_least
+    target: reputation
+    required: true
+    value: 1
+    failure_reason: reputation_collapse
+    partial_reason: reputation_collapse
+    score_key: objective_reputation
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: evacuate_border_homes
+    type: optional_action
+    target: border_homes_evacuated
+    progress_key: border_homes_evacuated
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_aid
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 2
+  rewards:
+    money: 2
+    reputation: 2
+    score: 50
+  event_bias:
+    tags:
+      village: 10
+      defense: 10
+      night: 8
+- id: beast_of_zarechka
+  title: 자레치카의 짐승
+  rank: novice
+  quest_type: defense
+  start_region: village
+  target_regions:
+  - village
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: identify_beast_tracks
+    type: discover_clue
+    target: beast_tracks
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: drive_beast_back
+    type: optional_action
+    target: drive_beast_back
+    progress_key: drive_beast_back
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: reassure_zarechka
+    type: return_to_region
+    target: village
+    progress_key: reassure_zarechka
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      zarechka_beast: 10
+      survival: 4
+- id: cattle_mutilation_stone_circle
+  title: 돌 원의 소 떼 상처
+  rank: novice
+  quest_type: defense
+  start_region: village
+  target_regions:
+  - village
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: inspect_cattle_circle
+    type: discover_clue
+    target: stone_circle_lure
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: break_stone_circle_lure
+    type: optional_action
+    target: break_stone_circle_lure
+    progress_key: break_stone_circle_lure
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: warn_herders
+    type: return_to_region
+    target: village
+    progress_key: warn_herders
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      stone_circle: 10
+      survival: 4

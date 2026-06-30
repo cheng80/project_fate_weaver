@@ -299,6 +299,8 @@ docs/
   - Bulk Fill 2차 전에 card_rules split 구조와 split-aware loader 지원을 도입한 결과를 보관한다.
 - `docs/07_reviews/38_Card_Rules_Category_Split_Migration_Result_v0.1.md`
   - card_rules split-aware loader 기반 위에서 Stable Category별 card rules를 split file로 마이그레이션한 결과를 보관한다.
+- `docs/07_reviews/39_Quest_Data_Split_Loader_Support_Result_v0.1.md`
+  - Quest split 구조와 split-aware quest loader 지원을 도입한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

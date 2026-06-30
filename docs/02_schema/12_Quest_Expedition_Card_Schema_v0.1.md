@@ -132,6 +132,15 @@ event_bias:
 `optional_action`은 `progress_key`가 있으면 해당 quest progress 값을 우선 보고 completed / partial / failed를 평가한다.
 예를 들어 `help_injured_traveler` objective는 `helped_injured_traveler` 진행도가 카드 결과로 1 이상이 되면 completed가 된다.
 
+현재 P0 Quest 데이터는 다음 위치에서 읽을 수 있다.
+
+- `data/content/base/quests.yaml`: 기존 호환을 위한 base Quest 파일이다.
+- `data/content/quests/*.yaml`: Category별 split Quest 파일이다.
+
+Loader는 base file을 먼저 읽고, split file을 파일명 정렬 순서로 병합한다. 모든 loaded Quest의 `id`는 전체 병합 결과에서 유일해야 하며, duplicate quest id가 있으면 최초 source path와 중복 source path를 포함한 error를 낸다.
+
+현재 적용된 Quest split file은 `foundation`, `local_problem`, `investigation_mystery`, `defense_threat`, `travel_delivery_escort`, `ruin_dungeon_ritual`, `survival_exploration`이다. Foundation Quest 4개는 기존 base file에 남아 있고, `foundation.yaml`은 Category 구조 고정을 위한 빈 split file로 유지한다.
+
 ---
 
 ## 3. Expedition Clock Schema

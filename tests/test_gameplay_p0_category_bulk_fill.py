@@ -124,7 +124,7 @@ class GameplayP0CategoryBulkFillTests(unittest.TestCase):
                     self.assertEqual("completed", _objective_status(payload["quest_report"], objective_id))
 
     def test_bulk_fill_quest_ids_gate_done_quest_regression(self) -> None:
-        raw_quests = yaml.safe_load((PROJECT_ROOT / "data/content/base/quests.yaml").read_text(encoding="utf-8"))["quests"]
+        raw_quests = _load_all_quests()
         raw_cards = _load_all_card_rules()
         raw_events = yaml.safe_load((PROJECT_ROOT / "data/content/base/events.yaml").read_text(encoding="utf-8"))["events"]
         quest_ids = {quest["id"] for quest in raw_quests}
@@ -237,6 +237,14 @@ def _load_all_card_rules() -> list[JsonMap]:
     for path in sorted(split_dir.glob("*.yaml")):
         raw_cards.extend(yaml.safe_load(path.read_text(encoding="utf-8"))["p0_cards"])
     return raw_cards
+
+
+def _load_all_quests() -> list[JsonMap]:
+    raw_quests = list(yaml.safe_load((PROJECT_ROOT / "data/content/base/quests.yaml").read_text(encoding="utf-8"))["quests"])
+    split_dir = PROJECT_ROOT / "data/content/quests"
+    for path in sorted(split_dir.glob("*.yaml")):
+        raw_quests.extend(yaml.safe_load(path.read_text(encoding="utf-8"))["quests"])
+    return raw_quests
 
 
 if __name__ == "__main__":

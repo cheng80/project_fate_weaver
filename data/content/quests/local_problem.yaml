@@ -1,0 +1,223 @@
+quests:
+- id: village_well_trouble
+  title: 병든 우물
+  rank: novice
+  quest_type: local_problem
+  start_region: village
+  target_regions:
+  - village
+  recommended_days: 2
+  max_days: 3
+  max_turns: 8
+  primary_objectives:
+  - id: find_well_contamination
+    type: discover_clue
+    target: well_contamination
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: restore_well_safety
+    type: optional_action
+    target: well_safety_restored
+    progress_key: well_safety_restored
+    required: true
+    value: 1
+    failure_reason: local_problem_failed
+    partial_reason: local_problem_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: report_to_village
+    type: return_to_region
+    target: village
+    progress_key: well_reported_to_village
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: keep_village_trust
+    type: keep_resource_at_least
+    target: reputation
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_reputation
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 3
+  rewards:
+    money: 2
+    reputation: 2
+    score: 45
+  event_bias:
+    tags:
+      village: 10
+      rumor: 6
+      local_problem: 8
+- id: beginner_village_wrongness
+  title: 초보 마을의 이상 징후
+  rank: novice
+  quest_type: local_problem
+  start_region: village
+  target_regions:
+  - village
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: find_wrongness_sign
+    type: discover_clue
+    target: wrongness_sign
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: calm_village_square
+    type: optional_action
+    target: calm_village_square
+    progress_key: calm_village_square
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: report_wrongness_resolved
+    type: return_to_region
+    target: village
+    progress_key: report_wrongness_resolved
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      village: 10
+      wrongness: 10
+      survival: 4
+- id: festival_missing_racer
+  title: 축제의 사라진 주자
+  rank: novice
+  quest_type: local_problem
+  start_region: village
+  target_regions:
+  - village
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: find_racer_track
+    type: discover_clue
+    target: racer_track
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: guide_missing_racer
+    type: optional_action
+    target: guide_missing_racer
+    progress_key: guide_missing_racer
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: report_festival_safe
+    type: return_to_region
+    target: village
+    progress_key: report_festival_safe
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      village: 10
+      festival: 10
+      survival: 4

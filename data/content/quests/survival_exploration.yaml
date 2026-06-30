@@ -1,0 +1,150 @@
+quests:
+- id: survive_the_storm_pass
+  title: 폭풍 산길 생존 귀환
+  rank: novice
+  quest_type: survival
+  start_region: village
+  target_regions:
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: find_storm_shelter
+    type: discover_clue
+    target: storm_shelter
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: secure_survival_route
+    type: optional_action
+    target: survival_route_secured
+    progress_key: survival_route_secured
+    required: true
+    value: 1
+    failure_reason: survival_failed
+    partial_reason: survival_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: return_from_storm_pass
+    type: return_to_region
+    target: village
+    progress_key: storm_pass_returned
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: keep_food
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      survival: 10
+      weather: 8
+- id: hidden_grove_discovery
+  title: 숨은 숲 빈터 발견
+  rank: novice
+  quest_type: exploration
+  start_region: village
+  target_regions:
+  - village
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: find_hidden_grove
+    type: discover_clue
+    target: hidden_grove
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: map_grove_path
+    type: optional_action
+    target: map_grove_path
+    progress_key: map_grove_path
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: report_hidden_grove
+    type: return_to_region
+    target: village
+    progress_key: report_hidden_grove
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      hidden_grove: 10
+      survival: 4

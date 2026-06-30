@@ -1,34 +1,44 @@
 quests:
-- id: herb_gathering_tutorial
-  title: 약초 채집 의뢰
+- id: ghost_town_medicine_run
+  title: 유령 마을 약 전달
   rank: novice
-  quest_type: gathering
+  quest_type: delivery
   start_region: village
   target_regions:
   - forest
   recommended_days: 3
-  max_days: 3
-  max_turns: 12
+  max_days: 5
+  max_turns: 8
   primary_objectives:
-  - id: collect_herbs
-    type: collect_item
-    target: herbs_collected
-    required: true
-    count: 3
-    failure_reason: primary_objective_failed
-    partial_reason: primary_partial
-    score_key: objective_collect
-    reward_weight: 3
-  - id: report_to_apothecary
-    type: return_to_region
-    target: village
-    progress_key: reported_to_apothecary
+  - id: secure_medicine_bundle
+    type: optional_action
+    target: medicine_bundle_secured
+    progress_key: medicine_bundle_secured
     required: true
     value: 1
-    failure_reason: return_failed
-    partial_reason: report_failed
-    score_key: objective_return
-    reward_weight: 2
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: find_ghost_town_route
+    type: discover_clue
+    target: ghost_town_route
+    required: true
+    value: 1
+    failure_reason: route_failed
+    partial_reason: route_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: deliver_medicine
+    type: optional_action
+    target: medicine_delivered
+    progress_key: medicine_delivered
+    required: true
+    value: 1
+    failure_reason: delivery_failed
+    partial_reason: delivery_partial
+    score_key: objective_optional_action
+    reward_weight: 3
   - id: survive_expedition
     type: survive_expedition
     target: health
@@ -39,250 +49,65 @@ quests:
     score_key: objective_survival
     reward_weight: 3
   optional_objectives:
-  - id: discover_old_hunter_trail
-    type: discover_clue
-    target: old_hunter_trail
-    required: false
-    value: 1
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_discovery
-    reward_weight: 1
   - id: preserve_food
     type: keep_resource_at_least
     target: food
     required: false
-    value: 2
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_resource
-    reward_weight: 1
-  - id: help_injured_traveler
-    type: optional_action
-    target: helped_injured_traveler
-    progress_key: helped_injured_traveler
-    required: false
     value: 1
     failure_reason: optional_failed
     partial_reason: optional_failed
-    score_key: objective_aid
+    score_key: objective_resource
     reward_weight: 1
   failure_conditions:
   - type: resource_lte
     resource: health
     value: 0
   - type: day_gt
-    value: 3
+    value: 5
   rewards:
     money: 3
     reputation: 1
-    score: 50
-    unlock_quests:
-    - missing_porter_search
-  event_bias:
-    tags:
-      forest: 10
-      exploration: 8
-      survival: 4
-      trade: 2
-- id: forest_path_scouting_tutorial
-  title: 숲길 안전 조사
-  rank: novice
-  quest_type: scouting
-  start_region: village
-  target_regions:
-  - forest
-  recommended_days: 3
-  max_days: 5
-  max_turns: 10
-  primary_objectives:
-  - id: discover_safe_path
-    type: discover_clue
-    target: safe_forest_path
-    required: true
-    value: 1
-    failure_reason: primary_objective_failed
-    partial_reason: primary_partial
-    score_key: objective_discovery
-    reward_weight: 3
-  - id: return_to_village
-    type: return_to_region
-    target: village
-    progress_key: reported_safe_path
-    required: true
-    value: 1
-    failure_reason: return_failed
-    partial_reason: report_failed
-    score_key: objective_return
-    reward_weight: 2
-  - id: survive_expedition
-    type: survive_expedition
-    target: health
-    required: true
-    value: 1
-    failure_reason: health_zero
-    partial_reason: health_zero
-    score_key: objective_survival
-    reward_weight: 3
-  optional_objectives:
-  - id: mark_beast_tracks
-    type: optional_action
-    target: marked_beast_tracks
-    progress_key: marked_beast_tracks
-    required: false
-    value: 1
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_optional_action
-    reward_weight: 1
-  - id: keep_food
-    type: keep_resource_at_least
-    target: food
-    required: false
-    value: 2
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_resource
-    reward_weight: 1
-  failure_conditions:
-  - type: resource_lte
-    resource: health
-    value: 0
-  - type: day_gt
-    value: 5
-  rewards:
-    money: 2
-    reputation: 1
-    score: 40
-    unlock_quests:
-    - missing_porter_search_intro
-  event_bias:
-    tags:
-      forest: 10
-      exploration: 8
-      survival: 4
-      beast: 3
-- id: missing_porter_search_intro
-  title: 실종된 짐꾼 수색
-  rank: novice
-  quest_type: rescue
-  start_region: village
-  target_regions:
-  - forest
-  recommended_days: 3
-  max_days: 5
-  max_turns: 10
-  primary_objectives:
-  - id: find_porter_trace
-    type: discover_clue
-    target: porter_trace
-    required: true
-    value: 1
-    failure_reason: primary_objective_failed
-    partial_reason: primary_partial
-    score_key: objective_discovery
-    reward_weight: 3
-  - id: resolve_porter_fate
-    type: optional_action
-    target: porter_fate_resolved
-    progress_key: porter_fate_resolved
-    required: true
-    value: 1
-    failure_reason: rescue_failed
-    partial_reason: rescue_partial
-    score_key: objective_optional_action
-    reward_weight: 3
-  - id: return_to_village
-    type: return_to_region
-    target: village
-    progress_key: porter_reported
-    required: true
-    value: 1
-    failure_reason: return_failed
-    partial_reason: report_failed
-    score_key: objective_return
-    reward_weight: 2
-  - id: survive_expedition
-    type: survive_expedition
-    target: health
-    required: true
-    value: 1
-    failure_reason: health_zero
-    partial_reason: health_zero
-    score_key: objective_survival
-    reward_weight: 3
-  optional_objectives:
-  - id: recover_lost_pack
-    type: optional_action
-    target: recovered_lost_pack
-    progress_key: recovered_lost_pack
-    required: false
-    value: 1
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_optional_action
-    reward_weight: 1
-  - id: keep_food
-    type: keep_resource_at_least
-    target: food
-    required: false
-    value: 1
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_resource
-    reward_weight: 1
-  failure_conditions:
-  - type: resource_lte
-    resource: health
-    value: 0
-  - type: day_gt
-    value: 5
-  rewards:
-    money: 2
-    reputation: 2
     score: 45
-    unlock_quests:
-    - merchant_lost_pack_recovery
   event_bias:
     tags:
-      forest: 10
-      exploration: 8
-      survival: 4
-      trade: 2
-- id: merchant_lost_pack_recovery
-  title: 상인의 잃어버린 짐
+      road: 10
+      delivery: 10
+      travel: 8
+- id: caravan_to_border_fort
+  title: 국경 요새로 가는 상단
   rank: novice
-  quest_type: recovery
+  quest_type: delivery
   start_region: village
   target_regions:
+  - village
   - forest
   recommended_days: 3
   max_days: 5
-  max_turns: 10
+  max_turns: 8
   primary_objectives:
-  - id: locate_lost_pack
+  - id: secure_caravan_manifest
     type: discover_clue
-    target: lost_pack_location
+    target: caravan_manifest
     required: true
     value: 1
     failure_reason: primary_objective_failed
     partial_reason: primary_partial
     score_key: objective_discovery
     reward_weight: 3
-  - id: resolve_pack_ownership
+  - id: cross_border_road
     type: optional_action
-    target: pack_ownership_resolved
-    progress_key: pack_ownership_resolved
+    target: cross_border_road
+    progress_key: cross_border_road
     required: true
     value: 1
-    failure_reason: recovery_failed
-    partial_reason: recovery_partial
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
     score_key: objective_optional_action
     reward_weight: 3
-  - id: return_to_village
+  - id: deliver_fort_supplies
     type: return_to_region
     target: village
-    progress_key: pack_returned_to_village
+    progress_key: deliver_fort_supplies
     required: true
     value: 1
     failure_reason: return_failed
@@ -299,24 +124,14 @@ quests:
     score_key: objective_survival
     reward_weight: 3
   optional_objectives:
-  - id: negotiate_bonus_payment
-    type: optional_action
-    target: bonus_payment_negotiated
-    progress_key: bonus_payment_negotiated
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
     required: false
     value: 1
     failure_reason: optional_failed
     partial_reason: optional_failed
     score_key: objective_resource
-    reward_weight: 1
-  - id: preserve_merchant_trust
-    type: keep_resource_at_least
-    target: reputation
-    required: false
-    value: 1
-    failure_reason: optional_failed
-    partial_reason: optional_failed
-    score_key: objective_reputation
     reward_weight: 1
   failure_conditions:
   - type: resource_lte
@@ -325,14 +140,161 @@ quests:
   - type: day_gt
     value: 5
   rewards:
-    money: 3
+    money: 2
     reputation: 1
-    score: 40
-    unlock_quests:
-    - caravan_to_border_fort
+    score: 45
   event_bias:
     tags:
-      forest: 8
-      exploration: 6
-      trade: 8
-      survival: 3
+      forest: 10
+      caravan: 10
+      survival: 4
+- id: winter_wagon_delivery
+  title: 겨울 마차 배송
+  rank: novice
+  quest_type: delivery
+  start_region: village
+  target_regions:
+  - village
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: prepare_winter_wagon
+    type: discover_clue
+    target: winter_route
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: cross_snow_road
+    type: optional_action
+    target: cross_snow_road
+    progress_key: cross_snow_road
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: deliver_winter_goods
+    type: return_to_region
+    target: village
+    progress_key: deliver_winter_goods
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      winter_wagon: 10
+      survival: 4
+- id: deliver_the_sealed_parcel
+  title: 봉인된 소포 배달
+  rank: novice
+  quest_type: delivery
+  start_region: village
+  target_regions:
+  - village
+  - forest
+  recommended_days: 3
+  max_days: 5
+  max_turns: 8
+  primary_objectives:
+  - id: receive_sealed_parcel
+    type: discover_clue
+    target: sealed_parcel_mark
+    required: true
+    value: 1
+    failure_reason: primary_objective_failed
+    partial_reason: primary_partial
+    score_key: objective_discovery
+    reward_weight: 3
+  - id: avoid_parcel_tamper
+    type: optional_action
+    target: avoid_parcel_tamper
+    progress_key: avoid_parcel_tamper
+    required: true
+    value: 1
+    failure_reason: quest_progress_failed
+    partial_reason: quest_progress_partial
+    score_key: objective_optional_action
+    reward_weight: 3
+  - id: deliver_sealed_parcel
+    type: return_to_region
+    target: village
+    progress_key: deliver_sealed_parcel
+    required: true
+    value: 1
+    failure_reason: return_failed
+    partial_reason: report_failed
+    score_key: objective_return
+    reward_weight: 2
+  - id: survive_expedition
+    type: survive_expedition
+    target: health
+    required: true
+    value: 1
+    failure_reason: health_zero
+    partial_reason: health_zero
+    score_key: objective_survival
+    reward_weight: 3
+  optional_objectives:
+  - id: preserve_supplies
+    type: keep_resource_at_least
+    target: food
+    required: false
+    value: 1
+    failure_reason: optional_failed
+    partial_reason: optional_failed
+    score_key: objective_resource
+    reward_weight: 1
+  failure_conditions:
+  - type: resource_lte
+    resource: health
+    value: 0
+  - type: day_gt
+    value: 5
+  rewards:
+    money: 2
+    reputation: 1
+    score: 45
+  event_bias:
+    tags:
+      forest: 10
+      sealed_parcel: 10
+      survival: 4
