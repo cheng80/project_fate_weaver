@@ -7,6 +7,45 @@ from fateweaver.text_mud_log import render_text_mud_log
 
 
 class TextMudLogTests(unittest.TestCase):
+    def test_format_quest_report_when_failure_taxonomy_present_then_renders_existing_lines(self) -> None:
+        # Given
+        from fateweaver.text_mud_sections import format_quest_report
+
+        quest_report: JsonMap = {
+            "result_type": "failure",
+            "failure_kind": "objective_failed",
+            "character_outcome": "alive",
+            "result_reason": "primary_objective_failed",
+            "review_text": "짐을 되찾지 못했지만 상인은 살아 돌아왔다.",
+            "partial_reasons": [],
+            "failure_reasons": ["primary_objective_failed"],
+            "completed_objectives": [],
+            "failed_objectives": ["recover_lost_pack"],
+            "reward_status": "no_reward",
+            "score": -60,
+            "objective_results": [
+                {
+                    "objective_id": "recover_lost_pack",
+                    "status": "failed",
+                    "reason": "primary_objective_failed",
+                    "score_delta": -30,
+                }
+            ],
+            "score_breakdown": {"objective_completion": -30, "outcome_adjustment": -30},
+        }
+
+        # When
+        lines = format_quest_report(quest_report)
+
+        # Then
+        self.assertEqual("Quest Report:", lines[0])
+        self.assertIn("결과 유형: failure", lines)
+        self.assertIn("실패 종류: objective_failed", lines)
+        self.assertIn("캐릭터 결과: alive", lines)
+        self.assertIn("목표 평가:", lines)
+        self.assertIn("- recover_lost_pack: 실패 (-/-) reason=primary_objective_failed", lines)
+        self.assertIn("점수 상세: objective_completion=-30, outcome_adjustment=-30", lines)
+
     def test_render_text_mud_log_when_curse_changes_then_frames_it_as_status_detail(self) -> None:
         # Given
         log: JsonMap = {

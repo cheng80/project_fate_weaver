@@ -279,6 +279,8 @@ docs/
   - `merchant_lost_pack_recovery` Quest를 실제 data fixture로 추가하고 economy / reputation / recovery / negotiation 경로를 검증한 결과를 보관한다.
 - `docs/07_reviews/30_Failure_Outcome_Taxonomy_Result_v0.1.md`
   - Gameplay P0의 failure 의미를 정리하고 merchant failure fixture를 생존 실패와 Quest 고유 실패로 분리한 결과를 보관한다.
+- `docs/07_reviews/31_Text_MUD_Log_Section_Refactor_Result_v0.1.md`
+  - `text_mud_log.py`의 출력 섹션을 분리하고 LOC warning band를 해소한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
