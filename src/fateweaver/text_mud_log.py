@@ -225,7 +225,7 @@ def _influences(turn: JsonMap) -> str:
 
 
 def _selected_cards(turn: JsonMap) -> str:
-    selected = _text(turn.get("selected_cards"))
+    selected = _text(turn.get("choice_reason"))
     multi = _json_map(turn.get("multi_select"))
     return f"{selected} (Multi-Select: {_text(multi.get('rule_id'))})" if multi.get("selected") is True else selected
 

@@ -78,11 +78,15 @@ class CardRule:
     title: str
     description: str
     slot_role: str
+    tags: tuple[str, ...]
     regions: tuple[str, ...]
     result: JsonMap
     requires_item: str | None
     requires_progress: JsonMap
     requires_status: JsonMap
+    applies_to_storylet_tags: tuple[str, ...]
+    applies_to_quest_objectives: tuple[str, ...]
+    progress_key: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,6 +109,12 @@ class CardRules:
     default_extra_cost: JsonMap
     combos: tuple[ComboRule, ...]
     conflicts: tuple[ConflictRule, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class CardCandidateContext:
+    quest: Quest
+    storylet_tags: tuple[str, ...]
 
 
 @dataclass(frozen=True, slots=True)

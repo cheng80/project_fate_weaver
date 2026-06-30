@@ -49,11 +49,15 @@ p0_cards:
   - id: help_injured_traveler
     title: 부상자를 돕는다
     description: 채집한 약초 일부로 숲길의 부상자를 응급 처치한다.
-    slot_role: risk_discovery
+    slot_role: resource_alternative
+    tags: [aid, npc, optional_objective, reputation, forest, quest_related]
     regions: [forest]
     requires_progress: {herbs_collected: {min: 2}}
+    applies_to_storylet_tags: [injured_traveler, aid_opportunity]
+    applies_to_quest_objectives: [help_injured_traveler]
+    progress_key: helped_injured_traveler
     result:
-      status: {reputation: 1}
+      status: {food: -1, reputation: 1}
       quest_progress: {helped_injured_traveler: 1}
       score_changes: {reputation: 4, survival: 3}
       next_event_tags: [safe_path, traveler_helped]

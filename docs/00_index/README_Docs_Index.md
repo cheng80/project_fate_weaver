@@ -258,6 +258,8 @@ docs/
   - Gameplay P0 Objective Schema 문서 정렬과 optional_action / max_day_exceeded fixture 검증 결과를 보관한다.
 - `docs/07_reviews/21_Gameplay_P0_Optional_Action_And_Score_Rule_Result_v0.1.md`
   - Gameplay P0의 optional_action completed 경로와 score rule 정렬 결과를 보관한다.
+- `docs/07_reviews/22_Gameplay_P0_Optional_Action_Ontology_Link_Result_v0.1.md`
+  - Gameplay P0 optional_action 카드를 Storylet/Ontology 후보군과 연결한 결과를 보관한다.
 
 ---
 

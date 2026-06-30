@@ -199,9 +199,20 @@ card_type: aid
 slot_role: risk_discovery
 title: 전령을 돕는다
 description: 식량을 나누어 전령을 안정시킨다.
+tags:
+  - aid
+  - npc
+  - optional_objective
+  - reputation
 source:
   type: storylet
   id: forest_wounded_messenger
+applies_to_storylet_tags:
+  - wounded_messenger
+  - aid_opportunity
+applies_to_quest_objectives:
+  - help_messenger
+progress_key: helped_messenger
 
 requires:
   min_food: 1
@@ -217,6 +228,15 @@ effects:
 
 risk_hint: 식량을 소모하지만 평판과 단서를 얻을 수 있다.
 ```
+
+현재 P0 구현의 `data/core/card_rules.yaml`은 위 스키마의 최소 실행형 subset을 사용한다.
+
+- `tags`: 카드의 온톨로지식 의미 태그다. 예: `aid`, `npc`, `optional_objective`, `reputation`, `forest`, `quest_related`.
+- `applies_to_storylet_tags`: 현재 Storylet/Event 또는 P0 situation context tag와 하나 이상 겹치면 후보로 올라올 수 있다.
+- `applies_to_quest_objectives`: active quest의 optional objective id와 연결한다.
+- `progress_key`: 카드 선택 후 갱신되는 quest progress key다. 이미 1 이상이면 같은 optional action 카드는 다시 후보 우선권을 갖지 않는다.
+
+예를 들어 `help_injured_traveler` 카드는 `injured_traveler` 또는 `aid_opportunity` context tag가 있고, active quest에 `help_injured_traveler` optional objective가 있으며, `helped_injured_traveler` 진행도가 아직 0일 때 3-Card 후보에 포함된다.
 
 ---
 

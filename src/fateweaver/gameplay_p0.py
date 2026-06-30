@@ -4,20 +4,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
 
+from fateweaver.gameplay_p0_cards import card_json, present_cards
 from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardRule, ComboRule, GameplayRunRequest, Quest, RunState
+from fateweaver.gameplay_p0_models import CardCandidateContext, CardRule, ComboRule, GameplayRunRequest, Quest, RunState
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
 from fateweaver.gameplay_p0_rules import (
     advance_clock,
     apply_turn_result,
-    card_json,
     clock_json,
     combined_result,
     influences,
     initial_state,
     int_map,
     multi_select_json,
-    present_cards,
     select_cards,
     select_storylet,
 )
@@ -38,13 +37,14 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         and not is_failed(state.status, request.bundle.statuses)
     ):
         event = select_storylet(request.events, state, rng)
-        cards = present_cards(foundation.card_rules.cards, state)
+        context = CardCandidateContext(foundation.quest, storylet_tags(event, state))
+        cards = present_cards(foundation.card_rules.cards, state, context)
         selected_cards, combo = select_cards(cards, foundation.card_rules.combos, state, request.profile)
         result = combined_result(selected_cards, combo, foundation.card_rules.default_extra_cost)
         result["selected_card_ids"] = [card.id for card in selected_cards]
         before = state
         state = apply_turn_result(state, result, request.bundle)
-        turns.append(_turn_log(foundation.quest, before, state, event, cards, selected_cards, combo, result))
+        turns.append(_turn_log(foundation.quest, before, state, event, context, cards, selected_cards, combo, result))
         if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
@@ -63,11 +63,19 @@ def _continue_state(state: RunState, event: Event) -> RunState:
     return replace(state, clock=advance_clock(state.clock), recent_event_ids=(*state.recent_event_ids, event.id))
 
 
+def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
+    tags = (*event.region_tags, *event.event_tags, *event.danger_tags, *state.next_event_tags)
+    if state.region == "forest" and state.quest_progress.get("herbs_collected", 0) >= 2:
+        tags = (*tags, "npc", "aid_opportunity", "injured_traveler", "quest_related")
+    return tuple(dict.fromkeys(tags))
+
+
 def _turn_log(
     quest: Quest,
     before: RunState,
     after: RunState,
     event: Event,
+    context: CardCandidateContext,
     cards: tuple[CardRule, CardRule, CardRule],
     selected: tuple[CardRule, ...],
     combo: ComboRule | None,
@@ -85,6 +93,7 @@ def _turn_log(
         "event_description": event.description,
         "region_tags": [before.region],
         "event_tags": list(event.event_tags),
+        "storylet_tags": list(context.storylet_tags),
         "danger_tags": list(event.danger_tags),
         "state_before": dict(before.status),
         "inventory_before": list(before.inventory),

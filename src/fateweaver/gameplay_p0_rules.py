@@ -6,7 +6,7 @@ from random import Random
 
 from fateweaver.event_selector import select_event
 from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, Quest, RunClock, RunState
-from fateweaver.models import Event, JsonMap, JsonValue, ProjectData, Scenario, StatusMap
+from fateweaver.models import Event, JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.state_manager import apply_choice_result
 
 
@@ -48,15 +48,6 @@ def select_storylet(events: tuple[Event, ...], state: RunState, rng: Random) -> 
     return select_event(pool, state.status, state.inventory, state.run_tags, rng, state.recent_event_ids)
 
 
-def present_cards(cards: tuple[CardRule, ...], state: RunState) -> tuple[CardRule, CardRule, CardRule]:
-    visible = tuple(card for card in cards if card_available(card, state))
-    return (
-        quest_card(visible, state),
-        first_for_slot(visible, "risk_discovery"),
-        first_for_slot(visible, "resource_alternative"),
-    )
-
-
 def select_cards(
     cards: tuple[CardRule, CardRule, CardRule],
     combos: tuple[ComboRule, ...],
@@ -66,6 +57,8 @@ def select_cards(
     combo = available_combo(cards, combos)
     if combo is not None and not state.combo_used:
         return tuple(card for card in cards if card.id in combo.cards), combo
+    if _should_select_optional_resource(cards, state, profile):
+        return (cards[2],), None
     if _should_select_discovery(cards, state, profile):
         return (cards[1],), None
     if _should_select_resource(cards, state, profile):
@@ -112,24 +105,6 @@ def advance_clock(clock: RunClock) -> RunClock:
     return replace(clock, turn=next_turn, turns_today=next_turns_today, time_of_day=TIME_OF_DAY[next_turns_today])
 
 
-def card_json(card: CardRule) -> JsonMap:
-    return {
-        "choice_id": card.id,
-        "card_id": card.id,
-        "choice_text": card.title,
-        "title": card.title,
-        "description": card.description,
-        "slot_role": card.slot_role,
-        "choice_type": card.slot_role,
-        "available": True,
-        "unavailable_reason": None,
-        "hidden": False,
-        "expected_risk": "low" if card.slot_role != "risk_discovery" else "medium",
-        "influenced_by": [f"slot:{card.slot_role}"],
-        "result": card.result,
-    }
-
-
 def multi_select_json(combo: ComboRule | None, selected_ids: list[str]) -> JsonMap:
     if combo is None:
         return {"selected": False, "selected_cards": selected_ids}
@@ -160,60 +135,6 @@ def clock_json(clock: RunClock) -> JsonMap:
     }
 
 
-def card_available(card: CardRule, state: RunState) -> bool:
-    return (
-        state.region in card.regions
-        and (card.requires_item is None or card.requires_item in state.inventory)
-        and progress_matches(card.requires_progress, state.quest_progress)
-        and status_matches(card.requires_status, state.status)
-    )
-
-
-def progress_matches(requirements: JsonMap, progress: dict[str, int]) -> bool:
-    for key, raw_bounds in requirements.items():
-        bounds = as_mapping(raw_bounds)
-        minimum = bounds.get("min")
-        if minimum is not None and progress.get(key, 0) < int(minimum):
-            return False
-    return True
-
-
-def status_matches(requirements: JsonMap, status: StatusMap) -> bool:
-    for key, raw_bounds in requirements.items():
-        bounds = as_mapping(raw_bounds)
-        minimum = bounds.get("min")
-        if minimum is not None and status.get(key, 0) < int(minimum):
-            return False
-    return True
-
-
-def first_for_slot(cards: tuple[CardRule, ...], slot: str) -> CardRule:
-    for card in cards:
-        if card.slot_role == slot:
-            return card
-    raise ValueError(f"No P0 card for slot: {slot}")
-
-
-def quest_card(cards: tuple[CardRule, ...], state: RunState) -> CardRule:
-    target = quest_target_card(state)
-    for card in cards:
-        if card.id == target:
-            return card
-    return first_for_slot(cards, "quest_progress")
-
-
-def quest_target_card(state: RunState) -> str:
-    herbs = state.quest_progress.get("herbs_collected", 0)
-    returned = state.quest_progress.get("returned_to_village", 0)
-    if state.region == "village" and herbs >= 3 and returned >= 1:
-        return "report_to_apothecary"
-    if state.region == "forest" and herbs >= 3:
-        return "return_to_village"
-    if state.region == "village":
-        return "ask_apothecary"
-    return "search_herbs"
-
-
 def available_combo(cards: tuple[CardRule, ...], combos: tuple[ComboRule, ...]) -> ComboRule | None:
     card_ids = {card.id for card in cards}
     for combo in combos:
@@ -228,6 +149,16 @@ def _should_select_discovery(cards: tuple[CardRule, CardRule, CardRule], state: 
         and state.region == "forest"
         and state.quest_progress.get("herbs_collected", 0) >= 2
         and cards[1].id not in state.selected_choice_history
+    )
+
+
+def _should_select_optional_resource(cards: tuple[CardRule, CardRule, CardRule], state: RunState, profile: str) -> bool:
+    return (
+        profile == "curious_leaning"
+        and state.region == "forest"
+        and state.quest_progress.get("herbs_collected", 0) >= 2
+        and bool(cards[2].applies_to_quest_objectives)
+        and cards[2].id not in state.selected_choice_history
     )
 
 

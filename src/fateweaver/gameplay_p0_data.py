@@ -107,11 +107,15 @@ def _load_card(raw_value: JsonValue) -> CardRule:
         title=str(raw["title"]),
         description=str(raw.get("description", "")),
         slot_role=str(raw["slot_role"]),
+        tags=_string_tuple(raw.get("tags", [])),
         regions=_string_tuple(raw.get("regions", [])),
         result=_mapping_at(raw, "result"),
         requires_item=_optional_string(raw, "requires_item"),
         requires_progress=_mapping_at(raw, "requires_progress"),
         requires_status=_mapping_at(raw, "requires_status"),
+        applies_to_storylet_tags=_string_tuple(raw.get("applies_to_storylet_tags", [])),
+        applies_to_quest_objectives=_string_tuple(raw.get("applies_to_quest_objectives", [])),
+        progress_key=str(raw.get("progress_key", "")),
     )
 
 
