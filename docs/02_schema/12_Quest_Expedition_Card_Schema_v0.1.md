@@ -258,6 +258,8 @@ Card Rule은 다음 위치에서 읽을 수 있다.
 
 Loader는 core file을 먼저 읽고, split file을 파일명 정렬 순서로 병합한다. 모든 loaded Card Rule의 `id`는 전체 병합 결과에서 유일해야 한다. Split file에 들어간 Card Rule은 quest-specific rule로 보며 `quest_ids`를 반드시 가져야 한다. Core file의 shared/foundation card는 기존 호환성을 위해 `quest_ids`가 없을 수 있다.
 
+현재 적용된 split file은 `local_problem`, `investigation_mystery`, `defense_threat`, `travel_delivery_escort`, `ruin_dungeon_ritual`, `survival_exploration`이다.
+
 - `tags`: 카드의 온톨로지식 의미 태그다. 예: `aid`, `npc`, `optional_objective`, `reputation`, `forest`, `quest_related`.
 - `quest_ids`: 값이 있으면 해당 active Quest(활성 퀘스트)에서만 후보가 된다. 값이 없으면 기존 전역 카드처럼 모든 Quest에서 후보가 될 수 있다.
 - `applies_to_storylet_tags`: 현재 Storylet/Event 또는 P0 situation context tag와 하나 이상 겹치면 후보로 올라올 수 있다.

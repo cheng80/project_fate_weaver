@@ -1,0 +1,358 @@
+p0_cards:
+  - id: copy_ruin_mark
+    title: 폐허 표식을 베껴 적는다
+    description: 부서진 돌문에 남은 반복 표식을 종이에 옮긴다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [ruin, clue, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [ruin_mark, ancient_symbol, investigation]
+    progress_key: ruin_mark_copied
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [ruin_mark]
+      quest_progress: {ruin_mark_copied: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [ruin, omen, investigation]
+      move_to_region: ruin
+      message: 표식은 같은 방향을 세 번 가리키며 폐허 안쪽의 징조를 남겼다.
+  - id: interpret_omen_pattern
+    title: 징조의 배열을 해석한다
+    description: 표식 주변의 검은 새 깃털과 금 간 돌을 대조한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, omen, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    requires_progress: {ruin_mark_copied: {min: 1}}
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    progress_key: ruin_omen_interpreted
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      quest_progress: {ruin_omen_interpreted: 1}
+      score_changes: {quest_progress: 12, discovery: 5}
+      next_event_tags: [village, report, omen]
+      message: 표식은 단순한 낙서가 아니라 봉인이 약해졌다는 경고였다.
+  - id: inspect_ruin_shadow
+    title: 폐허 그림자를 살핀다
+    description: 표식 주변에 드리운 이상한 그림자와 금 간 바닥을 확인한다.
+    slot_role: risk_discovery
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, omen, investigation]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_omens: [ruin_shadow]
+      score_changes: {discovery: 5, penalty: -2}
+      next_event_tags: [ruin, omen]
+      message: 표식 아래 그림자가 실제 빛과 다르게 움직이는 것을 보았다.
+  - id: preserve_ruin_notes
+    title: 폐허 조사 기록을 보존한다
+    description: 젖은 종이를 말리고 표식 사본을 다시 정리한다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, investigation, resource_management]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    applies_to_storylet_tags: [ruin_omen, ancient_symbol, investigation]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [ruin, report]
+      message: 표식 사본을 잃어버리지 않도록 정리했다.
+  - id: report_ruin_mark
+    title: 폐허 표식을 보고한다
+    description: 베낀 표식과 해석한 징조를 마을의 현자에게 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, investigation, quest_related]
+    quest_ids: [ruin_mark_investigation_intro]
+    regions: [ruin]
+    requires_progress: {ruin_omen_interpreted: {min: 1}}
+    progress_key: ruin_mark_reported
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {ruin_mark_reported: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 현자는 표식의 의미를 듣고 폐허를 더 조사해야 한다고 말했다.
+  - id: inspect_signal_lamp
+    title: 버려진 등대의 신호 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [ruin, lighthouse, clue, quest_related]
+    quest_ids: [abandoned_lighthouse_signal]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [lighthouse, quest_related]
+    progress_key: inspect_signal_lamp
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [lighthouse_signal]
+      quest_progress: {inspect_signal_lamp: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [lighthouse, quest_related]
+      move_to_region: ruin
+      message: 버려진 등대의 신호의 핵심 단서를 확보했다.
+  - id: decode_lighthouse_signal
+    title: 버려진 등대의 신호 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, lighthouse, action, quest_related]
+    quest_ids: [abandoned_lighthouse_signal]
+    regions: [village, ruin]
+    requires_progress: {inspect_signal_lamp: {min: 1}}
+    applies_to_storylet_tags: [lighthouse, quest_related]
+    progress_key: decode_lighthouse_signal
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {decode_lighthouse_signal: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 버려진 등대의 신호의 위험을 당장 번지지 않게 막았다.
+  - id: report_lighthouse_warning
+    title: 버려진 등대의 신호 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, lighthouse, quest_related]
+    quest_ids: [abandoned_lighthouse_signal]
+    regions: [village, ruin]
+    requires_progress: {decode_lighthouse_signal: {min: 1}}
+    progress_key: report_lighthouse_warning
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {report_lighthouse_warning: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 버려진 등대의 신호 해결 결과가 마을에 보고되었다.
+  - id: shield_lantern_oil
+    title: 버려진 등대의 신호 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, lighthouse]
+    quest_ids: [abandoned_lighthouse_signal]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [lighthouse, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [lighthouse]
+      message: 보급을 아껴 버려진 등대의 신호의 남은 위험에 대비했다.
+  - id: inspect_canvas_paint
+    title: 그려진 문 너머의 화폭 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [ruin, canvas, clue, quest_related]
+    quest_ids: [painted_portal_canvas]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [canvas, quest_related]
+    progress_key: inspect_canvas_paint
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [portal_canvas_paint]
+      quest_progress: {inspect_canvas_paint: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [canvas, quest_related]
+      move_to_region: ruin
+      message: 그려진 문 너머의 화폭의 핵심 단서를 확보했다.
+  - id: stabilize_portal_canvas
+    title: 그려진 문 너머의 화폭 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, canvas, action, quest_related]
+    quest_ids: [painted_portal_canvas]
+    regions: [village, ruin]
+    requires_progress: {inspect_canvas_paint: {min: 1}}
+    applies_to_storylet_tags: [canvas, quest_related]
+    progress_key: stabilize_portal_canvas
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {stabilize_portal_canvas: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 그려진 문 너머의 화폭의 위험을 당장 번지지 않게 막았다.
+  - id: report_canvas_truth
+    title: 그려진 문 너머의 화폭 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, canvas, quest_related]
+    quest_ids: [painted_portal_canvas]
+    regions: [village, ruin]
+    requires_progress: {stabilize_portal_canvas: {min: 1}}
+    progress_key: report_canvas_truth
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {report_canvas_truth: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 그려진 문 너머의 화폭 해결 결과가 마을에 보고되었다.
+  - id: cover_canvas_frame
+    title: 그려진 문 너머의 화폭 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, canvas]
+    quest_ids: [painted_portal_canvas]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [canvas, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [canvas]
+      message: 보급을 아껴 그려진 문 너머의 화폭의 남은 위험에 대비했다.
+  - id: find_vanishing_trace
+    title: 사라지는 마을의 흔적 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, vanishing, clue, quest_related]
+    quest_ids: [vanishing_village]
+    regions: [village, forest]
+    applies_to_storylet_tags: [vanishing, quest_related]
+    progress_key: find_vanishing_trace
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [vanishing_trace]
+      quest_progress: {find_vanishing_trace: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [vanishing, quest_related]
+      move_to_region: forest
+      message: 사라지는 마을의 흔적의 핵심 단서를 확보했다.
+  - id: anchor_village_memory
+    title: 사라지는 마을의 흔적 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, vanishing, action, quest_related]
+    quest_ids: [vanishing_village]
+    regions: [village, forest]
+    requires_progress: {find_vanishing_trace: {min: 1}}
+    applies_to_storylet_tags: [vanishing, quest_related]
+    progress_key: anchor_village_memory
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {anchor_village_memory: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 사라지는 마을의 흔적의 위험을 당장 번지지 않게 막았다.
+  - id: report_vanishing_village
+    title: 사라지는 마을의 흔적 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, vanishing, quest_related]
+    quest_ids: [vanishing_village]
+    regions: [village, forest]
+    requires_progress: {anchor_village_memory: {min: 1}}
+    progress_key: report_vanishing_village
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {report_vanishing_village: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 사라지는 마을의 흔적 해결 결과가 마을에 보고되었다.
+  - id: mark_returning_path
+    title: 사라지는 마을의 흔적 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, vanishing]
+    quest_ids: [vanishing_village]
+    regions: [village, forest]
+    applies_to_storylet_tags: [vanishing, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [vanishing]
+      message: 보급을 아껴 사라지는 마을의 흔적의 남은 위험에 대비했다.
+  - id: test_lighthouse_risk
+    title: 버려진 등대의 신호 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, lighthouse, quest_related]
+    quest_ids: [abandoned_lighthouse_signal]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [lighthouse, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [lighthouse]
+      message: 버려진 등대의 신호의 위험을 서두르기 전에 가늠했다.
+
+  - id: test_canvas_risk
+    title: 그려진 문 너머의 화폭 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, canvas, quest_related]
+    quest_ids: [painted_portal_canvas]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [canvas, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [canvas]
+      message: 그려진 문 너머의 화폭의 위험을 서두르기 전에 가늠했다.
+
+  - id: test_vanishing_risk
+    title: 사라지는 마을의 흔적 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, vanishing, quest_related]
+    quest_ids: [vanishing_village]
+    regions: [village, forest]
+    applies_to_storylet_tags: [vanishing, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [vanishing]
+      message: 사라지는 마을의 흔적의 위험을 서두르기 전에 가늠했다.
+

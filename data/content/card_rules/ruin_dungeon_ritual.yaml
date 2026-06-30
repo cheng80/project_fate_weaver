@@ -1,0 +1,181 @@
+p0_cards:
+  - id: descend_old_well
+    title: 오래된 우물 아래로 내려간다
+    description: 밧줄을 고정하고 우물 아래의 금 간 봉인을 확인한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, ruin, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    progress_key: cracked_well_seal_found
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_clues: [cracked_well_seal]
+      quest_progress: {cracked_well_seal_found: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [ruin, dungeon, seal]
+      move_to_region: ruin
+      message: 우물 아래 금 간 봉인에서 차가운 바람이 새어 나왔다.
+  - id: read_cracked_seal
+    title: 금 간 봉인을 해석한다
+    description: 균열을 따라 새겨진 오래된 글자를 읽는다.
+    slot_role: risk_discovery
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, seal, dungeon]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    applies_to_storylet_tags: [cracked_seal, ancient_symbol, dungeon]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1}
+      gain_omens: [seal_weakening]
+      score_changes: {discovery: 6, penalty: -2}
+      next_event_tags: [ruin, seal]
+      message: 봉인은 아직 버티지만 한 번 더 흔들리면 열릴 듯했다.
+  - id: brace_old_well_rope
+    title: 우물 밧줄을 보강한다
+    description: 내려온 길을 잃지 않도록 밧줄과 표시를 다시 묶는다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [ruin, dungeon, resource_management]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [ruin, seal]
+      message: 밧줄을 다시 묶어 우물 밖으로 나갈 길을 분명히 했다.
+  - id: reseal_well_awakening
+    title: 우물 봉인을 다시 잠근다
+    description: 균열에 돌가루를 채우고 오래된 문양을 다시 맞춘다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, seal, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    requires_progress: {cracked_well_seal_found: {min: 1}}
+    applies_to_storylet_tags: [old_well, cracked_seal, dungeon]
+    progress_key: well_depths_resealed
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {well_depths_resealed: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [village, report, quest_complete]
+      message: 봉인의 균열이 닫히며 우물 아래의 속삭임이 멎었다.
+  - id: report_well_seal
+    title: 우물 봉인 상태를 보고한다
+    description: 우물 아래에서 본 균열과 재봉인 결과를 마을에 전한다.
+    slot_role: quest_progress
+    base_weight: 115
+    tier_hint: critical
+    tags: [village, report, dungeon, quest_related]
+    quest_ids: [old_well_awakening]
+    regions: [ruin]
+    requires_progress: {well_depths_resealed: {min: 1}}
+    progress_key: well_seal_reported
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 3, reputation: 1}
+      quest_progress: {well_seal_reported: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 마을은 오래된 우물이 다시 잠잠해졌다는 보고를 받았다.
+  - id: find_gate_runes
+    title: 오래된 문 작동 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [ruin, old_gate, clue, quest_related]
+    quest_ids: [activate_the_old_gate]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [old_gate, quest_related]
+    progress_key: find_gate_runes
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [gate_runes]
+      quest_progress: {find_gate_runes: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [old_gate, quest_related]
+      move_to_region: ruin
+      message: 오래된 문 작동의 핵심 단서를 확보했다.
+  - id: align_old_gate
+    title: 오래된 문 작동 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [ruin, old_gate, action, quest_related]
+    quest_ids: [activate_the_old_gate]
+    regions: [village, ruin]
+    requires_progress: {find_gate_runes: {min: 1}}
+    applies_to_storylet_tags: [old_gate, quest_related]
+    progress_key: align_old_gate
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {align_old_gate: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 오래된 문 작동의 위험을 당장 번지지 않게 막았다.
+  - id: return_gate_report
+    title: 오래된 문 작동 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, old_gate, quest_related]
+    quest_ids: [activate_the_old_gate]
+    regions: [village, ruin]
+    requires_progress: {align_old_gate: {min: 1}}
+    progress_key: return_gate_report
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {return_gate_report: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 오래된 문 작동 해결 결과가 마을에 보고되었다.
+  - id: brace_gate_stones
+    title: 오래된 문 작동 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, old_gate]
+    quest_ids: [activate_the_old_gate]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [old_gate, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [old_gate]
+      message: 보급을 아껴 오래된 문 작동의 남은 위험에 대비했다.
+  - id: test_old_gate_risk
+    title: 오래된 문 작동 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, old_gate, quest_related]
+    quest_ids: [activate_the_old_gate]
+    regions: [village, ruin]
+    applies_to_storylet_tags: [old_gate, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [old_gate]
+      message: 오래된 문 작동의 위험을 서두르기 전에 가늠했다.
+

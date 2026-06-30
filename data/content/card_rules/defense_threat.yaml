@@ -1,0 +1,234 @@
+p0_cards:
+  - id: raise_village_barricade
+    title: 마을 방책을 세운다
+    description: 울타리 틈을 막으며 밤에 다가올 위협의 방향을 확인한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [village, defense, night, quest_related]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    applies_to_storylet_tags: [night_threat, barricade, defense]
+    progress_key: night_threat_identified
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [night_threat_tracks]
+      quest_progress: {night_threat_identified: 1}
+      score_changes: {discovery: 8, quest_progress: 8}
+      next_event_tags: [village, defense, night]
+      message: 울타리 밖 진흙에서 같은 방향으로 모인 발자국을 확인했다.
+  - id: evacuate_border_homes
+    title: 외곽 집 사람들을 대피시킨다
+    description: 가장 취약한 집의 주민들을 광장 쪽으로 모은다.
+    slot_role: resource_alternative
+    base_weight: 70
+    tier_hint: strong
+    tags: [village, civilian, defense, optional_objective]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    applies_to_storylet_tags: [civilian, evacuation, defense]
+    progress_key: border_homes_evacuated
+    weight_modifiers: {quest_objective_match: 35, storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {reputation: 1}
+      quest_progress: {border_homes_evacuated: 1}
+      score_changes: {reputation: 5, survival: 3}
+      next_event_tags: [village, defense]
+      message: 외곽 주민들이 안전한 곳으로 옮겨 마을의 동요가 줄었다.
+  - id: hold_night_watch
+    title: 밤 경계를 버틴다
+    description: 방책 뒤에서 위협이 물러날 때까지 경계를 유지한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, defense, night, quest_related]
+    quest_ids: [defend_the_village_night]
+    regions: [village]
+    requires_progress: {night_threat_identified: {min: 1}}
+    applies_to_storylet_tags: [night_watch, threat, defense]
+    progress_key: village_defense_held
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {health: -1, reputation: 1}
+      quest_progress: {village_defense_held: 1}
+      score_changes: {quest_progress: 14, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      message: 긴 밤 끝에 위협은 물러났고 마을 사람들은 버텨 냈다.
+  - id: identify_beast_tracks
+    title: 자레치카의 짐승 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, zarechka_beast, clue, quest_related]
+    quest_ids: [beast_of_zarechka]
+    regions: [village, forest]
+    applies_to_storylet_tags: [zarechka_beast, quest_related]
+    progress_key: identify_beast_tracks
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [beast_tracks]
+      quest_progress: {identify_beast_tracks: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [zarechka_beast, quest_related]
+      move_to_region: forest
+      message: 자레치카의 짐승의 핵심 단서를 확보했다.
+  - id: drive_beast_back
+    title: 자레치카의 짐승 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, zarechka_beast, action, quest_related]
+    quest_ids: [beast_of_zarechka]
+    regions: [village, forest]
+    requires_progress: {identify_beast_tracks: {min: 1}}
+    applies_to_storylet_tags: [zarechka_beast, quest_related]
+    progress_key: drive_beast_back
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {drive_beast_back: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 자레치카의 짐승의 위험을 당장 번지지 않게 막았다.
+  - id: reassure_zarechka
+    title: 자레치카의 짐승 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, zarechka_beast, quest_related]
+    quest_ids: [beast_of_zarechka]
+    regions: [village, forest]
+    requires_progress: {drive_beast_back: {min: 1}}
+    progress_key: reassure_zarechka
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {reassure_zarechka: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 자레치카의 짐승 해결 결과가 마을에 보고되었다.
+  - id: set_beast_watchfire
+    title: 자레치카의 짐승 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, zarechka_beast]
+    quest_ids: [beast_of_zarechka]
+    regions: [village, forest]
+    applies_to_storylet_tags: [zarechka_beast, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [zarechka_beast]
+      message: 보급을 아껴 자레치카의 짐승의 남은 위험에 대비했다.
+  - id: inspect_cattle_circle
+    title: 돌 원의 소 떼 상처 단서를 확인한다
+    description: 관련 흔적을 조사해 핵심 단서를 확보한다.
+    slot_role: quest_progress
+    base_weight: 125
+    tier_hint: critical
+    tags: [forest, stone_circle, clue, quest_related]
+    quest_ids: [cattle_mutilation_stone_circle]
+    regions: [village, forest]
+    applies_to_storylet_tags: [stone_circle, quest_related]
+    progress_key: inspect_cattle_circle
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      gain_clues: [stone_circle_lure]
+      quest_progress: {inspect_cattle_circle: 1}
+      score_changes: {discovery: 10, quest_progress: 8}
+      next_event_tags: [stone_circle, quest_related]
+      move_to_region: forest
+      message: 돌 원의 소 떼 상처의 핵심 단서를 확보했다.
+  - id: break_stone_circle_lure
+    title: 돌 원의 소 떼 상처 문제를 처리한다
+    description: 확보한 단서를 바탕으로 상황을 안정시킨다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [forest, stone_circle, action, quest_related]
+    quest_ids: [cattle_mutilation_stone_circle]
+    regions: [village, forest]
+    requires_progress: {inspect_cattle_circle: {min: 1}}
+    applies_to_storylet_tags: [stone_circle, quest_related]
+    progress_key: break_stone_circle_lure
+    weight_modifiers: {storylet_tag_match: 25, storylet_hint_bonus: 35, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {food: -1}
+      quest_progress: {break_stone_circle_lure: 1}
+      score_changes: {quest_progress: 14, survival: 3}
+      next_event_tags: [report, quest_complete]
+      message: 돌 원의 소 떼 상처의 위험을 당장 번지지 않게 막았다.
+  - id: warn_herders
+    title: 돌 원의 소 떼 상처 결과를 보고한다
+    description: 마을로 돌아와 확인한 사실과 조치 결과를 전한다.
+    slot_role: quest_progress
+    base_weight: 120
+    tier_hint: critical
+    tags: [village, report, stone_circle, quest_related]
+    quest_ids: [cattle_mutilation_stone_circle]
+    regions: [village, forest]
+    requires_progress: {break_stone_circle_lure: {min: 1}}
+    progress_key: warn_herders
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 30, region_match: 10, slot_role_bonus: 5, already_completed: -999, unavailable: -999, recent_repeat_penalty: -25}
+    result:
+      status: {money: 2, reputation: 1}
+      quest_progress: {warn_herders: 1}
+      score_changes: {quest_progress: 12, reputation: 4, ending_bonus: 12}
+      next_event_tags: [village, quest_complete]
+      move_to_region: village
+      message: 돌 원의 소 떼 상처 해결 결과가 마을에 보고되었다.
+  - id: move_cattle_before_dusk
+    title: 돌 원의 소 떼 상처 보급을 아낀다
+    description: 무리하지 않고 식량과 장비를 아껴 다음 행동 여지를 만든다.
+    slot_role: resource_alternative
+    base_weight: 75
+    tier_hint: strong
+    tags: [survival, resource, stone_circle]
+    quest_ids: [cattle_mutilation_stone_circle]
+    regions: [village, forest]
+    applies_to_storylet_tags: [stone_circle, survival]
+    weight_modifiers: {storylet_tag_match: 15, storylet_hint_bonus: 20, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 4}
+      next_event_tags: [stone_circle]
+      message: 보급을 아껴 돌 원의 소 떼 상처의 남은 위험에 대비했다.
+  - id: test_zarechka_beast_risk
+    title: 자레치카의 짐승 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, zarechka_beast, quest_related]
+    quest_ids: [beast_of_zarechka]
+    regions: [village, forest]
+    applies_to_storylet_tags: [zarechka_beast, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [zarechka_beast]
+      message: 자레치카의 짐승의 위험을 서두르기 전에 가늠했다.
+
+  - id: test_stone_circle_risk
+    title: 돌 원의 소 떼 상처 위험을 가늠한다
+    description: 조급하게 움직이기 전 위험의 방향과 규모를 살핀다.
+    slot_role: risk_discovery
+    base_weight: 85
+    tier_hint: strong
+    tags: [risk, stone_circle, quest_related]
+    quest_ids: [cattle_mutilation_stone_circle]
+    regions: [village, forest]
+    applies_to_storylet_tags: [stone_circle, quest_related]
+    weight_modifiers: {storylet_tag_match: 20, storylet_hint_bonus: 25, region_match: 10, slot_role_bonus: 5, recent_repeat_penalty: -25}
+    result:
+      score_changes: {discovery: 3, risk_management: 4}
+      next_event_tags: [stone_circle]
+      message: 돌 원의 소 떼 상처의 위험을 서두르기 전에 가늠했다.
+
