@@ -221,6 +221,8 @@ docs/
   - Content Volume Audit 결과를 바탕으로 Quest, Expedition Clock, 3-Card Choice, Multi-Select, Score, Quest Report를 도입하기 위한 P0 구현 계획이다.
 - `docs/06_plans/05_Quest_Expansion_Roadmap_v0.1.md`
   - Gameplay P0 이후 Quest 추가 순서와 첫 추가 Quest 설계 방향을 정리한 계획 문서다.
+- `docs/06_plans/06_Quest_Type_Catalog_v0.1.md`
+  - Quest Design Guide와 Quest Base Research Collection에 나열된 Quest 후보를 Type별로 분류하고, 다음 Batch 구성 기준을 정리한 계획 문서다.
 
 ---
 
