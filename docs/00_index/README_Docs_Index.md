@@ -254,6 +254,8 @@ docs/
   - Gameplay P0 Foundation의 partial_success / failure reason 구조화와 JSON/Text MUD 로그 검증 결과를 보관한다.
 - `docs/07_reviews/19_Gameplay_P0_Objective_Schema_Normalization_Result_v0.1.md`
   - Gameplay P0의 Quest Objective Schema 정규화 결과를 보관한다.
+- `docs/07_reviews/20_Gameplay_P0_Objective_Schema_Doc_And_Fixture_Result_v0.1.md`
+  - Gameplay P0 Objective Schema 문서 정렬과 optional_action / max_day_exceeded fixture 검증 결과를 보관한다.
 
 ---
 

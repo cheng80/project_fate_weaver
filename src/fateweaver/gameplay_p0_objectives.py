@@ -30,12 +30,12 @@ class QuestReportRequest:
 
 def quest_completed(quest: Quest, state: RunState, bundle: ProjectData) -> bool:
     evaluations = evaluate_objectives(quest, state, bundle)
-    return _result_type(evaluations) == "success"
+    return _result_type(evaluations, state) == "success"
 
 
 def build_quest_report(request: QuestReportRequest) -> JsonMap:
     evaluations = evaluate_objectives(request.quest, request.state, request.bundle)
-    result_type = _result_type(evaluations)
+    result_type = _result_type(evaluations, request.state)
     partial_reasons = _partial_reasons(evaluations, request.state, result_type)
     failure_reasons = _failure_reasons(evaluations, request.state, result_type)
     result_reasons = partial_reasons if result_type == "partial_success" else failure_reasons
@@ -112,9 +112,11 @@ def _score_delta(objective: QuestObjective, status: ObjectiveStatus) -> int:
             assert_never(unreachable)
 
 
-def _result_type(evaluations: tuple[ObjectiveEvaluation, ...]) -> ResultType:
+def _result_type(evaluations: tuple[ObjectiveEvaluation, ...], state: RunState) -> ResultType:
     required = tuple(evaluation for evaluation in evaluations if evaluation.objective.required)
     primary = tuple(evaluation for evaluation in required if evaluation.objective.objective_type != "survive_expedition")
+    if state.clock.day > state.clock.max_days:
+        return "failure"
     if _objective_failed(evaluations, "survive_expedition"):
         return "failure"
     if all(evaluation.status == "completed" for evaluation in required):

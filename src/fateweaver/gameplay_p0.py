@@ -32,7 +32,11 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
     rng = Random(request.seed + request.run_number - 1)
     state = initial_state(request.scenario, foundation.quest)
     turns: list[JsonMap] = []
-    while state.clock.turn <= state.clock.max_turns and not is_failed(state.status, request.bundle.statuses):
+    while (
+        len(turns) < request.scenario.target_turns
+        and state.clock.turn <= state.clock.max_turns
+        and not is_failed(state.status, request.bundle.statuses)
+    ):
         event = select_storylet(request.events, state, rng)
         cards = present_cards(foundation.card_rules.cards, state)
         selected_cards, combo = select_cards(cards, foundation.card_rules.combos, state, request.profile)

@@ -93,6 +93,12 @@ class GameplayP0Tests(unittest.TestCase):
                 set(),
                 {"health_zero", "return_failed", "primary_objective_failed"},
             ),
+            (
+                "data/scenarios/tutorial_herb_quest_failure_max_day.yaml",
+                "failure",
+                set(),
+                {"max_day_exceeded"},
+            ),
         )
         reports = {}
         partial_reasons: set[str] = set()
@@ -149,10 +155,12 @@ class GameplayP0Tests(unittest.TestCase):
                 self.assertIn("collect_herbs", objective_by_id)
                 self.assertIn("report_to_apothecary", objective_by_id)
                 self.assertIn("survive_expedition", objective_by_id)
+                self.assertIn("help_injured_traveler", objective_by_id)
                 self.assertIn("objective_completion", payload["quest_report"]["score_breakdown"])
                 self.assertIn(f"결과 유형: {expected_result_type}", text_log)
                 self.assertIn("결과 이유:", text_log)
                 self.assertIn("목표 평가:", text_log)
+                self.assertIn("help_injured_traveler", text_log)
                 self.assertIn(payload["quest_report"]["review_text"], text_log)
                 partial_reasons.update(payload["quest_report"]["partial_reasons"])
                 failure_reasons.update(payload["quest_report"]["failure_reasons"])
@@ -161,6 +169,10 @@ class GameplayP0Tests(unittest.TestCase):
                     reports["partial_optional_failed"] = payload["quest_report"]
                 if scenario_path.endswith("failure_health_zero.yaml"):
                     reports["health_zero_failure"] = payload["quest_report"]
+                if scenario_path.endswith("failure_max_day.yaml"):
+                    reports["max_day_failure"] = payload["quest_report"]
+                    self.assertTrue(payload["turns"])
+                    self.assertGreater(payload["run_summary"]["final_state"]["health"], 0)
 
         # Then
         self.assertGreater(int(reports["success"]["score"]), int(reports["partial_success"]["score"]))
@@ -177,16 +189,53 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertEqual("completed", _objective_status(reports["partial_success"], "collect_herbs"))
         self.assertEqual("failed", _objective_status(reports["partial_success"], "report_to_apothecary"))
         self.assertEqual("partial", _objective_status(reports["partial_optional_failed"], "collect_herbs"))
+        self.assertEqual("failed", _objective_status(reports["partial_optional_failed"], "help_injured_traveler"))
         self.assertEqual("failed", _objective_status(reports["failure"], "collect_herbs"))
         self.assertEqual("failed", _objective_status(reports["failure"], "report_to_apothecary"))
         self.assertEqual("completed", _objective_status(reports["failure"], "survive_expedition"))
         self.assertEqual("failed", _objective_status(reports["health_zero_failure"], "survive_expedition"))
+        self.assertIn("max_day_exceeded", reports["max_day_failure"]["failure_reasons"])
+        self.assertEqual(["max_day_exceeded"], reports["max_day_failure"]["failure_reasons"])
+        self.assertNotIn("max_turn_exceeded", reports["max_day_failure"]["failure_reasons"])
         self.assertTrue(reports["success"]["rewards"])
         self.assertEqual({}, reports["partial_success"]["rewards"])
         self.assertEqual({}, reports["failure"]["rewards"])
         self.assertLess(int(reports["failure"]["score_breakdown"]["outcome_adjustment"]), 0)
         self.assertGreaterEqual(len(partial_reasons), 2)
         self.assertGreaterEqual(len(failure_reasons), 3)
+
+    def test_gameplay_p0_schema_doc_matches_objective_fields(self) -> None:
+        # Given
+        doc = Path("docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md").read_text(encoding="utf-8")
+
+        # Then
+        for field in (
+            "id",
+            "type",
+            "target",
+            "required",
+            "count",
+            "value",
+            "progress_key",
+            "failure_reason",
+            "partial_reason",
+            "score_key",
+            "reward_weight",
+        ):
+            self.assertIn(field, doc)
+        for output_field in (
+            "objective_results",
+            "completed_objectives",
+            "failed_objectives",
+            "partial_reasons",
+            "failure_reasons",
+            "score_breakdown",
+            "reward_status",
+            "review_text",
+        ):
+            self.assertIn(output_field, doc)
+        self.assertIn("optional_action", doc)
+        self.assertIn("max_day_exceeded", doc)
 
 
 def _objective_status(report: dict, objective_id: str) -> str:

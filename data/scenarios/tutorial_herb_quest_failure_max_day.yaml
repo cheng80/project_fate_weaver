@@ -1,0 +1,52 @@
+id: tutorial_herb_quest_failure_max_day
+name: Tutorial Herb Quest Failure Max Day
+gameplay_mode: p0_foundation
+active_quest_id: herb_gathering_tutorial
+
+content_sources:
+  - data/content/base/regions.yaml
+  - data/content/base/items.yaml
+  - data/content/base/events.yaml
+  - data/content/base/endings.yaml
+
+include_regions:
+  - village
+  - forest
+
+include_event_ids:
+  - sudden_storm
+  - hunger_night
+  - suspicious_merchant
+  - village_market
+  - forest_shrine
+  - quiet_camp
+
+exclude_event_ids: []
+exclude_event_tags: []
+
+initial_status:
+  health: 7
+  food: 5
+  money: 2
+  reputation: 0
+  curse: 1
+
+initial_items:
+  - torch
+
+run_clock:
+  day: 4
+  turn: 1
+  turns_today: 0
+  time_of_day: morning
+  act: 1
+  max_days: 3
+  max_turns: 99
+  turns_per_day: 4
+
+target_turns: 12
+seed: 42
+
+validation_targets:
+  min_events: 4
+  min_item_count: 5

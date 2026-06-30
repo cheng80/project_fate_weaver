@@ -56,6 +56,15 @@ quests:
         partial_reason: optional_failed
         score_key: objective_resource
         reward_weight: 1
+      - id: help_injured_traveler
+        type: optional_action
+        target: help_injured_traveler
+        required: false
+        value: 1
+        failure_reason: optional_failed
+        partial_reason: optional_failed
+        score_key: objective_aid
+        reward_weight: 1
     failure_conditions:
       - type: resource_lte
         resource: health
