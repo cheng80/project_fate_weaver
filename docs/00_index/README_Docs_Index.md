@@ -291,6 +291,8 @@ docs/
   - Category Probe 결과를 바탕으로 Bulk Fill 가능 여부와 Stable 판정을 보관한다.
 - `docs/07_reviews/34_Quest_Category_Bulk_Fill_Result_v0.1.md`
   - Stable 판정된 Quest Category의 나머지 Quest를 lightweight success fixture 중심으로 Bulk Fill한 결과를 보관한다.
+- `docs/07_reviews/35_Quest_Expansion_Coverage_Audit_v0.1.md`
+  - Phase 3 Bulk Fill 이후 Quest / Scenario / Card Rule / Event Hint / Type Coverage를 수치화한 감사 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
