@@ -225,6 +225,8 @@ docs/
   - Quest Design Guide와 Quest Base Research Collection에 나열된 Quest 후보를 Type별로 분류하고, 다음 Batch 구성 기준을 정리한 계획 문서다.
 - `docs/06_plans/07_Quest_Category_Probe_And_Bulk_Loop_Plan_v0.1.md`
   - Quest Type Catalog 기반 Category Probe, Stability Review, Bulk Fill의 실행 순서와 게이트를 잠근 ULW Loop 계획 문서다.
+- `docs/06_plans/08_Content_Enrichment_Catalog_v0.1.md`
+  - Card Candidate / Clue / Omen / Item / Ending 확장을 위한 구현 후보 카탈로그다.
 
 ---
 
@@ -305,6 +307,8 @@ docs/
   - Bulk Fill 2차 전에 Event / Storylet Hint split 구조와 split-aware event loader 지원을 도입한 결과를 보관한다.
 - `docs/07_reviews/41_Data_Split_Coverage_Audit_v0.1.md`
   - Card Rules / Quest Data / Event Hint split 이후 loaded inventory와 cross-reference 정합성 감사 결과를 보관한다.
+- `docs/07_reviews/42_Content_Enrichment_Ultraresearch_Notes_v0.1.md`
+  - FateWeaver Content Enrichment Catalog 작성을 위한 외부 자료 조사와 변환 원칙을 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
