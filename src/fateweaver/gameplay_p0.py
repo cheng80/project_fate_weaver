@@ -4,9 +4,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
 
-from fateweaver.gameplay_p0_cards import build_card_candidate_pool, card_candidate_pool_json, card_json, cards_from_pool
+from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
+from fateweaver.gameplay_p0_cards import build_card_candidate_pool, card_candidate_pool_json, card_json
 from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardCandidateContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
+from fateweaver.gameplay_p0_models import CardCandidateContext, CardSelectionContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
 from fateweaver.gameplay_p0_rules import (
     advance_clock,
@@ -39,9 +40,12 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         event = select_storylet(request.events, state, rng)
         context = CardCandidateContext(foundation.quest, storylet_tags(event, state))
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
-        cards = cards_from_pool(candidate_pool)
+        selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
+        candidate_pool = selection.candidate_pool
+        cards = selection.cards
         selected_cards, combo = select_cards(cards, foundation.card_rules.combos, state, request.profile)
         result = combined_result(selected_cards, combo, foundation.card_rules.default_extra_cost)
+        result["presented_card_ids"] = [card.id for card in cards]
         result["selected_card_ids"] = [card.id for card in selected_cards]
         before = state
         state = apply_turn_result(state, result, request.bundle)
@@ -84,6 +88,18 @@ def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
     if state.region == "forest" and state.quest_progress.get("herbs_collected", 0) >= 2:
         tags = (*tags, "npc", "aid_opportunity", "injured_traveler", "quest_related")
     return tuple(dict.fromkeys(tags))
+
+
+def _selection_context(request: GameplayRunRequest, quest: Quest, state: RunState) -> CardSelectionContext:
+    return CardSelectionContext(
+        scenario_id=request.scenario.id,
+        seed=request.seed,
+        run_number=request.run_number,
+        active_quest_id=quest.id,
+        day=state.clock.day,
+        turn=state.clock.turn,
+        current_region=state.region,
+    )
 
 
 def _turn_log(request: TurnLogRequest) -> JsonMap:

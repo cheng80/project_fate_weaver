@@ -5,6 +5,7 @@ from dataclasses import replace
 from random import Random
 
 from fateweaver.event_selector import select_event
+from fateweaver.gameplay_p0_errors import ExpectedMappingError
 from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, Quest, RunClock, RunState
 from fateweaver.models import Event, JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.state_manager import apply_choice_result
@@ -23,6 +24,7 @@ def initial_state(scenario: Scenario, quest: Quest) -> RunState:
         score={},
         next_event_tags=(),
         recent_event_ids=(),
+        recent_presented_card_ids=(),
         selected_choice_history=(),
         combo_used=False,
     )
@@ -92,6 +94,7 @@ def apply_turn_result(state: RunState, result: JsonMap, bundle: ProjectData) -> 
         omens=append_unique(state.omens, string_tuple(merged.get("gain_omens", []))),
         score=merge_ints(state.score, int_map(merged.get("score_changes", {}))),
         next_event_tags=append_unique(state.next_event_tags, string_tuple(merged.get("next_event_tags", []))),
+        recent_presented_card_ids=string_tuple(merged.get("presented_card_ids", [])),
         selected_choice_history=(*state.selected_choice_history, *string_tuple(merged.get("selected_card_ids", []))),
         combo_used=state.combo_used or "multi_select_rule" in merged,
     )
@@ -174,7 +177,7 @@ def _should_select_resource(cards: tuple[CardRule, CardRule, CardRule], state: R
 def merge_result(left: JsonMap, right: JsonMap) -> JsonMap:
     merged = dict(left)
     for key, value in right.items():
-        match key:
+        match key:  # noqa: MATCH_OK - result payload keys are open-ended data.
             case "status" | "quest_progress" | "score_changes":
                 merged[key] = merge_ints(int_map(merged.get(key, {})), int_map(value))
             case "add_item" | "remove_item" | "gain_clues" | "gain_omens" | "next_event_tags":
@@ -221,5 +224,5 @@ def string_tuple(value: JsonValue) -> tuple[str, ...]:
 
 def as_mapping(value: JsonValue) -> JsonMap:
     if not isinstance(value, dict):
-        raise TypeError("value must be a mapping")
+        raise ExpectedMappingError(type(value).__name__)
     return {str(key): item for key, item in value.items()}

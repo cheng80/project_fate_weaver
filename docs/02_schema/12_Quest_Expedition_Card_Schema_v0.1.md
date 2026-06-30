@@ -264,6 +264,10 @@ card_candidate_pool:
     matched_objectives:
       - help_injured_traveler
     blocked_reason: ""
+    selection_seed_key: "tutorial_herb_quest:42:run1:day1:turn3:resource_alternative:forest:herb_gathering_tutorial"
+    variety_window: true
+    selected_by: seeded_tier_pick
+    repeat_penalty: 0
 ```
 
 Tier 기준:
@@ -273,6 +277,15 @@ Tier 기준:
 - `normal`: 40 이상 70 미만
 - `flavor`: 0 이상 40 미만
 - `blocked`: 0 미만 또는 unavailable/completed objective
+
+Seeded Tier Variety(시드 기반 등급 내 다양성) 기준:
+
+- 같은 `scenario_id`, `seed`, `turn`, `day`, `slot_role`, `current_region`, `active_quest_id`에서는 같은 3-Card 구성이 재현된다.
+- slot별 후보는 `tier`와 `score`로 정렬한 뒤, 같은 Tier(등급) 안에서 상위 `variety_window_size: 3` 또는 `score_tolerance: 10` 안의 후보를 Variety Window(다양성 창)로 묶는다.
+- Variety Window(다양성 창) 안에서는 `selection_seed_key` 기반 Weighted Pick(가중 선택)을 수행한다.
+- `critical` 후보는 우선권을 유지하며, 여러 critical 후보가 있을 때만 seed 기반 선택이 개입한다.
+- `blocked` 후보는 Variety Window(다양성 창)에 들어가지 않으며 3-Card에 선택되지 않는다.
+- 직전 또는 최근 선택 이력에 있는 카드는 `recent_repeat_penalty`가 `repeat_penalty` evidence로 남는다.
 
 ---
 

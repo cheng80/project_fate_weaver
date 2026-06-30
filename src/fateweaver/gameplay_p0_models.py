@@ -116,6 +116,27 @@ class CardCandidate:
     matched_tags: tuple[str, ...]
     matched_objectives: tuple[str, ...]
     blocked_reason: BlockedReason
+    selection_seed_key: str = ""
+    variety_window: bool = False
+    selected_by: str = ""
+    repeat_penalty: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class CardSelectionContext:
+    scenario_id: str
+    seed: int
+    run_number: int
+    active_quest_id: str
+    day: int
+    turn: int
+    current_region: str
+
+
+@dataclass(frozen=True, slots=True)
+class CardSelectionResult:
+    cards: tuple[CardRule, CardRule, CardRule]
+    candidate_pool: tuple[CardCandidate, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -166,5 +187,6 @@ class RunState:
     score: dict[str, int]
     next_event_tags: tuple[str, ...]
     recent_event_ids: tuple[str, ...]
+    recent_presented_card_ids: tuple[str, ...]
     selected_choice_history: tuple[str, ...]
     combo_used: bool

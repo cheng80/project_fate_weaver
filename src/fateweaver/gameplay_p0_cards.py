@@ -3,7 +3,18 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Final, assert_never
 
-from fateweaver.gameplay_p0_models import BlockedReason, CardCandidate, CandidateTier, CardCandidateContext, CardRule, Quest, RunState
+from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
+from fateweaver.gameplay_p0_errors import ExpectedMappingError, MissingCardSlotError
+from fateweaver.gameplay_p0_models import (
+    BlockedReason,
+    CardCandidate,
+    CandidateTier,
+    CardCandidateContext,
+    CardRule,
+    CardSelectionContext,
+    Quest,
+    RunState,
+)
 from fateweaver.models import JsonMap, JsonValue, StatusMap
 
 
@@ -29,11 +40,21 @@ class CandidateScoreInput:
     blocked_reason: BlockedReason
 
 
-def present_cards(cards: tuple[CardRule, ...], state: RunState, context: CardCandidateContext) -> tuple[CardRule, CardRule, CardRule]:
-    return cards_from_pool(build_card_candidate_pool(cards, state, context))
+def present_cards(
+    cards: tuple[CardRule, ...],
+    state: RunState,
+    context: CardCandidateContext,
+    selection: CardSelectionContext | None = None,
+) -> tuple[CardRule, CardRule, CardRule]:
+    return cards_from_pool(build_card_candidate_pool(cards, state, context), selection)
 
 
-def cards_from_pool(pool: tuple[CardCandidate, ...]) -> tuple[CardRule, CardRule, CardRule]:
+def cards_from_pool(
+    pool: tuple[CardCandidate, ...],
+    selection: CardSelectionContext | None = None,
+) -> tuple[CardRule, CardRule, CardRule]:
+    if selection is not None:
+        return select_cards_from_pool(pool, selection).cards
     available = tuple(candidate for candidate in ranked_candidates(pool) if candidate.tier != "blocked")
     return (
         best_for_slot(available, "quest_progress").card,
@@ -50,6 +71,7 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
     matched_tags = tuple(tag for tag in card.applies_to_storylet_tags if tag in context.storylet_tags)
     matched_objectives = tuple(objective_id for objective_id in card.applies_to_quest_objectives if objective_id in active_optional_objectives(context.quest))
     blocked_reason = card_blocked_reason(card, state)
+    repeat_penalty = modifier(card, "recent_repeat_penalty") if recently_seen_card(card, state) else 0
     score = candidate_score(CandidateScoreInput(card, state, matched_tags, matched_objectives, blocked_reason))
     return CardCandidate(
         card=card,
@@ -58,6 +80,7 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
         matched_tags=matched_tags,
         matched_objectives=matched_objectives,
         blocked_reason=blocked_reason,
+        repeat_penalty=repeat_penalty,
     )
 
 
@@ -73,7 +96,7 @@ def candidate_score(candidate: CandidateScoreInput) -> int:
         score += modifier(card, "region_match")
     if card.slot_role in {"quest_progress", "risk_discovery", "resource_alternative"}:
         score += modifier(card, "slot_role_bonus")
-    if card.id in state.selected_choice_history:
+    if recently_seen_card(card, state):
         score += modifier(card, "recent_repeat_penalty")
     if low_food_penalty_applies(card, state):
         score += modifier(card, "low_food_penalty")
@@ -96,6 +119,10 @@ def card_blocked_reason(card: CardRule, state: RunState) -> BlockedReason:
     return ""
 
 
+def recently_seen_card(card: CardRule, state: RunState) -> bool:
+    return card.id in state.recent_presented_card_ids or card.id in state.selected_choice_history
+
+
 def classify_tier(score: int, blocked_reason: BlockedReason) -> CandidateTier:
     if blocked_reason or score < 0:
         return "blocked"
@@ -116,7 +143,7 @@ def best_for_slot(candidates: tuple[CardCandidate, ...], slot: str) -> CardCandi
     for candidate in candidates:
         if candidate.card.slot_role == slot:
             return candidate
-    raise ValueError(f"No P0 candidate for slot: {slot}")
+    raise MissingCardSlotError(slot)
 
 
 def card_candidate_pool_json(pool: tuple[CardCandidate, ...]) -> list[JsonMap]:
@@ -129,6 +156,10 @@ def card_candidate_pool_json(pool: tuple[CardCandidate, ...]) -> list[JsonMap]:
             "matched_tags": list(candidate.matched_tags),
             "matched_objectives": list(candidate.matched_objectives),
             "blocked_reason": candidate.blocked_reason,
+            "selection_seed_key": candidate.selection_seed_key,
+            "variety_window": candidate.variety_window,
+            "selected_by": candidate.selected_by,
+            "repeat_penalty": candidate.repeat_penalty,
         }
         for candidate in pool
     ]
@@ -210,7 +241,7 @@ def first_for_slot(cards: tuple[CardRule, ...], slot: str) -> CardRule:
     for card in cards:
         if card.slot_role == slot:
             return card
-    raise ValueError(f"No P0 card for slot: {slot}")
+    raise MissingCardSlotError(slot)
 
 
 def active_optional_objectives(quest: Quest) -> set[str]:
@@ -249,5 +280,5 @@ def card_influences(card: CardRule) -> list[str]:
 
 def as_mapping(value: JsonValue) -> JsonMap:
     if not isinstance(value, dict):
-        raise TypeError("value must be a mapping")
+        raise ExpectedMappingError(type(value).__name__)
     return {str(key): item for key, item in value.items()}

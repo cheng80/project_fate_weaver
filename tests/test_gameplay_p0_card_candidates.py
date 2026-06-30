@@ -8,9 +8,9 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from fateweaver.gameplay_p0_cards import build_card_candidate_pool, present_cards
+from fateweaver.gameplay_p0_cards import build_card_candidate_pool, cards_from_pool, present_cards
 from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardCandidate, CardCandidateContext, Foundation, RunState
+from fateweaver.gameplay_p0_models import CardCandidate, CardCandidateContext, CardSelectionContext, Foundation, RunState
 from fateweaver.gameplay_p0_rules import initial_state
 from fateweaver.models import Scenario
 
@@ -114,8 +114,88 @@ class GameplayP0CardCandidateTests(unittest.TestCase):
         # Then
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         pool = payload["turns"][0]["card_candidate_pool"]
-        expected_keys = {"card_id", "slot_role", "score", "tier", "matched_tags", "matched_objectives", "blocked_reason"}
+        expected_keys = {
+            "card_id",
+            "slot_role",
+            "score",
+            "tier",
+            "matched_tags",
+            "matched_objectives",
+            "blocked_reason",
+            "selection_seed_key",
+            "selected_by",
+            "variety_window",
+            "repeat_penalty",
+        }
         self.assertTrue(expected_keys <= set(pool[0]))
+
+    def test_same_seed_same_three_cards(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = _forest_state(foundation)
+        context = CardCandidateContext(foundation.quest, ("forest", "hidden_path"))
+        pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
+        selection = _selection_context(foundation, state, 42)
+
+        # When
+        first = cards_from_pool(pool, selection)
+        second = cards_from_pool(pool, selection)
+
+        # Then
+        self.assertEqual([card.id for card in first], [card.id for card in second])
+
+    def test_different_seed_can_change_same_tier_card(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = _forest_state(foundation)
+        context = CardCandidateContext(foundation.quest, ("forest", "hidden_path"))
+        pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
+
+        # When
+        seed_42_cards = cards_from_pool(pool, _selection_context(foundation, state, 42))
+        seed_43_cards = cards_from_pool(pool, _selection_context(foundation, state, 43))
+
+        # Then
+        self.assertNotEqual([card.id for card in seed_42_cards], [card.id for card in seed_43_cards])
+
+    def test_seeded_variety_preserves_slot_roles(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = _forest_state(foundation)
+        context = CardCandidateContext(foundation.quest, ("forest", "hidden_path"))
+        pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
+
+        # When
+        cards = cards_from_pool(pool, _selection_context(foundation, state, 43))
+
+        # Then
+        self.assertEqual(("quest_progress", "risk_discovery", "resource_alternative"), tuple(card.slot_role for card in cards))
+
+    def test_blocked_candidates_never_selected_by_seeded_variety(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = _forest_state(foundation)
+        state.quest_progress["helped_injured_traveler"] = 1
+        context = CardCandidateContext(foundation.quest, ("forest", "injured_traveler", "aid_opportunity"))
+        pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
+
+        # When
+        cards = cards_from_pool(pool, _selection_context(foundation, state, 43))
+
+        # Then
+        self.assertNotIn("help_injured_traveler", [card.id for card in cards])
+
+    def test_previous_presented_card_gets_repeat_penalty(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = replace(_forest_state(foundation), recent_presented_card_ids=("inspect_tracks",))
+        context = CardCandidateContext(foundation.quest, ("forest", "hidden_path"))
+
+        # When
+        candidate = _candidate(build_card_candidate_pool(foundation.card_rules.cards, state, context), "inspect_tracks")
+
+        # Then
+        self.assertLess(candidate.repeat_penalty, 0)
 
 
 def _forest_state(foundation: Foundation) -> RunState:
@@ -149,3 +229,15 @@ def _candidate(pool: tuple[CardCandidate, ...], card_id: str) -> CardCandidate:
 
 def _candidate_score(pool: tuple[CardCandidate, ...], card_id: str) -> int:
     return _candidate(pool, card_id).score
+
+
+def _selection_context(foundation: Foundation, state: RunState, seed: int) -> CardSelectionContext:
+    return CardSelectionContext(
+        scenario_id="unit_candidate_pool",
+        seed=seed,
+        run_number=1,
+        active_quest_id=foundation.quest.id,
+        day=state.clock.day,
+        turn=state.clock.turn,
+        current_region=state.region,
+    )

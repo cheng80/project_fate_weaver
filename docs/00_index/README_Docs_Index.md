@@ -262,6 +262,8 @@ docs/
   - Gameplay P0 optional_action 카드를 Storylet/Ontology 후보군과 연결한 결과를 보관한다.
 - `docs/07_reviews/23_Gameplay_P0_Card_Candidate_Tier_Weight_Result_v0.1.md`
   - Gameplay P0 Card Candidate Pool에 tier / weight 기반 후보 선택 구조를 도입한 결과를 보관한다.
+- `docs/07_reviews/24_Gameplay_P0_Seeded_Tier_Variety_Result_v0.1.md`
+  - Gameplay P0 Card Candidate Pool에 seed 기반 tier variety를 도입한 결과를 보관한다.
 
 ---
 
