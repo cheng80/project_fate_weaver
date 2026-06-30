@@ -1,5 +1,5 @@
-id: merchant_lost_pack_recovery_failure
-name: Merchant Lost Pack Recovery Failure Outcome
+id: merchant_lost_pack_recovery_failure_health_zero
+name: Merchant Lost Pack Recovery Health Zero Failure
 gameplay_mode: p0_foundation
 active_quest_id: merchant_lost_pack_recovery
 
@@ -23,7 +23,7 @@ exclude_event_ids: []
 exclude_event_tags: []
 
 initial_status:
-  health: 7
+  health: 0
   food: 5
   money: 2
   reputation: 1
@@ -39,10 +39,10 @@ run_clock:
   time_of_day: morning
   act: 1
   max_days: 5
-  max_turns: 0
+  max_turns: 10
   turns_per_day: 4
 
-target_turns: 0
+target_turns: 10
 seed: 42
 
 validation_targets:

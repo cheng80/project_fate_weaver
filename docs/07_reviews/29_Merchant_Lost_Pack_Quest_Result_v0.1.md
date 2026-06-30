@@ -129,13 +129,19 @@ Rewards(보상):
 
 ## 10. Failure 검증
 
-`merchant_lost_pack_recovery_failure.yaml` 실행 결과:
+`merchant_lost_pack_recovery_failure.yaml`은 이후 Failure Outcome Taxonomy 정리에서 Quest 고유 실패 fixture(고정 데이터)로 바뀌었다.
+
+현재 objective_failed 실행 결과:
 
 - result_type: `failure`
 - selected cards: 없음
-- failed objectives: `locate_lost_pack`, `resolve_pack_ownership`, `return_to_village`, `survive_expedition`
-- failure reasons: `return_failed`, `health_zero`, `primary_objective_failed`
-- score: -120
+- failed objectives: `locate_lost_pack`, `resolve_pack_ownership`, `return_to_village`
+- failure reasons: `max_turn_exceeded`, `return_failed`, `primary_objective_failed`
+- failure_kind: `objective_failed`
+- character_outcome: `alive`
+- score: -60
+
+health_zero(체력 0) 기반 생존 실패는 `merchant_lost_pack_recovery_failure_health_zero.yaml`에서 별도로 검증한다.
 
 ## 11. Economy / Reputation 검증
 
@@ -215,7 +221,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulato
 - Storylet Pool(스토리 조각 풀) 전체 시스템은 구현하지 않았다.
 - Repeat Cooldown Memory(반복 쿨다운 기억) 장기 저장은 구현하지 않았다.
 - 상점/거래 UI(사용자 인터페이스)는 구현하지 않았다.
-- Failure(실패) 시나리오는 health_zero(체력 0) 기반이라 turn(턴) 없이 Quest Report(퀘스트 보고서)를 검증한다.
+- Failure(실패) 시나리오는 이후 `failure_kind`와 `character_outcome` 도입으로 Quest 고유 실패와 health_zero(체력 0) 생존 실패를 분리했다.
 
 ## 17. 다음 추천 작업
 

@@ -71,6 +71,8 @@ Run은 다음을 포함한다.
 - score changes
 - next_event_tags
 - quest report
+- failure_kind
+- character_outcome
 
 ### Text MUD Play Log
 
@@ -89,6 +91,7 @@ Run은 다음을 포함한다.
 - 자원/상태/평판/점수 변화
 - 다음 사건 변화
 - Quest 진행도
+- 실패 종류와 캐릭터 결과
 - Run Review
 
 ---

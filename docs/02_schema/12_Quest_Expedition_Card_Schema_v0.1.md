@@ -466,6 +466,8 @@ quest_report:
   quest_id: herb_gathering_tutorial
   result_type: partial_success
   result_reason: primary_partial
+  failure_kind: none
+  character_outcome: alive
   objective_results:
     - objective_id: collect_herbs
       objective_type: collect_item
@@ -515,6 +517,31 @@ quest_report:
 `reward_weight`는 objective별 중요도 가중치로 사용한다.
 
 현재 P0 result reason은 Quest별 하드코딩이 아니라 objective evaluation과 clock constraint에서 유도한다.
+
+`result_type`은 Quest Expedition Run(퀘스트 원정 실행)의 결과다.
+
+- `success`: 주요 목표를 달성하고 보상을 받을 수 있다.
+- `partial_success`: 의미 있는 성과는 있지만 일부 목표, 귀환, 보조 목표, 보상이 부족하다.
+- `failure`: Quest Expedition Run이 Quest 성공으로 인정되지 않는다.
+
+`result_type=failure`는 캐릭터 사망을 뜻하지 않는다. 캐릭터 생존 실패는 `failure_kind`와 `character_outcome`으로 별도 구분한다.
+
+`failure_kind`는 P0에서 다음 값을 사용한다.
+
+- `none`: success 또는 partial_success.
+- `death_or_incapacitated`: `health_zero` 기반 생존 실패.
+- `objective_failed`: 주 목표 미완료.
+- `return_failed`: 귀환/보고 실패.
+- `time_expired`: turn/day 제한 초과.
+- `reputation_collapse`: 평판 붕괴형 실패.
+- `quest_specific_failure`: `recovery_failed`, `rescue_failed` 같은 Quest별 핵심 행위 실패.
+- `unknown`: 분류되지 않은 failure.
+
+`character_outcome`은 P0에서 최소 규칙만 사용한다.
+
+- `alive`: health가 1 이상.
+- `incapacitated`: health가 0 이하.
+- `injured`, `dead_or_lost`, `unknown`: 향후 부상/사망 시스템 확장용 예약 값.
 
 - `primary_partial`: required `collect_item`이 partial인 경우.
 - `report_failed`: partial_success에서 `return_to_region`이 failed인 경우.

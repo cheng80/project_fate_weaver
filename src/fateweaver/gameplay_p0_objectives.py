@@ -8,6 +8,17 @@ from fateweaver.gameplay_p0_scoring import ObjectiveStatus, objective_score_delt
 from fateweaver.models import JsonMap, ProjectData
 
 ResultType = Literal["success", "partial_success", "failure"]
+FailureKind = Literal[
+    "none",
+    "death_or_incapacitated",
+    "objective_failed",
+    "return_failed",
+    "time_expired",
+    "reputation_collapse",
+    "quest_specific_failure",
+    "unknown",
+]
+CharacterOutcome = Literal["alive", "injured", "incapacitated", "dead_or_lost", "unknown"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -45,6 +56,8 @@ def build_quest_report(request: QuestReportRequest) -> JsonMap:
         "quest_id": request.quest.id,
         "result_type": result_type,
         "result_reason": result_reason,
+        "failure_kind": _failure_kind(failure_reasons, result_type),
+        "character_outcome": _character_outcome(request.state),
         "objective_results": [_objective_json(evaluation) for evaluation in evaluations],
         "completed_objectives": _completed_objectives(evaluations),
         "failed_objectives": _failed_objectives(evaluations),
@@ -157,6 +170,28 @@ def _clock_reasons(state: RunState) -> list[str]:
     if state.clock.turn > state.clock.max_turns:
         reasons.append("max_turn_exceeded")
     return reasons
+
+
+def _failure_kind(failure_reasons: list[str], result_type: ResultType) -> FailureKind:
+    if result_type != "failure":
+        return "none"
+    if "health_zero" in failure_reasons:
+        return "death_or_incapacitated"
+    if "primary_objective_failed" in failure_reasons:
+        return "objective_failed"
+    if "return_failed" in failure_reasons or "report_failed" in failure_reasons:
+        return "return_failed"
+    if "max_day_exceeded" in failure_reasons or "max_turn_exceeded" in failure_reasons:
+        return "time_expired"
+    if "reputation_collapse" in failure_reasons:
+        return "reputation_collapse"
+    if "recovery_failed" in failure_reasons or "rescue_failed" in failure_reasons:
+        return "quest_specific_failure"
+    return "unknown"
+
+
+def _character_outcome(state: RunState) -> CharacterOutcome:
+    return "incapacitated" if state.status.get("health", 0) <= 0 else "alive"
 
 
 def _score_breakdown(request: QuestReportRequest, evaluations: tuple[ObjectiveEvaluation, ...], result_type: ResultType) -> dict[str, int]:

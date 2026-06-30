@@ -201,6 +201,8 @@ def _render_summary(summary: JsonMap, quest_report: JsonMap) -> list[str]:
             [
                 "Quest Report:",
                 f"결과 유형: {_text(quest_report.get('result_type'))}",
+                f"실패 종류: {_text(quest_report.get('failure_kind'))}",
+                f"캐릭터 결과: {_text(quest_report.get('character_outcome'))}",
                 f"결과 이유: {_text(quest_report.get('result_reason'))} / {_text(quest_report.get('review_text'))}",
                 f"부분 성공 이유: {_text(quest_report.get('partial_reasons'))}",
                 f"실패 이유: {_text(quest_report.get('failure_reasons'))}",

@@ -53,7 +53,9 @@ class GameplayP0MerchantLostPackTests(unittest.TestCase):
         self.assertEqual("failed", _objective_status(reports["failure"], "locate_lost_pack"))
         self.assertEqual("failed", _objective_status(reports["failure"], "resolve_pack_ownership"))
         self.assertEqual("failed", _objective_status(reports["failure"], "return_to_village"))
-        self.assertIn("health_zero", reports["failure"]["failure_reasons"])
+        self.assertIn("primary_objective_failed", reports["failure"]["failure_reasons"])
+        self.assertEqual("objective_failed", reports["failure"]["failure_kind"])
+        self.assertEqual("alive", reports["failure"]["character_outcome"])
 
     def test_merchant_lost_pack_storylet_hints_and_logs(self) -> None:
         # Given
