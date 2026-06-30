@@ -43,7 +43,7 @@ class TestValidator(unittest.TestCase):
         errors = validate_bundle(broken_bundle, scenario)
 
         # Then
-        self.assertIn("Unknown choice type missing_type in cursed_well/pass", errors)
+        self.assertIn(f"Unknown choice type missing_type in {first.id}/pass", errors)
 
 
 if __name__ == "__main__":

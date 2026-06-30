@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -20,6 +21,23 @@ from fateweaver.models import (
 )
 
 
+@dataclass(frozen=True, slots=True)
+class DuplicateEventIdError(ValueError):
+    event_id: str
+
+    def __str__(self) -> str:
+        return f"Duplicate event id: {self.event_id}"
+
+
+@dataclass(frozen=True, slots=True)
+class DataLoaderTypeError(TypeError):
+    label: str
+    expected: str
+
+    def __str__(self) -> str:
+        return f"{self.label} must be {self.expected}"
+
+
 def load_project_data(project_root: Path, scenario_path: Path) -> LoadedProject:
     root = project_root.resolve()
     scenario = _load_scenario(root, scenario_path)
@@ -38,7 +56,7 @@ def load_project_data(project_root: Path, scenario_path: Path) -> LoadedProject:
         if "events" in raw:
             for event in _load_events(raw, source):
                 if event.id in seen_event_ids:
-                    raise ValueError(f"Duplicate event id: {event.id}")
+                    raise DuplicateEventIdError(event.id)
                 seen_event_ids.add(event.id)
                 events.append(event)
         if "endings" in raw:
@@ -133,6 +151,10 @@ def _load_events(raw: JsonMap, source_path: Path) -> tuple[Event, ...]:
                 region_tags=tuple(_optional_string_list(event, "region_tags")),
                 event_tags=tuple(_optional_string_list(event, "event_tags")),
                 danger_tags=tuple(_optional_string_list(event, "danger_tags")),
+                storylet_tags=tuple(_optional_string_list(event, "storylet_tags")),
+                card_candidate_hints=tuple(_optional_string_list(event, "card_candidate_hints")),
+                cooldown_tags=tuple(_optional_string_list(event, "cooldown_tags")),
+                repeat_group=str(event.get("repeat_group", "")),
                 base_weight=int(event.get("base_weight", 1)),
                 choices=tuple(_load_choice(raw_choice) for raw_choice in _list_at(event, "choices")),
                 max_occurrences_per_run=_optional_int(event, "max_occurrences_per_run"),
@@ -213,7 +235,7 @@ def _list_at(raw: JsonMap, key: str) -> list[JsonValue]:
 def _string_at(raw: JsonMap, key: str) -> str:
     value = raw[key]
     if not isinstance(value, str):
-        raise TypeError(f"{key} must be a string")
+        raise DataLoaderTypeError(key, "a string")
     return value
 
 
@@ -230,7 +252,7 @@ def _read_string_list(raw: JsonMap, key: str) -> list[str]:
     strings: list[str] = []
     for value in values:
         if not isinstance(value, str):
-            raise TypeError(f"{key} values must be strings")
+            raise DataLoaderTypeError(f"{key} values", "strings")
         strings.append(value)
     return strings
 
@@ -240,7 +262,7 @@ def _optional_string(raw: JsonMap, key: str) -> str | None:
     if value is None:
         return None
     if not isinstance(value, str):
-        raise TypeError(f"{key} must be a string")
+        raise DataLoaderTypeError(key, "a string")
     return value
 
 
@@ -251,11 +273,11 @@ def _optional_int(raw: JsonMap, key: str) -> int | None:
 
 def _as_mapping(value: JsonValue, label: str) -> JsonMap:
     if not isinstance(value, dict):
-        raise TypeError(f"{label} must be a mapping")
+        raise DataLoaderTypeError(label, "a mapping")
     return {str(key): item for key, item in value.items()}
 
 
 def _as_list(value: JsonValue, label: str) -> list[JsonValue]:
     if not isinstance(value, list):
-        raise TypeError(f"{label} must be a list")
+        raise DataLoaderTypeError(label, "a list")
     return value

@@ -24,6 +24,9 @@ DEFAULT_MODIFIERS: Final = {
     "storylet_tag_match": 20,
     "region_match": 10,
     "slot_role_bonus": 5,
+    "storylet_hint_bonus": 25,
+    "cooldown_tag_penalty": -15,
+    "repeat_group_penalty": -30,
     "recent_repeat_penalty": -25,
     "already_completed": -999,
     "unavailable": -999,
@@ -37,6 +40,8 @@ class CandidateScoreInput:
     state: RunState
     matched_tags: tuple[str, ...]
     matched_objectives: tuple[str, ...]
+    matched_storylet_hints: tuple[str, ...]
+    cooldown_penalty: int
     blocked_reason: BlockedReason
 
 
@@ -70,9 +75,11 @@ def build_card_candidate_pool(cards: tuple[CardRule, ...], state: RunState, cont
 def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -> CardCandidate:
     matched_tags = tuple(tag for tag in card.applies_to_storylet_tags if tag in context.storylet_tags)
     matched_objectives = tuple(objective_id for objective_id in card.applies_to_quest_objectives if objective_id in active_optional_objectives(context.quest))
+    matched_storylet_hints = (card.id,) if card.id in context.card_candidate_hints else ()
+    cooldown_penalty = candidate_cooldown_penalty(card, state, context)
     blocked_reason = card_blocked_reason(card, state)
     repeat_penalty = modifier(card, "recent_repeat_penalty") if recently_seen_card(card, state) else 0
-    score = candidate_score(CandidateScoreInput(card, state, matched_tags, matched_objectives, blocked_reason))
+    score = candidate_score(CandidateScoreInput(card, state, matched_tags, matched_objectives, matched_storylet_hints, cooldown_penalty, blocked_reason))
     return CardCandidate(
         card=card,
         score=score,
@@ -80,6 +87,8 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
         matched_tags=matched_tags,
         matched_objectives=matched_objectives,
         blocked_reason=blocked_reason,
+        matched_storylet_hints=matched_storylet_hints,
+        cooldown_penalty=cooldown_penalty,
         repeat_penalty=repeat_penalty,
     )
 
@@ -92,6 +101,8 @@ def candidate_score(candidate: CandidateScoreInput) -> int:
         score += modifier(card, "quest_objective_match")
     if candidate.matched_tags:
         score += modifier(card, "storylet_tag_match")
+    if candidate.matched_storylet_hints:
+        score += modifier(card, "storylet_hint_bonus")
     if state.region in card.regions:
         score += modifier(card, "region_match")
     if card.slot_role in {"quest_progress", "risk_discovery", "resource_alternative"}:
@@ -100,6 +111,7 @@ def candidate_score(candidate: CandidateScoreInput) -> int:
         score += modifier(card, "recent_repeat_penalty")
     if low_food_penalty_applies(card, state):
         score += modifier(card, "low_food_penalty")
+    score += candidate.cooldown_penalty
     match candidate.blocked_reason:
         case "":
             return score
@@ -121,6 +133,17 @@ def card_blocked_reason(card: CardRule, state: RunState) -> BlockedReason:
 
 def recently_seen_card(card: CardRule, state: RunState) -> bool:
     return card.id in state.recent_presented_card_ids or card.id in state.selected_choice_history
+
+
+def candidate_cooldown_penalty(card: CardRule, state: RunState, context: CardCandidateContext) -> int:
+    penalty = 0
+    active_tags = {counter.key for counter in state.repeat_memory.cooldown_tags}
+    active_groups = {counter.key for counter in state.repeat_memory.repeat_groups}
+    if context.repeat_group and context.repeat_group in active_groups:
+        penalty += modifier(card, "repeat_group_penalty")
+    if active_tags.intersection(context.cooldown_tags):
+        penalty += modifier(card, "cooldown_tag_penalty")
+    return penalty
 
 
 def classify_tier(score: int, blocked_reason: BlockedReason) -> CandidateTier:
@@ -155,11 +178,13 @@ def card_candidate_pool_json(pool: tuple[CardCandidate, ...]) -> list[JsonMap]:
             "tier": candidate.tier,
             "matched_tags": list(candidate.matched_tags),
             "matched_objectives": list(candidate.matched_objectives),
+            "matched_storylet_hints": list(candidate.matched_storylet_hints),
             "blocked_reason": candidate.blocked_reason,
             "selection_seed_key": candidate.selection_seed_key,
             "variety_window": candidate.variety_window,
             "selected_by": candidate.selected_by,
             "repeat_penalty": candidate.repeat_penalty,
+            "cooldown_penalty": candidate.cooldown_penalty,
         }
         for candidate in pool
     ]
@@ -237,35 +262,8 @@ def status_matches(requirements: JsonMap, status: StatusMap) -> bool:
     return True
 
 
-def first_for_slot(cards: tuple[CardRule, ...], slot: str) -> CardRule:
-    for card in cards:
-        if card.slot_role == slot:
-            return card
-    raise MissingCardSlotError(slot)
-
-
 def active_optional_objectives(quest: Quest) -> set[str]:
     return {objective.id for objective in quest.objectives if not objective.required}
-
-
-def quest_card(cards: tuple[CardRule, ...], state: RunState) -> CardRule:
-    target = quest_target_card(state)
-    for card in cards:
-        if card.id == target:
-            return card
-    return first_for_slot(cards, "quest_progress")
-
-
-def quest_target_card(state: RunState) -> str:
-    herbs = state.quest_progress.get("herbs_collected", 0)
-    returned = state.quest_progress.get("returned_to_village", 0)
-    if state.region == "village" and herbs >= 3 and returned >= 1:
-        return "report_to_apothecary"
-    if state.region == "forest" and herbs >= 3:
-        return "return_to_village"
-    if state.region == "village":
-        return "ask_apothecary"
-    return "search_herbs"
 
 
 def card_influences(card: CardRule) -> list[str]:

@@ -168,6 +168,15 @@ tags:
   - clue
   - reputation
   - quest_related
+storylet_tags:
+  - wounded_messenger
+  - aid_opportunity
+card_candidate_hints:
+  - help_messenger
+cooldown_tags:
+  - npc_aid
+  - wounded_messenger
+repeat_group: forest_npc_aid
 
 requires:
   active_quest_tags:
@@ -263,11 +272,14 @@ card_candidate_pool:
       - aid_opportunity
     matched_objectives:
       - help_injured_traveler
+    matched_storylet_hints:
+      - help_injured_traveler
     blocked_reason: ""
     selection_seed_key: "tutorial_herb_quest:42:run1:day1:turn3:resource_alternative:forest:herb_gathering_tutorial"
     variety_window: true
     selected_by: seeded_tier_pick
     repeat_penalty: 0
+    cooldown_penalty: 0
 ```
 
 Tier 기준:
@@ -286,6 +298,21 @@ Seeded Tier Variety(시드 기반 등급 내 다양성) 기준:
 - `critical` 후보는 우선권을 유지하며, 여러 critical 후보가 있을 때만 seed 기반 선택이 개입한다.
 - `blocked` 후보는 Variety Window(다양성 창)에 들어가지 않으며 3-Card에 선택되지 않는다.
 - 직전 또는 최근 선택 이력에 있는 카드는 `recent_repeat_penalty`가 `repeat_penalty` evidence로 남는다.
+
+Storylet/Event Hint(스토리 조각/이벤트 힌트) 기준:
+
+- `storylet_tags`: Event(이벤트)가 Card Candidate Context(카드 후보 컨텍스트)에 직접 공급하는 의미 태그다.
+- `card_candidate_hints`: Event(이벤트)가 직접 우선 고려하라고 제안하는 card id 목록이다.
+- `cooldown_tags`: 같은 계열 Storylet/Event(스토리 조각/이벤트) 반복을 줄이기 위한 tag 단위 cooldown key다.
+- `repeat_group`: 같은 사건군 반복을 줄이기 위한 group key다.
+- `card_candidate_hints`에 있는 card id는 `storylet_hint_bonus`를 받지만, `requires_*`, `completed_objective`, `blocked` 조건을 우회하지 않는다.
+
+Repeat Cooldown Memory(반복 쿨다운 기억) 기준:
+
+- P0는 run 내부에서만 memory를 유지한다.
+- JSON turn log에는 `repeat_memory_snapshot`과 `repeat_memory_after`를 남긴다.
+- 같은 `repeat_group`은 `repeat_group_penalty`, 같은 `cooldown_tags` 계열은 `cooldown_tag_penalty`를 후보 점수에 적용한다.
+- cooldown은 score penalty이며, completed objective card처럼 hard block으로 쓰지 않는다.
 
 ---
 

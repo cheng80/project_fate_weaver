@@ -10,7 +10,13 @@ from pathlib import Path
 
 from fateweaver.gameplay_p0_cards import build_card_candidate_pool, cards_from_pool, present_cards
 from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardCandidate, CardCandidateContext, CardSelectionContext, Foundation, RunState
+from fateweaver.gameplay_p0_models import (
+    CardCandidate,
+    CardCandidateContext,
+    CardSelectionContext,
+    Foundation,
+    RunState,
+)
 from fateweaver.gameplay_p0_rules import initial_state
 from fateweaver.models import Scenario
 
@@ -196,7 +202,6 @@ class GameplayP0CardCandidateTests(unittest.TestCase):
 
         # Then
         self.assertLess(candidate.repeat_penalty, 0)
-
 
 def _forest_state(foundation: Foundation) -> RunState:
     scenario = Scenario(

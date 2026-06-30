@@ -18,6 +18,7 @@ include_event_ids:
   - hunger_night
   - suspicious_merchant
   - village_market
+  - forest_injured_traveler_hint
   - forest_shrine
   - quiet_camp
 

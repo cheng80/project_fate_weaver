@@ -18,6 +18,7 @@ from fateweaver.gameplay_p0_rules import (
     initial_state,
     int_map,
     multi_select_json,
+    repeat_memory_json,
     select_cards,
     select_storylet,
 )
@@ -38,13 +39,16 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         and not is_failed(state.status, request.bundle.statuses)
     ):
         event = select_storylet(request.events, state, rng)
-        context = CardCandidateContext(foundation.quest, storylet_tags(event, state))
+        context = card_candidate_context(foundation.quest, event, state)
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
         selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
         candidate_pool = selection.candidate_pool
         cards = selection.cards
         selected_cards, combo = select_cards(cards, foundation.card_rules.combos, state, request.profile)
         result = combined_result(selected_cards, combo, foundation.card_rules.default_extra_cost)
+        result["storylet_id"] = event.id
+        result["cooldown_tags"] = list(context.cooldown_tags)
+        result["repeat_group"] = context.repeat_group
         result["presented_card_ids"] = [card.id for card in cards]
         result["selected_card_ids"] = [card.id for card in selected_cards]
         before = state
@@ -84,10 +88,21 @@ def _continue_state(state: RunState, event: Event) -> RunState:
 
 
 def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
-    tags = (*event.region_tags, *event.event_tags, *event.danger_tags, *state.next_event_tags)
+    tags = (*event.region_tags, *event.event_tags, *event.danger_tags, *event.storylet_tags, *state.next_event_tags)
     if state.region == "forest" and state.quest_progress.get("herbs_collected", 0) >= 2:
         tags = (*tags, "npc", "aid_opportunity", "injured_traveler", "quest_related")
     return tuple(dict.fromkeys(tags))
+
+
+def card_candidate_context(quest: Quest, event: Event, state: RunState) -> CardCandidateContext:
+    return CardCandidateContext(
+        quest=quest,
+        storylet_tags=storylet_tags(event, state),
+        storylet_id=event.id,
+        card_candidate_hints=event.card_candidate_hints,
+        cooldown_tags=event.cooldown_tags,
+        repeat_group=event.repeat_group,
+    )
 
 
 def _selection_context(request: GameplayRunRequest, quest: Quest, state: RunState) -> CardSelectionContext:
@@ -115,10 +130,15 @@ def _turn_log(request: TurnLogRequest) -> JsonMap:
         "event_description": request.event.description,
         "region_tags": [request.before.region],
         "event_tags": list(request.event.event_tags),
+        "storylet_id": request.context.storylet_id,
         "storylet_tags": list(request.context.storylet_tags),
+        "card_candidate_hints": list(request.context.card_candidate_hints),
+        "cooldown_tags": list(request.context.cooldown_tags),
+        "repeat_group": request.context.repeat_group,
         "danger_tags": list(request.event.danger_tags),
         "state_before": dict(request.before.status),
         "inventory_before": list(request.before.inventory),
+        "repeat_memory_snapshot": repeat_memory_json(request.before.repeat_memory),
         "card_candidate_pool": card_candidate_pool_json(request.candidate_pool),
         "choices_seen": [card_json(card) for card in request.cards],
         "presented_cards": [card_json(card) for card in request.cards],
@@ -137,6 +157,7 @@ def _turn_log(request: TurnLogRequest) -> JsonMap:
         "state_after": dict(request.after.status),
         "inventory_after": list(request.after.inventory),
         "quest_progress": dict(request.after.quest_progress),
+        "repeat_memory_after": repeat_memory_json(request.after.repeat_memory),
         "score": dict(request.after.score),
         "score_change": int_map(request.result.get("score_changes", {})),
         "next_event_tags": list(request.after.next_event_tags),

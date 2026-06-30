@@ -69,8 +69,11 @@ p0_cards:
     weight_modifiers:
       quest_objective_match: 30
       storylet_tag_match: 20
+      storylet_hint_bonus: 25
       region_match: 10
       slot_role_bonus: 5
+      cooldown_tag_penalty: -15
+      repeat_group_penalty: -30
       already_completed: -999
       unavailable: -999
       recent_repeat_penalty: -25

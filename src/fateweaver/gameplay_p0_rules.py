@@ -6,7 +6,7 @@ from random import Random
 
 from fateweaver.event_selector import select_event
 from fateweaver.gameplay_p0_errors import ExpectedMappingError
-from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, Quest, RunClock, RunState
+from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, CooldownCounter, Quest, RepeatMemory, RunClock, RunState
 from fateweaver.models import Event, JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.state_manager import apply_choice_result
 
@@ -26,6 +26,7 @@ def initial_state(scenario: Scenario, quest: Quest) -> RunState:
         recent_event_ids=(),
         recent_presented_card_ids=(),
         selected_choice_history=(),
+        repeat_memory=RepeatMemory(),
         combo_used=False,
     )
 
@@ -96,6 +97,7 @@ def apply_turn_result(state: RunState, result: JsonMap, bundle: ProjectData) -> 
         next_event_tags=append_unique(state.next_event_tags, string_tuple(merged.get("next_event_tags", []))),
         recent_presented_card_ids=string_tuple(merged.get("presented_card_ids", [])),
         selected_choice_history=(*state.selected_choice_history, *string_tuple(merged.get("selected_card_ids", []))),
+        repeat_memory=update_repeat_memory(state.repeat_memory, merged),
         combo_used=state.combo_used or "multi_select_rule" in merged,
     )
 
@@ -136,6 +138,49 @@ def clock_json(clock: RunClock) -> JsonMap:
         "max_turns": clock.max_turns,
         "turns_per_day": clock.turns_per_day,
     }
+
+
+def repeat_memory_json(memory: RepeatMemory) -> JsonMap:
+    return {
+        "recent_presented_cards": list(memory.recent_presented_cards),
+        "recent_selected_cards": list(memory.recent_selected_cards),
+        "recent_storylets": list(memory.recent_storylets),
+        "cooldown_tags": {counter.key: counter.remaining_turns for counter in memory.cooldown_tags},
+        "repeat_groups": {counter.key: counter.remaining_turns for counter in memory.repeat_groups},
+    }
+
+
+def update_repeat_memory(memory: RepeatMemory, result: JsonMap) -> RepeatMemory:
+    return RepeatMemory(
+        recent_presented_cards=string_tuple(result.get("presented_card_ids", [])),
+        recent_selected_cards=string_tuple(result.get("selected_card_ids", [])),
+        recent_storylets=_recent_storylets(memory, result),
+        cooldown_tags=_refresh_counters(memory.cooldown_tags, string_tuple(result.get("cooldown_tags", []))),
+        repeat_groups=_refresh_counters(memory.repeat_groups, _repeat_group_tuple(result)),
+    )
+
+
+def _recent_storylets(memory: RepeatMemory, result: JsonMap) -> tuple[str, ...]:
+    storylet_id = str(result.get("storylet_id", ""))
+    if not storylet_id:
+        return memory.recent_storylets[-2:]
+    return (*memory.recent_storylets[-2:], storylet_id)
+
+
+def _repeat_group_tuple(result: JsonMap) -> tuple[str, ...]:
+    repeat_group = str(result.get("repeat_group", ""))
+    return () if not repeat_group else (repeat_group,)
+
+
+def _refresh_counters(counters: tuple[CooldownCounter, ...], additions: tuple[str, ...]) -> tuple[CooldownCounter, ...]:
+    refreshed = {
+        counter.key: counter.remaining_turns - 1
+        for counter in counters
+        if counter.remaining_turns > 1
+    }
+    for key in additions:
+        refreshed[key] = 2
+    return tuple(CooldownCounter(key, turns) for key, turns in sorted(refreshed.items()))
 
 
 def available_combo(cards: tuple[CardRule, ...], combos: tuple[ComboRule, ...]) -> ComboRule | None:

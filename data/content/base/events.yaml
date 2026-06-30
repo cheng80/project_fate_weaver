@@ -1,4 +1,24 @@
 events:
+  - id: forest_injured_traveler_hint
+    name: 숲길의 부상자
+    description: 오래된 숲길 옆에서 다친 여행자가 약초 냄새에 눈을 뜬다.
+    region_tags: [forest]
+    event_tags: [exploration]
+    danger_tags: [hunger]
+    storylet_tags: [forest, npc, aid_opportunity, injured_traveler, optional_objective, reputation, quest_related]
+    card_candidate_hints: [help_injured_traveler]
+    cooldown_tags: [npc_aid, injured_traveler]
+    repeat_group: forest_npc_aid
+    base_weight: 12
+    cooldown_turns: 2
+    choices:
+      - id: pass
+        text: 길을 살피며 지나간다
+        type: safe
+        risk_level: low
+        result:
+          message: 부상자를 지나치며 길의 흔적만 확인했다.
+
   - id: cursed_well
     name: 저주받은 우물
     description: 검은 물이 고인 우물에서 낮은 속삭임이 들린다.

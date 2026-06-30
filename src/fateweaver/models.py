@@ -73,9 +73,13 @@ class Event:
     requires_item: str | None
     requires_status: dict[str, StatusRequirement]
     requires_run_tag: str | None
+    storylet_tags: tuple[str, ...] = ()
+    card_candidate_hints: tuple[str, ...] = ()
+    cooldown_tags: tuple[str, ...] = ()
+    repeat_group: str = ""
 
     def __getitem__(self, key: str) -> JsonValue:
-        match key:
+        match key:  # noqa: MATCH_OK - Event mapping keys are data compatibility surface.
             case "id":
                 return self.id
             case "name":
@@ -88,6 +92,14 @@ class Event:
                 return list(self.event_tags)
             case "danger_tags":
                 return list(self.danger_tags)
+            case "storylet_tags":
+                return list(self.storylet_tags)
+            case "card_candidate_hints":
+                return list(self.card_candidate_hints)
+            case "cooldown_tags":
+                return list(self.cooldown_tags)
+            case "repeat_group":
+                return self.repeat_group
             case "base_weight":
                 return self.base_weight
             case _:

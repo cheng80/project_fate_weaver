@@ -116,10 +116,27 @@ class CardCandidate:
     matched_tags: tuple[str, ...]
     matched_objectives: tuple[str, ...]
     blocked_reason: BlockedReason
+    matched_storylet_hints: tuple[str, ...] = ()
+    cooldown_penalty: int = 0
     selection_seed_key: str = ""
     variety_window: bool = False
     selected_by: str = ""
     repeat_penalty: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class CooldownCounter:
+    key: str
+    remaining_turns: int
+
+
+@dataclass(frozen=True, slots=True)
+class RepeatMemory:
+    recent_presented_cards: tuple[str, ...] = ()
+    recent_selected_cards: tuple[str, ...] = ()
+    recent_storylets: tuple[str, ...] = ()
+    cooldown_tags: tuple[CooldownCounter, ...] = ()
+    repeat_groups: tuple[CooldownCounter, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -165,6 +182,10 @@ class CardRules:
 class CardCandidateContext:
     quest: Quest
     storylet_tags: tuple[str, ...]
+    storylet_id: str = ""
+    card_candidate_hints: tuple[str, ...] = ()
+    cooldown_tags: tuple[str, ...] = ()
+    repeat_group: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -189,4 +210,5 @@ class RunState:
     recent_event_ids: tuple[str, ...]
     recent_presented_card_ids: tuple[str, ...]
     selected_choice_history: tuple[str, ...]
+    repeat_memory: RepeatMemory
     combo_used: bool
