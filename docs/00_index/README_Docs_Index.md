@@ -293,6 +293,8 @@ docs/
   - Stable 판정된 Quest Category의 나머지 Quest를 lightweight success fixture 중심으로 Bulk Fill한 결과를 보관한다.
 - `docs/07_reviews/35_Quest_Expansion_Coverage_Audit_v0.1.md`
   - Phase 3 Bulk Fill 이후 Quest / Scenario / Card Rule / Event Hint / Type Coverage를 수치화한 감사 결과를 보관한다.
+- `docs/07_reviews/36_Quest_Expansion_Refactor_Gate_v0.1.md`
+  - Phase 3 Bulk Fill과 Phase 4 Coverage Audit 이후, Bulk Fill 2차 전에 데이터/룰/이벤트/시나리오/코드 분리 필요성을 판정한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
