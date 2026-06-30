@@ -9,6 +9,8 @@ from fateweaver.models import Event, JsonMap, ProjectData, Scenario, StatusMap
 
 TIME_OF_DAY: Final = ("morning", "afternoon", "evening", "night")
 ObjectiveType = Literal["collect_item", "return_to_region", "survive_expedition", "keep_resource_at_least", "discover_clue", "optional_action"]
+CandidateTier = Literal["critical", "strong", "normal", "flavor", "blocked"]
+BlockedReason = Literal["", "completed_objective", "unavailable_requirement"]
 
 
 class InputPort(Protocol):
@@ -32,6 +34,20 @@ class GameplayRunRequest:
     stdin: InputPort
     stdout: OutputPort
     profile: str
+
+
+@dataclass(frozen=True, slots=True)
+class TurnLogRequest:
+    quest: "Quest"
+    before: "RunState"
+    after: "RunState"
+    event: Event
+    context: "CardCandidateContext"
+    candidate_pool: tuple["CardCandidate", ...]
+    cards: tuple["CardRule", "CardRule", "CardRule"]
+    selected: tuple["CardRule", ...]
+    combo: "ComboRule | None"
+    result: JsonMap
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,6 +94,8 @@ class CardRule:
     title: str
     description: str
     slot_role: str
+    base_weight: int
+    tier_hint: str
     tags: tuple[str, ...]
     regions: tuple[str, ...]
     result: JsonMap
@@ -87,6 +105,17 @@ class CardRule:
     applies_to_storylet_tags: tuple[str, ...]
     applies_to_quest_objectives: tuple[str, ...]
     progress_key: str
+    weight_modifiers: JsonMap
+
+
+@dataclass(frozen=True, slots=True)
+class CardCandidate:
+    card: CardRule
+    score: int
+    tier: CandidateTier
+    matched_tags: tuple[str, ...]
+    matched_objectives: tuple[str, ...]
+    blocked_reason: BlockedReason
 
 
 @dataclass(frozen=True, slots=True)

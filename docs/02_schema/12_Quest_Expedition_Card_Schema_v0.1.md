@@ -197,6 +197,8 @@ next_event_tags:
 id: help_messenger
 card_type: aid
 slot_role: risk_discovery
+base_weight: 50
+tier_hint: strong
 title: 전령을 돕는다
 description: 식량을 나누어 전령을 안정시킨다.
 tags:
@@ -213,6 +215,13 @@ applies_to_storylet_tags:
 applies_to_quest_objectives:
   - help_messenger
 progress_key: helped_messenger
+weight_modifiers:
+  quest_objective_match: 30
+  storylet_tag_match: 20
+  region_match: 10
+  already_completed: -999
+  unavailable: -999
+  recent_repeat_penalty: -25
 
 requires:
   min_food: 1
@@ -235,8 +244,35 @@ risk_hint: 식량을 소모하지만 평판과 단서를 얻을 수 있다.
 - `applies_to_storylet_tags`: 현재 Storylet/Event 또는 P0 situation context tag와 하나 이상 겹치면 후보로 올라올 수 있다.
 - `applies_to_quest_objectives`: active quest의 optional objective id와 연결한다.
 - `progress_key`: 카드 선택 후 갱신되는 quest progress key다. 이미 1 이상이면 같은 optional action 카드는 다시 후보 우선권을 갖지 않는다.
+- `base_weight`: 후보 pool에서 기본 점수로 쓰는 값이다.
+- `tier_hint`: 데이터 작성자가 의도한 대략적 tier다. 실제 tier는 runtime score로 다시 계산한다.
+- `weight_modifiers`: quest objective, storylet tag, region, 반복, 완료, unavailable 상태가 점수에 주는 보정값이다.
 
 예를 들어 `help_injured_traveler` 카드는 `injured_traveler` 또는 `aid_opportunity` context tag가 있고, active quest에 `help_injured_traveler` optional objective가 있으며, `helped_injured_traveler` 진행도가 아직 0일 때 3-Card 후보에 포함된다.
+
+P0 JSON Log의 각 turn은 `card_candidate_pool`을 남긴다.
+
+```yaml
+card_candidate_pool:
+  - card_id: help_injured_traveler
+    slot_role: resource_alternative
+    score: 70
+    tier: strong
+    matched_tags:
+      - injured_traveler
+      - aid_opportunity
+    matched_objectives:
+      - help_injured_traveler
+    blocked_reason: ""
+```
+
+Tier 기준:
+
+- `critical`: 90 이상
+- `strong`: 70 이상 90 미만
+- `normal`: 40 이상 70 미만
+- `flavor`: 0 이상 40 미만
+- `blocked`: 0 미만 또는 unavailable/completed objective
 
 ---
 

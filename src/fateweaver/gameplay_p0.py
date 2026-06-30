@@ -4,9 +4,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
 
-from fateweaver.gameplay_p0_cards import card_json, present_cards
+from fateweaver.gameplay_p0_cards import build_card_candidate_pool, card_candidate_pool_json, card_json, cards_from_pool
 from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardCandidateContext, CardRule, ComboRule, GameplayRunRequest, Quest, RunState
+from fateweaver.gameplay_p0_models import CardCandidateContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
 from fateweaver.gameplay_p0_rules import (
     advance_clock,
@@ -38,13 +38,29 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
     ):
         event = select_storylet(request.events, state, rng)
         context = CardCandidateContext(foundation.quest, storylet_tags(event, state))
-        cards = present_cards(foundation.card_rules.cards, state, context)
+        candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
+        cards = cards_from_pool(candidate_pool)
         selected_cards, combo = select_cards(cards, foundation.card_rules.combos, state, request.profile)
         result = combined_result(selected_cards, combo, foundation.card_rules.default_extra_cost)
         result["selected_card_ids"] = [card.id for card in selected_cards]
         before = state
         state = apply_turn_result(state, result, request.bundle)
-        turns.append(_turn_log(foundation.quest, before, state, event, context, cards, selected_cards, combo, result))
+        turns.append(
+            _turn_log(
+                TurnLogRequest(
+                    quest=foundation.quest,
+                    before=before,
+                    after=state,
+                    event=event,
+                    context=context,
+                    candidate_pool=candidate_pool,
+                    cards=cards,
+                    selected=selected_cards,
+                    combo=combo,
+                    result=result,
+                ),
+            ),
+        )
         if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
@@ -70,56 +86,47 @@ def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
     return tuple(dict.fromkeys(tags))
 
 
-def _turn_log(
-    quest: Quest,
-    before: RunState,
-    after: RunState,
-    event: Event,
-    context: CardCandidateContext,
-    cards: tuple[CardRule, CardRule, CardRule],
-    selected: tuple[CardRule, ...],
-    combo: ComboRule | None,
-    result: JsonMap,
-) -> JsonMap:
-    selected_ids = [card.id for card in selected]
-    selected_text = " + ".join(card.title for card in selected)
+def _turn_log(request: TurnLogRequest) -> JsonMap:
+    selected_ids = [card.id for card in request.selected]
+    selected_text = " + ".join(card.title for card in request.selected)
     return {
-        "turn": before.clock.turn,
-        "run_clock": clock_json(before.clock),
-        "quest_id": quest.id,
-        "quest_title": quest.title,
-        "event_id": event.id,
-        "event_name": event.name,
-        "event_description": event.description,
-        "region_tags": [before.region],
-        "event_tags": list(event.event_tags),
-        "storylet_tags": list(context.storylet_tags),
-        "danger_tags": list(event.danger_tags),
-        "state_before": dict(before.status),
-        "inventory_before": list(before.inventory),
-        "choices_seen": [card_json(card) for card in cards],
-        "presented_cards": [card_json(card) for card in cards],
-        "selected_choice_id": selected[0].id,
-        "selected_choice_type": "multi_select" if combo is not None else selected[0].slot_role,
-        "selected_choice_reason": "p0_foundation: selected combo" if combo is not None else "p0_foundation: selected quest progress",
+        "turn": request.before.clock.turn,
+        "run_clock": clock_json(request.before.clock),
+        "quest_id": request.quest.id,
+        "quest_title": request.quest.title,
+        "event_id": request.event.id,
+        "event_name": request.event.name,
+        "event_description": request.event.description,
+        "region_tags": [request.before.region],
+        "event_tags": list(request.event.event_tags),
+        "storylet_tags": list(request.context.storylet_tags),
+        "danger_tags": list(request.event.danger_tags),
+        "state_before": dict(request.before.status),
+        "inventory_before": list(request.before.inventory),
+        "card_candidate_pool": card_candidate_pool_json(request.candidate_pool),
+        "choices_seen": [card_json(card) for card in request.cards],
+        "presented_cards": [card_json(card) for card in request.cards],
+        "selected_choice_id": request.selected[0].id,
+        "selected_choice_type": "multi_select" if request.combo is not None else request.selected[0].slot_role,
+        "selected_choice_reason": "p0_foundation: selected combo" if request.combo is not None else "p0_foundation: selected quest progress",
         "selected_cards": selected_ids,
-        "multi_select": multi_select_json(combo, selected_ids),
+        "multi_select": multi_select_json(request.combo, selected_ids),
         "was_available": True,
         "was_hidden": False,
         "choice_time_seconds": 0,
         "choice_reason": selected_text,
-        "expected_risk": "medium" if combo is not None else "low",
-        "influenced_by": influences(selected, combo),
-        "result": result,
-        "state_after": dict(after.status),
-        "inventory_after": list(after.inventory),
-        "quest_progress": dict(after.quest_progress),
-        "score": dict(after.score),
-        "score_change": int_map(result.get("score_changes", {})),
-        "next_event_tags": list(after.next_event_tags),
-        "clues": list(after.clues),
-        "omens": list(after.omens),
-        "regret_score": 3 if combo is not None else 1,
+        "expected_risk": "medium" if request.combo is not None else "low",
+        "influenced_by": influences(request.selected, request.combo),
+        "result": request.result,
+        "state_after": dict(request.after.status),
+        "inventory_after": list(request.after.inventory),
+        "quest_progress": dict(request.after.quest_progress),
+        "score": dict(request.after.score),
+        "score_change": int_map(request.result.get("score_changes", {})),
+        "next_event_tags": list(request.after.next_event_tags),
+        "clues": list(request.after.clues),
+        "omens": list(request.after.omens),
+        "regret_score": 3 if request.combo is not None else 1,
         "notes": "",
     }
 

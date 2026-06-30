@@ -3,6 +3,8 @@ p0_cards:
     title: 약사에게 의뢰를 확인한다
     description: 약사가 숲 가장자리에서 자라는 달빛잎의 특징을 알려준다.
     slot_role: quest_progress
+    base_weight: 80
+    tier_hint: strong
     regions: [village]
     result:
       status: {reputation: 1}
@@ -15,6 +17,8 @@ p0_cards:
     title: 약초를 찾는다
     description: 습한 나무뿌리 근처에서 달빛잎을 찾는다.
     slot_role: quest_progress
+    base_weight: 70
+    tier_hint: strong
     regions: [forest]
     result:
       add_item: [herb]
@@ -26,6 +30,8 @@ p0_cards:
     title: 마을로 돌아간다
     description: 숲길을 빠져나와 약사에게 돌아갈 길을 잡는다.
     slot_role: quest_progress
+    base_weight: 85
+    tier_hint: strong
     regions: [forest]
     requires_progress: {herbs_collected: {min: 3}}
     result:
@@ -38,6 +44,8 @@ p0_cards:
     title: 약사에게 보고한다
     description: 모은 약초와 숲에서 본 징조를 약사에게 전한다.
     slot_role: quest_progress
+    base_weight: 90
+    tier_hint: critical
     regions: [village]
     requires_progress: {herbs_collected: {min: 3}, returned_to_village: {min: 1}}
     result:
@@ -50,12 +58,23 @@ p0_cards:
     title: 부상자를 돕는다
     description: 채집한 약초 일부로 숲길의 부상자를 응급 처치한다.
     slot_role: resource_alternative
+    base_weight: 5
+    tier_hint: strong
     tags: [aid, npc, optional_objective, reputation, forest, quest_related]
     regions: [forest]
     requires_progress: {herbs_collected: {min: 2}}
     applies_to_storylet_tags: [injured_traveler, aid_opportunity]
     applies_to_quest_objectives: [help_injured_traveler]
     progress_key: helped_injured_traveler
+    weight_modifiers:
+      quest_objective_match: 30
+      storylet_tag_match: 20
+      region_match: 10
+      slot_role_bonus: 5
+      already_completed: -999
+      unavailable: -999
+      recent_repeat_penalty: -25
+      low_food_penalty: -10
     result:
       status: {food: -1, reputation: 1}
       quest_progress: {helped_injured_traveler: 1}
@@ -66,6 +85,8 @@ p0_cards:
     title: 발자국을 조사한다
     description: 젖은 흙 위에 난 작은 발자국을 따라간다.
     slot_role: risk_discovery
+    base_weight: 45
+    tier_hint: normal
     regions: [forest]
     result:
       gain_clues: [old_hunter_trail]
@@ -76,6 +97,8 @@ p0_cards:
     title: 깊은 숲으로 들어간다
     description: 어두운 안쪽 숲에서 더 많은 흔적을 찾는다.
     slot_role: risk_discovery
+    base_weight: 35
+    tier_hint: flavor
     regions: [forest]
     result:
       status: {health: -1}
@@ -87,6 +110,8 @@ p0_cards:
     title: 돈으로 숲길 정보를 산다
     description: 마을 사람에게 안전한 숲길을 묻는다.
     slot_role: risk_discovery
+    base_weight: 45
+    tier_hint: normal
     regions: [village]
     requires_status: {money: {min: 1}}
     result:
@@ -99,6 +124,8 @@ p0_cards:
     title: 횃불을 켜고 살핀다
     description: 어두운 덤불 사이를 횃불로 비춘다.
     slot_role: resource_alternative
+    base_weight: 50
+    tier_hint: normal
     regions: [forest]
     requires_item: torch
     result:
@@ -109,6 +136,8 @@ p0_cards:
     title: 식량을 아끼며 이동한다
     description: 천천히 움직여 식량 낭비를 줄인다.
     slot_role: resource_alternative
+    base_weight: 45
+    tier_hint: normal
     regions: [forest]
     result:
       status: {food: 1}
@@ -118,6 +147,8 @@ p0_cards:
     title: 잠시 쉰다
     description: 짧게 숨을 돌려 체력을 회복한다.
     slot_role: resource_alternative
+    base_weight: 35
+    tier_hint: flavor
     regions: [village, forest]
     result:
       status: {food: -1, health: 1}

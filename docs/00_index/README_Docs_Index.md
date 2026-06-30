@@ -260,6 +260,8 @@ docs/
   - Gameplay P0의 optional_action completed 경로와 score rule 정렬 결과를 보관한다.
 - `docs/07_reviews/22_Gameplay_P0_Optional_Action_Ontology_Link_Result_v0.1.md`
   - Gameplay P0 optional_action 카드를 Storylet/Ontology 후보군과 연결한 결과를 보관한다.
+- `docs/07_reviews/23_Gameplay_P0_Card_Candidate_Tier_Weight_Result_v0.1.md`
+  - Gameplay P0 Card Candidate Pool에 tier / weight 기반 후보 선택 구조를 도입한 결과를 보관한다.
 
 ---
 
