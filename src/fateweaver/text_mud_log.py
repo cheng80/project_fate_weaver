@@ -29,17 +29,19 @@ def render_text_mud_log(log: JsonMap) -> str:
     ]
     for turn in _json_maps(log.get("turns")):
         lines.extend(_render_turn(turn))
-    lines.extend(_render_summary(_json_map(log.get("run_summary"))))
+    lines.extend(_render_summary(_json_map(log.get("run_summary")), _json_map(log.get("quest_report"))))
     lines.append("[Run 종료]")
     return "\n".join(lines) + "\n"
 
 
 def _render_turn(turn: JsonMap) -> list[str]:
-    turn_number = _text(turn.get("turn"))
+    turn_heading = _turn_heading(turn)
     selected = _selected_choice(turn)
     result = _json_map(turn.get("result"))
     lines = [
-        f"[Turn {turn_number}]",
+        turn_heading,
+        f"Quest: {_text(turn.get('quest_title'))}",
+        f"Region: {_region(turn)}",
         f"장소: {_place(turn)}",
         f"현재 상태와 자원: {_text(turn.get('state_before'))}",
         f"보유 아이템: {_text(turn.get('inventory_before'))}",
@@ -47,17 +49,21 @@ def _render_turn(turn: JsonMap) -> list[str]:
         f"불길한 징조: {_omens(turn)}",
         f"현재 위험도: {_text(turn.get('expected_risk'))}",
         f"발생 사건: {_event_line(turn)}",
-        "선택:",
+        "카드:",
     ]
     lines.extend(_choice_lines(turn))
     lines.extend(
         [
+            "선택:",
+            f"- {_selected_cards(turn)}",
             f"선택 결과: {_choice_result_line(selected, result)}",
             f"위험/보상 판단: {_risk_reward_judgment(turn)}",
             f"결과 메시지: {_text(result.get('message'))}",
             f"상태 변화: {_state_changes(_json_map(turn.get('state_before')), _json_map(turn.get('state_after')))}",
             f"아이템/단서/징조 영향: {_influences(turn)}",
             f"다음 사건 변화: {_event_weight(result)}",
+            f"Quest Progress: {_text(turn.get('quest_progress'))}",
+            f"Score Change: {_text(turn.get('score_change'))}",
             "",
         ]
     )
@@ -82,6 +88,24 @@ def _place(turn: JsonMap) -> str:
     if regions == MISSING:
         return event_name
     return f"{regions} / {event_name}"
+
+
+def _turn_heading(turn: JsonMap) -> str:
+    clock = _json_map(turn.get("run_clock"))
+    if not clock:
+        return f"[Turn {_text(turn.get('turn'))}]"
+    return (
+        f"[Day {_text(clock.get('day'))} / "
+        f"{_text(clock.get('time_of_day')).title()} / "
+        f"Turn {_text(clock.get('turn'))}]"
+    )
+
+
+def _region(turn: JsonMap) -> str:
+    values = _json_values(turn.get("region_tags"))
+    if not values:
+        return MISSING
+    return _text(values[0])
 
 
 def _event_line(turn: JsonMap) -> str:
@@ -142,9 +166,14 @@ def _items_delta(result: JsonMap) -> str:
 
 def _event_weight(result: JsonMap) -> str:
     weight = _text(result.get("event_weight"))
-    if weight == MISSING:
+    tags = _text(result.get("next_event_tags"))
+    if weight == MISSING and tags == MISSING:
         return "변화 없음"
-    return f"후속 사건 가중치 {weight}"
+    if weight == MISSING:
+        return f"다음 사건 태그 {tags}"
+    if tags == MISSING:
+        return f"후속 사건 가중치 {weight}"
+    return f"후속 사건 가중치 {weight}; 다음 사건 태그 {tags}"
 
 
 def _clues(turn: JsonMap) -> str:
@@ -167,8 +196,8 @@ def _first_turn(log: JsonMap) -> JsonMap:
     return turns[0]
 
 
-def _render_summary(summary: JsonMap) -> list[str]:
-    return [
+def _render_summary(summary: JsonMap, quest_report: JsonMap) -> list[str]:
+    lines = [
         "[결과]",
         f"최종 상태: {_text(summary.get('final_state'))}",
         f"최종 소지품: {_text(summary.get('final_inventory'))}",
@@ -176,6 +205,17 @@ def _render_summary(summary: JsonMap) -> list[str]:
         f"요약: {_text(summary.get('narrative_summary'))}",
         f"다음 실행 의도: {_text(summary.get('next_run_intent'))}",
     ]
+    if quest_report:
+        lines.extend(
+            [
+                "Quest Report:",
+                f"결과 유형: {_text(quest_report.get('result_type'))}",
+                f"완료 목표: {_text(quest_report.get('completed_objectives'))}",
+                f"실패 목표: {_text(quest_report.get('failed_objectives'))}",
+                f"점수: {_text(quest_report.get('score'))}",
+            ]
+        )
+    return lines
 
 
 def _influences(turn: JsonMap) -> str:
@@ -186,6 +226,14 @@ def _influences(turn: JsonMap) -> str:
     if direct == MISSING:
         return inventory_change
     return f"{direct}; {inventory_change}"
+
+
+def _selected_cards(turn: JsonMap) -> str:
+    selected = _text(turn.get("selected_cards"))
+    multi = _json_map(turn.get("multi_select"))
+    if multi.get("selected") is True:
+        return f"{selected} (Multi-Select: {_text(multi.get('rule_id'))})"
+    return selected
 
 
 def _inventory_changes(before: tuple[JsonValue, ...], after: tuple[JsonValue, ...]) -> str:

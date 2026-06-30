@@ -3,6 +3,7 @@ __all__ = [
     "choice_resolver",
     "data_loader",
     "event_selector",
+    "gameplay_p0",
     "logger",
     "models",
     "scenario_filter",

@@ -8,6 +8,7 @@ from typing import Protocol
 from fateweaver.choice_resolver import ChoiceSeen, ChoiceSelection, build_choices_seen, select_choice, selected_choice_from_seen
 from fateweaver.data_loader import load_project_data
 from fateweaver.event_selector import select_event
+from fateweaver.gameplay_p0 import GameplayRunRequest, run_gameplay_p0
 from fateweaver.logger import save_run_log
 from fateweaver.models import JsonMap, PlayerChoiceFeedback, RunFeedback
 from fateweaver.scenario_filter import filter_events_for_scenario
@@ -46,7 +47,12 @@ def run_console_simulation(
     seed = scenario.seed if seed_override is None else seed_override
     saved_paths: list[Path] = []
     for run_number in range(1, runs + 1):
-        saved_paths.append(_run_once(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
+        if scenario.gameplay_mode == "p0_foundation":
+            saved_paths.append(
+                run_gameplay_p0(GameplayRunRequest(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
+            )
+        else:
+            saved_paths.append(_run_once(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
     return saved_paths
 
 

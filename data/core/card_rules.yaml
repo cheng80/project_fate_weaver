@@ -1,0 +1,127 @@
+p0_cards:
+  - id: ask_apothecary
+    title: 약사에게 의뢰를 확인한다
+    description: 약사가 숲 가장자리에서 자라는 달빛잎의 특징을 알려준다.
+    slot_role: quest_progress
+    regions: [village]
+    result:
+      status: {reputation: 1}
+      quest_progress: {briefing_received: 1}
+      score_changes: {quest_progress: 5, reputation: 4}
+      next_event_tags: [forest, herb]
+      move_to_region: forest
+      message: 의뢰 내용을 확인하고 숲으로 향했다.
+  - id: search_herbs
+    title: 약초를 찾는다
+    description: 습한 나무뿌리 근처에서 달빛잎을 찾는다.
+    slot_role: quest_progress
+    regions: [forest]
+    result:
+      add_item: [herb]
+      quest_progress: {herbs_collected: 1}
+      score_changes: {quest_progress: 10}
+      next_event_tags: [herb, forest]
+      message: 달빛잎 약초를 찾았다.
+  - id: return_to_village
+    title: 마을로 돌아간다
+    description: 숲길을 빠져나와 약사에게 돌아갈 길을 잡는다.
+    slot_role: quest_progress
+    regions: [forest]
+    requires_progress: {herbs_collected: {min: 3}}
+    result:
+      quest_progress: {returned_to_village: 1}
+      score_changes: {quest_progress: 8, survival: 5}
+      next_event_tags: [village, report]
+      move_to_region: village
+      message: 약초를 챙겨 마을로 돌아왔다.
+  - id: report_to_apothecary
+    title: 약사에게 보고한다
+    description: 모은 약초와 숲에서 본 징조를 약사에게 전한다.
+    slot_role: quest_progress
+    regions: [village]
+    requires_progress: {herbs_collected: {min: 3}, returned_to_village: {min: 1}}
+    result:
+      status: {money: 3, reputation: 1}
+      quest_progress: {reported_to_apothecary: 1}
+      score_changes: {quest_progress: 20, reputation: 4, ending_bonus: 20}
+      next_event_tags: [quest_complete]
+      message: 약사는 보수를 건네고 다음 의뢰를 암시했다.
+  - id: inspect_tracks
+    title: 발자국을 조사한다
+    description: 젖은 흙 위에 난 작은 발자국을 따라간다.
+    slot_role: risk_discovery
+    regions: [forest]
+    result:
+      gain_clues: [old_hunter_trail]
+      score_changes: {discovery: 6}
+      next_event_tags: [hidden_path]
+      message: 낡은 사냥꾼 길 단서를 얻었다.
+  - id: enter_deep_woods
+    title: 깊은 숲으로 들어간다
+    description: 어두운 안쪽 숲에서 더 많은 흔적을 찾는다.
+    slot_role: risk_discovery
+    regions: [forest]
+    result:
+      status: {health: -1}
+      gain_omens: [silent_birds]
+      score_changes: {discovery: 4, penalty: -2}
+      next_event_tags: [beast, lost]
+      message: 새소리가 끊긴 숲에서 위험한 징조를 보았다.
+  - id: buy_local_hint
+    title: 돈으로 숲길 정보를 산다
+    description: 마을 사람에게 안전한 숲길을 묻는다.
+    slot_role: risk_discovery
+    regions: [village]
+    requires_status: {money: {min: 1}}
+    result:
+      status: {money: -1}
+      gain_clues: [safe_forest_path]
+      score_changes: {discovery: 4}
+      next_event_tags: [safe_path]
+      message: 안전한 숲길 정보를 얻었다.
+  - id: use_torch_to_search
+    title: 횃불을 켜고 살핀다
+    description: 어두운 덤불 사이를 횃불로 비춘다.
+    slot_role: resource_alternative
+    regions: [forest]
+    requires_item: torch
+    result:
+      score_changes: {resource_management: 3}
+      next_event_tags: [darkness]
+      message: 횃불 덕분에 어두운 길이 드러났다.
+  - id: conserve_food
+    title: 식량을 아끼며 이동한다
+    description: 천천히 움직여 식량 낭비를 줄인다.
+    slot_role: resource_alternative
+    regions: [forest]
+    result:
+      status: {food: 1}
+      score_changes: {resource_management: 3}
+      message: 움직임은 느려졌지만 식량을 아꼈다.
+  - id: rest_briefly
+    title: 잠시 쉰다
+    description: 짧게 숨을 돌려 체력을 회복한다.
+    slot_role: resource_alternative
+    regions: [village, forest]
+    result:
+      status: {food: -1, health: 1}
+      score_changes: {survival: 3}
+      message: 식량을 조금 쓰고 숨을 돌렸다.
+
+multi_select_rules:
+  max_selected_cards: 2
+  default_extra_cost:
+    status: {food: -1}
+  combo_rules:
+    - id: torch_plus_search
+      cards: [use_torch_to_search, search_herbs]
+      result:
+        quest_progress: {herbs_collected: 1}
+        score_changes: {quest_progress: 5, discovery: 4}
+        gain_clues: [moonleaf_glow]
+        next_event_tags: [herb, safe_path]
+        message: 횃불빛 아래 달빛잎을 더 찾아 위험을 낮췄다.
+  conflict_rules:
+    - id: return_vs_deep_woods
+      cards: [return_to_village, enter_deep_woods]
+      message: 귀환과 심층 진입은 같은 턴에 함께 선택할 수 없다.

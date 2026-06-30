@@ -1,0 +1,41 @@
+quests:
+  - id: herb_gathering_tutorial
+    title: 약초 채집 의뢰
+    rank: novice
+    quest_type: gathering
+    start_region: village
+    target_regions: [forest]
+    recommended_days: 3
+    max_days: 3
+    max_turns: 12
+    primary_objectives:
+      - type: quest_progress_at_least
+        key: herbs_collected
+        value: 3
+      - type: quest_progress_at_least
+        key: reported_to_apothecary
+        value: 1
+    optional_objectives:
+      - type: discover_clue
+        clue_id: old_hunter_trail
+      - type: keep_resource_at_least
+        resource: food
+        value: 2
+    failure_conditions:
+      - type: resource_lte
+        resource: health
+        value: 0
+      - type: day_gt
+        value: 3
+    rewards:
+      money: 3
+      reputation: 1
+      score: 50
+      unlock_quests:
+        - missing_porter_search
+    event_bias:
+      tags:
+        forest: 10
+        exploration: 8
+        survival: 4
+        trade: 2

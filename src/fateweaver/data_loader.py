@@ -83,6 +83,9 @@ def _load_scenario(project_root: Path, scenario_path: Path) -> Scenario:
         target_turns=int(raw.get("target_turns", 1)),
         seed=int(raw.get("seed", 0)),
         validation_targets={key: int(value) for key, value in _mapping_at(raw, "validation_targets").items()},
+        gameplay_mode=_optional_string(raw, "gameplay_mode"),
+        active_quest_id=_optional_string(raw, "active_quest_id"),
+        run_clock=_mapping_at(raw, "run_clock"),
     )
 
 

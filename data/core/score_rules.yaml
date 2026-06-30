@@ -1,0 +1,15 @@
+score_rules:
+  survival_bonus: 10
+  quest_success: 30
+  partial_success: 12
+  discovered_clue: 5
+  preserved_food: 2
+  reputation_point: 4
+  ending_bonus:
+    success: 30
+    partial_success: 10
+    failure: -20
+  penalties:
+    health_zero: -30
+    food_zero: -5
+    curse: -3

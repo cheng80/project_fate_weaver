@@ -116,6 +116,9 @@ class Scenario:
     target_turns: int
     seed: int
     validation_targets: dict[str, int] = field(default_factory=dict)
+    gameplay_mode: str | None = None
+    active_quest_id: str | None = None
+    run_clock: JsonMap = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)

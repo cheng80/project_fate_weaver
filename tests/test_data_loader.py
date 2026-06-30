@@ -15,7 +15,14 @@ class DataLoaderTests(unittest.TestCase):
         self.assertGreaterEqual(len(loaded.bundle.events), 12)
         self.assertIn("combat_response", loaded.bundle.choice_types)
 
+    def test_loads_gameplay_p0_scenario_contract(self) -> None:
+        loaded = load_project_data(Path("."), Path("data/scenarios/tutorial_herb_quest.yaml"))
+
+        self.assertEqual("tutorial_herb_quest", loaded.scenario.id)
+        self.assertEqual("herb_gathering_tutorial", loaded.scenario.active_quest_id)
+        self.assertEqual(12, loaded.scenario.target_turns)
+        self.assertEqual("p0_foundation", loaded.scenario.gameplay_mode)
+
 
 if __name__ == "__main__":
     unittest.main()
-

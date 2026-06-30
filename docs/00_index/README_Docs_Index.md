@@ -246,6 +246,8 @@ docs/
   - 현재 이벤트, 선택지, 아이템, 단서, 징조, 퀘스트, 엔딩 볼륨을 감사하기 위한 리뷰 템플릿이다.
 - `docs/07_reviews/15_Content_Volume_Audit_Result_v0.1.md`
   - Gameplay Replan 구현 전 현재 콘텐츠 볼륨과 구조 부족분을 감사한 결과 문서다.
+- `docs/07_reviews/16_Gameplay_P0_Foundation_Implementation_Result_v0.1.md`
+  - Gameplay Replan P0 Foundation 최소 수직 슬라이스 구현 결과와 검증 결과를 보관한다.
 
 ---
 
