@@ -9,6 +9,15 @@ score_rules:
     success: 30
     partial_success: 10
     failure: -20
+  objective_scoring:
+    completed_required: 10
+    completed_optional: 10
+    partial_required: 5
+    partial_optional: 5
+    failed_required: -10
+    failed_optional: 0
+    survival_failed: -30
+    return_failed: -20
   penalties:
     health_zero: -30
     food_zero: -5

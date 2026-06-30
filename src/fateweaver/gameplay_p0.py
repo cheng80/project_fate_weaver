@@ -45,7 +45,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         before = state
         state = apply_turn_result(state, result, request.bundle)
         turns.append(_turn_log(foundation.quest, before, state, event, cards, selected_cards, combo, result))
-        if quest_completed(foundation.quest, state, request.bundle) or is_failed(state.status, request.bundle.statuses):
+        if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
     quest_report = build_quest_report(QuestReportRequest(foundation.quest, state, request.bundle, foundation.score_rules))

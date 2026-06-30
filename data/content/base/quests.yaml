@@ -58,7 +58,8 @@ quests:
         reward_weight: 1
       - id: help_injured_traveler
         type: optional_action
-        target: help_injured_traveler
+        target: helped_injured_traveler
+        progress_key: helped_injured_traveler
         required: false
         value: 1
         failure_reason: optional_failed

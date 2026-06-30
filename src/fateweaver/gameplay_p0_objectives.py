@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Literal, assert_never
 
 from fateweaver.gameplay_p0_models import Quest, QuestObjective, RunState
+from fateweaver.gameplay_p0_scoring import ObjectiveStatus, objective_score_delta
 from fateweaver.models import JsonMap, ProjectData
 
-ObjectiveStatus = Literal["completed", "partial", "failed"]
 ResultType = Literal["success", "partial_success", "failure"]
 
 
@@ -28,13 +28,13 @@ class QuestReportRequest:
     score_rules: JsonMap
 
 
-def quest_completed(quest: Quest, state: RunState, bundle: ProjectData) -> bool:
-    evaluations = evaluate_objectives(quest, state, bundle)
+def quest_completed(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> bool:
+    evaluations = evaluate_objectives(quest, state, bundle, score_rules)
     return _result_type(evaluations, state) == "success"
 
 
 def build_quest_report(request: QuestReportRequest) -> JsonMap:
-    evaluations = evaluate_objectives(request.quest, request.state, request.bundle)
+    evaluations = evaluate_objectives(request.quest, request.state, request.bundle, request.score_rules)
     result_type = _result_type(evaluations, request.state)
     partial_reasons = _partial_reasons(evaluations, request.state, result_type)
     failure_reasons = _failure_reasons(evaluations, request.state, result_type)
@@ -60,56 +60,44 @@ def build_quest_report(request: QuestReportRequest) -> JsonMap:
     }
 
 
-def evaluate_objectives(quest: Quest, state: RunState, bundle: ProjectData) -> tuple[ObjectiveEvaluation, ...]:
-    return tuple(_evaluate_objective(objective, state, bundle) for objective in quest.objectives)
+def evaluate_objectives(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> tuple[ObjectiveEvaluation, ...]:
+    return tuple(_evaluate_objective(objective, state, bundle, score_rules) for objective in quest.objectives)
 
 
-def _evaluate_objective(objective: QuestObjective, state: RunState, bundle: ProjectData) -> ObjectiveEvaluation:
+def _evaluate_objective(objective: QuestObjective, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> ObjectiveEvaluation:
     match objective.objective_type:
         case "collect_item":
-            return _progress_objective(objective, state.quest_progress.get(objective.target, 0), objective.count)
+            return _progress_objective(objective, state.quest_progress.get(objective.target, 0), objective.count, score_rules)
         case "return_to_region":
             progress = state.quest_progress.get(objective.progress_key, 0)
             value = progress if state.region == objective.target else 0
-            return _complete_or_failed(objective, value, objective.value)
+            return _complete_or_failed(objective, value, objective.value, score_rules)
         case "survive_expedition":
             health = state.status.get(objective.target, bundle.statuses[objective.target].initial)
-            return _complete_or_failed(objective, health, objective.value)
+            return _complete_or_failed(objective, health, objective.value, score_rules)
         case "keep_resource_at_least":
-            return _complete_or_failed(objective, state.status.get(objective.target, 0), objective.value)
+            return _complete_or_failed(objective, state.status.get(objective.target, 0), objective.value, score_rules)
         case "discover_clue":
             value = 1 if objective.target in state.clues else 0
-            return _complete_or_failed(objective, value, objective.value)
+            return _complete_or_failed(objective, value, objective.value, score_rules)
         case "optional_action":
-            return _progress_objective(objective, state.quest_progress.get(objective.target, 0), objective.value)
+            return _progress_objective(objective, state.quest_progress.get(objective.progress_key, 0), objective.value, score_rules)
         case unreachable:
             assert_never(unreachable)
 
 
-def _progress_objective(objective: QuestObjective, progress: int, target: int) -> ObjectiveEvaluation:
+def _progress_objective(objective: QuestObjective, progress: int, target: int, score_rules: JsonMap) -> ObjectiveEvaluation:
     if progress >= target:
-        return ObjectiveEvaluation(objective=objective, status="completed", reason="completed", progress_value=progress, target_value=target, score_delta=_score_delta(objective, "completed"))
+        return ObjectiveEvaluation(objective=objective, status="completed", reason="completed", progress_value=progress, target_value=target, score_delta=objective_score_delta(objective, "completed", score_rules))
     if progress > 0:
-        return ObjectiveEvaluation(objective=objective, status="partial", reason=objective.partial_reason, progress_value=progress, target_value=target, score_delta=_score_delta(objective, "partial"))
-    return ObjectiveEvaluation(objective=objective, status="failed", reason=objective.failure_reason, progress_value=progress, target_value=target, score_delta=_score_delta(objective, "failed"))
+        return ObjectiveEvaluation(objective=objective, status="partial", reason=objective.partial_reason, progress_value=progress, target_value=target, score_delta=objective_score_delta(objective, "partial", score_rules))
+    return ObjectiveEvaluation(objective=objective, status="failed", reason=objective.failure_reason, progress_value=progress, target_value=target, score_delta=objective_score_delta(objective, "failed", score_rules))
 
 
-def _complete_or_failed(objective: QuestObjective, progress: int, target: int) -> ObjectiveEvaluation:
+def _complete_or_failed(objective: QuestObjective, progress: int, target: int, score_rules: JsonMap) -> ObjectiveEvaluation:
     status: ObjectiveStatus = "completed" if progress >= target else "failed"
     reason = "completed" if status == "completed" else objective.failure_reason
-    return ObjectiveEvaluation(objective=objective, status=status, reason=reason, progress_value=progress, target_value=target, score_delta=_score_delta(objective, status))
-
-
-def _score_delta(objective: QuestObjective, status: ObjectiveStatus) -> int:
-    match status:
-        case "completed":
-            return 10 * objective.reward_weight
-        case "partial":
-            return 5 * objective.reward_weight
-        case "failed":
-            return -10 * objective.reward_weight if objective.required else 0
-        case unreachable:
-            assert_never(unreachable)
+    return ObjectiveEvaluation(objective=objective, status=status, reason=reason, progress_value=progress, target_value=target, score_delta=objective_score_delta(objective, status, score_rules))
 
 
 def _result_type(evaluations: tuple[ObjectiveEvaluation, ...], state: RunState) -> ResultType:

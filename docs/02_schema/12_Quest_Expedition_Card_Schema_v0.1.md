@@ -85,7 +85,8 @@ optional_objectives:
     reward_weight: 1
   - id: help_injured_traveler
     type: optional_action
-    target: help_injured_traveler
+    target: helped_injured_traveler
+    progress_key: helped_injured_traveler
     required: false
     value: 1
     failure_reason: optional_failed
@@ -127,6 +128,9 @@ event_bias:
 - `partial_reason`: objective partial 또는 partial_success reason 후보.
 - `score_key`: score breakdown에서 objective 의미를 추적하기 위한 키.
 - `reward_weight`: objective 완료, partial, 실패 점수 계산 가중치.
+
+`optional_action`은 `progress_key`가 있으면 해당 quest progress 값을 우선 보고 completed / partial / failed를 평가한다.
+예를 들어 `help_injured_traveler` objective는 `helped_injured_traveler` 진행도가 카드 결과로 1 이상이 되면 completed가 된다.
 
 ---
 
@@ -333,6 +337,15 @@ score_rules:
   solved_storylet: 3
   preserved_food: 2
   reputation_point: 4
+  objective_scoring:
+    completed_required: 10
+    completed_optional: 10
+    partial_required: 5
+    partial_optional: 5
+    failed_required: -10
+    failed_optional: 0
+    survival_failed: -30
+    return_failed: -20
   ending_bonus:
     success: 30
     discovery: 20
@@ -398,6 +411,9 @@ quest_report:
 ```
 
 `objective_results`는 JSON Log와 Text MUD Play Log 양쪽에서 objective 평가를 사람이 추적할 수 있게 하는 최소 출력 계약이다.
+
+`score_delta`는 `data/core/score_rules.yaml`의 `objective_scoring` 값을 기준으로 계산한다.
+`reward_weight`는 objective별 중요도 가중치로 사용한다.
 
 현재 P0 result reason은 Quest별 하드코딩이 아니라 objective evaluation과 clock constraint에서 유도한다.
 

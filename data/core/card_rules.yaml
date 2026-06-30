@@ -46,6 +46,18 @@ p0_cards:
       score_changes: {quest_progress: 20, reputation: 4, ending_bonus: 20}
       next_event_tags: [quest_complete]
       message: 약사는 보수를 건네고 다음 의뢰를 암시했다.
+  - id: help_injured_traveler
+    title: 부상자를 돕는다
+    description: 채집한 약초 일부로 숲길의 부상자를 응급 처치한다.
+    slot_role: risk_discovery
+    regions: [forest]
+    requires_progress: {herbs_collected: {min: 2}}
+    result:
+      status: {reputation: 1}
+      quest_progress: {helped_injured_traveler: 1}
+      score_changes: {reputation: 4, survival: 3}
+      next_event_tags: [safe_path, traveler_helped]
+      message: 부상자는 안전한 숲길을 알려 주고 감사 인사를 남겼다.
   - id: inspect_tracks
     title: 발자국을 조사한다
     description: 젖은 흙 위에 난 작은 발자국을 따라간다.

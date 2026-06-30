@@ -227,7 +227,7 @@ def _should_select_discovery(cards: tuple[CardRule, CardRule, CardRule], state: 
         profile == "curious_leaning"
         and state.region == "forest"
         and state.quest_progress.get("herbs_collected", 0) >= 2
-        and "inspect_tracks" not in state.selected_choice_history
+        and cards[1].id not in state.selected_choice_history
     )
 
 

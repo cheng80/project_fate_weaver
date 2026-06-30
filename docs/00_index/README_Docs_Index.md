@@ -256,6 +256,8 @@ docs/
   - Gameplay P0의 Quest Objective Schema 정규화 결과를 보관한다.
 - `docs/07_reviews/20_Gameplay_P0_Objective_Schema_Doc_And_Fixture_Result_v0.1.md`
   - Gameplay P0 Objective Schema 문서 정렬과 optional_action / max_day_exceeded fixture 검증 결과를 보관한다.
+- `docs/07_reviews/21_Gameplay_P0_Optional_Action_And_Score_Rule_Result_v0.1.md`
+  - Gameplay P0의 optional_action completed 경로와 score rule 정렬 결과를 보관한다.
 
 ---
 
