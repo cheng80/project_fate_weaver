@@ -335,6 +335,8 @@ docs/
   - Standard Run의 reward 반복, quest_progress 선택 편중, resource pressure, score/ending threshold를 1차로 조정한 결과를 보관한다.
 - `docs/07_reviews/54_Resource_Alternative_Surface_Gate_Result_v0.1.md`
   - Standard Run seed 202의 resource_alternative 후보/제시/선택 표면화 문제를 진단하고 최소 보정한 결과를 보관한다.
+- `docs/07_reviews/55_Resource_Balance_Validation_Result_v0.1.md`
+  - Resource Alternative Surface Gate 이후 10개 seed Standard Run에서 resource_alternative 후보/제시/선택 비율과 자원 압박을 검증한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
