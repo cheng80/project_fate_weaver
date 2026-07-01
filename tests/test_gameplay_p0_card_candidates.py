@@ -8,11 +8,13 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
+from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
 from fateweaver.gameplay_p0_cards import build_card_candidate_pool, cards_from_pool, present_cards
 from fateweaver.gameplay_p0_data import load_foundation
 from fateweaver.gameplay_p0_models import (
     CardCandidate,
     CardCandidateContext,
+    CardRule,
     CardSelectionContext,
     Foundation,
     RunState,
@@ -203,6 +205,23 @@ class GameplayP0CardCandidateTests(unittest.TestCase):
         # Then
         self.assertLess(candidate.repeat_penalty, 0)
 
+    def test_fallback_prefers_active_quest_candidate_over_off_quest_noise(self) -> None:
+        # Given
+        foundation = load_foundation(Path("."), "herb_gathering_tutorial")
+        state = _forest_state(foundation)
+        context = _selection_context(foundation, state, 42)
+        relevant = _candidate_fixture("relevant_fallback", "quest_progress", 30, quest_ids=(foundation.quest.id,))
+        off_quest = _candidate_fixture("off_quest_noise", "quest_progress", 90)
+        first_slot = _candidate_fixture("first_slot", "quest_progress", 120, quest_ids=(foundation.quest.id,))
+
+        # When
+        selection = select_cards_from_pool((first_slot, off_quest, relevant), context)
+
+        # Then
+        self.assertEqual(["first_slot", "relevant_fallback", "off_quest_noise"], [card.id for card in selection.cards])
+        selected = {candidate.card.id: candidate.selected_by for candidate in selection.candidate_pool}
+        self.assertEqual("fallback_pick", selected["relevant_fallback"])
+
 def _forest_state(foundation: Foundation) -> RunState:
     scenario = Scenario(
         id="unit_candidate_pool",
@@ -246,3 +265,26 @@ def _selection_context(foundation: Foundation, state: RunState, seed: int) -> Ca
         turn=state.clock.turn,
         current_region=state.region,
     )
+
+
+def _candidate_fixture(card_id: str, slot_role: str, score: int, quest_ids: tuple[str, ...] = ()) -> CardCandidate:
+    card = CardRule(
+        id=card_id,
+        title=card_id,
+        description=card_id,
+        slot_role=slot_role,
+        base_weight=score,
+        tier_hint="normal",
+        tags=(),
+        regions=("forest",),
+        result={},
+        requires_item=None,
+        requires_progress={},
+        requires_status={},
+        applies_to_storylet_tags=(),
+        applies_to_quest_objectives=(),
+        progress_key="",
+        weight_modifiers={},
+        quest_ids=quest_ids,
+    )
+    return CardCandidate(card=card, score=score, tier="normal", matched_tags=(), matched_objectives=(), blocked_reason="")

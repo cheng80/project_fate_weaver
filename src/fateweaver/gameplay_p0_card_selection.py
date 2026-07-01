@@ -42,7 +42,7 @@ def _pick_for_slot_or_fallback(
     fresh_window = tuple(candidate for candidate in window if candidate.card.id not in selected_ids)
     if fresh_window:
         return _seeded_pick(fresh_window, context, slot)
-    remaining = _fallback_window(candidates, selected_ids)
+    remaining = _fallback_window(candidates, selected_ids, context)
     if not remaining:
         raise MissingCardSlotError(slot)
     return _seeded_pick(remaining, context, slot)
@@ -52,10 +52,27 @@ def _seeded_pick(candidates: tuple[CardCandidate, ...], context: CardSelectionCo
     return min(candidates, key=lambda candidate: _weighted_seed_value(candidate, _selection_seed_key(context, slot)))
 
 
-def _fallback_window(candidates: tuple[CardCandidate, ...], selected_ids: set[str]) -> tuple[CardCandidate, ...]:
+def _fallback_window(
+    candidates: tuple[CardCandidate, ...],
+    selected_ids: set[str],
+    context: CardSelectionContext,
+) -> tuple[CardCandidate, ...]:
     remaining = tuple(candidate for candidate in candidates if candidate.card.id not in selected_ids)
     ranked = sorted(remaining, key=lambda candidate: (candidate.frequency_penalty, TIER_RANK[candidate.tier], candidate.score, candidate.card.id), reverse=True)
+    relevant = tuple(candidate for candidate in ranked if _fallback_relevant(candidate, context))
+    if relevant:
+        return tuple(relevant[:VARIETY_WINDOW_SIZE])
     return tuple(ranked[:VARIETY_WINDOW_SIZE])
+
+
+def _fallback_relevant(candidate: CardCandidate, context: CardSelectionContext) -> bool:
+    return (
+        context.active_quest_id in candidate.card.quest_ids
+        or bool(candidate.matched_objectives)
+        or bool(candidate.matched_tags)
+        or bool(candidate.matched_storylet_hints)
+        or candidate.card.slot_role == "resource_alternative"
+    )
 
 
 def _deprioritize_overused(candidates: tuple[CardCandidate, ...], slot: str) -> tuple[CardCandidate, ...]:
@@ -96,10 +113,18 @@ def _with_selection_evidence(
             candidate,
             selection_seed_key=window_ids.get(candidate.card.id, ""),
             variety_window=candidate.card.id in window_ids,
-            selected_by="seeded_tier_pick" if candidate.card.id in selected_ids else _window_label(candidate.card.id, window_ids),
+            selected_by=_selected_by(candidate.card.id, selected_ids, window_ids),
         )
         for candidate in pool
     )
+
+
+def _selected_by(card_id: str, selected_ids: set[str], window_ids: dict[str, str]) -> str:
+    if card_id in selected_ids and card_id not in window_ids:
+        return "fallback_pick"
+    if card_id in selected_ids:
+        return "seeded_tier_pick"
+    return _window_label(card_id, window_ids)
 
 
 def _window_label(card_id: str, window_ids: dict[str, str]) -> str:

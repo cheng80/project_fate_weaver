@@ -39,6 +39,21 @@ class RequiredObjectiveTrace(TypedDict):
     completed_after: bool
 
 
+class PresentedCardRelevance(TypedDict):
+    card_id: str
+    slot_role: str
+    active_quest_id: str
+    required_objective_ids: list[str]
+    active_quest_linked: bool
+    required_objective_linked: bool
+    storylet_linked: bool
+    resource_or_safety: bool
+    off_quest_candidate: bool
+    relevance_reason: str
+    selection_reason: str
+    fallback_reason: str
+
+
 class TraceEntry(TypedDict):
     turn: int
     day: int
@@ -49,6 +64,7 @@ class TraceEntry(TypedDict):
     required_objective_ids: list[str]
     required_objectives: list[RequiredObjectiveTrace]
     presented_card_ids: list[str]
+    presented_card_relevance: list[PresentedCardRelevance]
     selected_index: int
     selected_card_id: str
     selected_card_slot_role: str
