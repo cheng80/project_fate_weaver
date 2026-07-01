@@ -39,7 +39,6 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     from fateweaver.data_loader import load_project_data
     from fateweaver.gameplay_p0 import (
         _continue_state,
-        _minimum_completion_turn,
         _ontology_context,
         _run_log,
         _selection_context,
@@ -50,6 +49,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     from fateweaver.gameplay_p0_cards import build_card_candidate_pool
     from fateweaver.gameplay_p0_data import load_foundation
     from fateweaver.gameplay_p0_errors import MissingCardSlotError
+    from fateweaver.gameplay_p0_lifecycle import complete_quest_lifecycle
     from fateweaver.gameplay_p0_models import GameplayRunRequest, TurnLogRequest
     from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
     from fateweaver.gameplay_p0_rules import apply_turn_result, combined_result, initial_state, select_storylet
@@ -109,6 +109,9 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         result["selected_card_ids"] = [selected_cards[0].id]
         before = state
         state = apply_turn_result(state, result, bundle)
+        lifecycle = {}
+        if quest_completed(foundation.quest, state, bundle, foundation.score_rules):
+            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, bundle, foundation.score_rules)
         turn = _turn_log(
             TurnLogRequest(
                 quest=foundation.quest,
@@ -124,15 +127,13 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
                 ontology_inference=ontology_inference,
             ),
         )
+        turn.update(lifecycle)
         turn["manual_choice_mode"] = True
         turn["manual_selected_index"] = selected_index
         turns.append(turn)
         trace.append(build_trace_entry(foundation.quest, turn, selected_index, before, state))
-        if (
-            quest_completed(foundation.quest, state, bundle, foundation.score_rules)
-            and state.clock.turn >= _minimum_completion_turn(scenario.run_clock)
-        ) or is_failed(state.status, bundle.statuses):
-            stop_reason = "failure" if is_failed(state.status, bundle.statuses) else "target_turn_reached"
+        if lifecycle or is_failed(state.status, bundle.statuses):
+            stop_reason = "failure" if is_failed(state.status, bundle.statuses) else "completed"
             break
         state = _continue_state(state, event)
 

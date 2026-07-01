@@ -8,6 +8,7 @@ from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
 from fateweaver.gameplay_p0_card_json import card_candidate_pool_json, card_json
 from fateweaver.gameplay_p0_cards import build_card_candidate_pool
 from fateweaver.gameplay_p0_data import load_foundation
+from fateweaver.gameplay_p0_lifecycle import complete_quest_lifecycle
 from fateweaver.gameplay_p0_models import CardCandidateContext, CardSelectionContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
 from fateweaver.gameplay_p0_rules import (
@@ -58,27 +59,27 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         result["selected_card_ids"] = [card.id for card in selected_cards]
         before = state
         state = apply_turn_result(state, result, request.bundle)
-        turns.append(
-            _turn_log(
-                TurnLogRequest(
-                    quest=foundation.quest,
-                    before=before,
-                    after=state,
-                    event=event,
-                    context=context,
-                    candidate_pool=candidate_pool,
-                    cards=cards,
-                    selected=selected_cards,
-                    combo=combo,
-                    result=result,
-                    ontology_inference=ontology_inference,
-                ),
+        lifecycle: JsonMap = {}
+        if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules):
+            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, request.bundle, foundation.score_rules)
+        turn = _turn_log(
+            TurnLogRequest(
+                quest=foundation.quest,
+                before=before,
+                after=state,
+                event=event,
+                context=context,
+                candidate_pool=candidate_pool,
+                cards=cards,
+                selected=selected_cards,
+                combo=combo,
+                result=result,
+                ontology_inference=ontology_inference,
             ),
         )
-        if (
-            quest_completed(foundation.quest, state, request.bundle, foundation.score_rules)
-            and state.clock.turn >= _minimum_completion_turn(request.scenario.run_clock)
-        ) or is_failed(state.status, request.bundle.statuses):
+        turn.update(lifecycle)
+        turns.append(turn)
+        if lifecycle or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
     quest_report = build_quest_report(QuestReportRequest(foundation.quest, state, request.bundle, foundation.score_rules))
@@ -94,10 +95,6 @@ def _continue_state(state: RunState, event: Event) -> RunState:
     from dataclasses import replace
 
     return replace(state, clock=advance_clock(state.clock), recent_event_ids=(*state.recent_event_ids, event.id))
-
-
-def _minimum_completion_turn(run_clock: JsonMap) -> int:
-    return int(run_clock.get("min_turns_before_completion", 0))
 
 
 def _ontology_context(quest_id: str, state: RunState) -> OntologyReasonerContext:

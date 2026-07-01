@@ -45,6 +45,8 @@ class ManualChoiceRunnerReportTests(unittest.TestCase):
         self.assertIn("## Run Summary", report)
         self.assertIn("## Quest Onboarding", report)
         self.assertIn("## Turn Timeline", report)
+        self.assertIn("## Quest Completion", report)
+        self.assertIn("Reward Granted", report)
         self.assertIn("relevance=", report)
         self.assertIn("manual_stop_reason", report)
 

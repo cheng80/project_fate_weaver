@@ -22,12 +22,25 @@ def render_trace_report(run_log: dict, trace: list[dict]) -> str:
         ]
     )
     onboarding = next((entry for entry in trace if entry.get("quest_onboarding")), trace[0] if trace else {})
+    completion = next((entry for entry in trace if entry.get("quest_lifecycle_event")), {})
     lines.extend(
         [
             f"- onboarding turn: {_value(onboarding.get('onboarding_turn', onboarding.get('turn')))}",
             f"- active quest: {_value(onboarding.get('active_quest_id'))} / {_value(onboarding.get('active_quest_title'))}",
             f"- required objective ids: {_join(onboarding.get('required_objective_ids'))}",
             f"- initial objective status: {_objective_status(onboarding)}",
+            "",
+            "## Quest Completion",
+            f"- quest_completed: {_value(completion.get('quest_completed', 'not_recorded'))}",
+            f"- quest_success: {_value(completion.get('quest_success', 'not_recorded'))}",
+            f"- completed quest id: {_value(completion.get('completed_quest_id', 'not_recorded'))}",
+            f"- completed required objectives: {_join(completion.get('completed_required_objective_ids'))}",
+            f"- Reward Granted: {_value(completion.get('reward_granted', 'not_recorded'))}",
+            f"- Reward Delta: {_dict_delta(completion.get('reward_delta'))}",
+            f"- Quest Transition: {_quest_transition(completion)}",
+            f"- Next Quest Onboarding: {_value(completion.get('next_quest_onboarding', 'not_recorded'))}",
+            f"- Run Complete: {_value(completion.get('run_complete', 'not_recorded'))}",
+            f"- completion_blocked_by_min_turns: {_value(completion.get('completion_blocked_by_min_turns', 'not_recorded'))}",
             "",
             "## Turn Timeline",
         ]
@@ -159,6 +172,15 @@ def _fallback_value(relevance: dict) -> str:
         return "not_recorded"
     value = relevance.get("fallback_reason")
     return "n/a" if value in {None, ""} else str(value)
+
+
+def _quest_transition(completion: dict) -> str:
+    next_quest_id = completion.get("next_quest_id")
+    if next_quest_id:
+        return str(next_quest_id)
+    if completion.get("no_next_quest"):
+        return "no_next_quest"
+    return "not_recorded"
 
 
 def _sequence(value: object) -> list:

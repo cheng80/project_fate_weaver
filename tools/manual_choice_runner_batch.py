@@ -78,6 +78,7 @@ def _run_agent(project_root: Path, scenario: str, output_dir: Path, seed: int, a
     summary = json.loads((run_dir / f"manual_seed_{seed}_summary.json").read_text(encoding="utf-8"))
     trace = json.loads((run_dir / f"manual_seed_{seed}_choice_trace.json").read_text(encoding="utf-8"))
     warnings = _trace_warnings(trace)
+    lifecycle = _lifecycle_counts(trace)
     return {
         "seed": seed,
         "agent_id": agent,
@@ -90,6 +91,7 @@ def _run_agent(project_root: Path, scenario: str, output_dir: Path, seed: int, a
         "selected_indexes": summary.get("selected_indexes", []),
         "warning_count": len(warnings),
         "warnings": warnings,
+        **lifecycle,
         "run_dir": str(run_dir),
     }
 
@@ -112,6 +114,12 @@ def _batch_summary(seeds: list[int], agents: list[str], runs: list[dict]) -> dic
         "total_runs": len(runs),
         "crash_count": sum(1 for run in runs if run["crashed"]),
         "invariant_violation_count": sum(1 for run in runs if any("invariant" in warning for warning in run["warnings"])),
+        "quest_completion_count": sum(int(run.get("quest_completion_count", 0)) for run in runs),
+        "reward_granted_count": sum(int(run.get("reward_granted_count", 0)) for run in runs),
+        "duplicate_reward_prevention_count": sum(int(run.get("duplicate_reward_prevention_count", 0)) for run in runs),
+        "next_quest_transition_count": sum(int(run.get("next_quest_transition_count", 0)) for run in runs),
+        "run_complete_count": sum(int(run.get("run_complete_count", 0)) for run in runs),
+        "completion_blocked_by_min_turns_count": sum(int(run.get("completion_blocked_by_min_turns_count", 0)) for run in runs),
         "outcome_counts": dict(Counter(str(run["result_type"]) for run in runs)),
         "agent_summary": agent_summary,
         "runs": runs,
@@ -128,6 +136,12 @@ def _render_batch_report(summary: dict) -> str:
         f"- total runs: {summary['total_runs']}",
         f"- crash count: {summary['crash_count']}",
         f"- invariant violation count: {summary['invariant_violation_count']}",
+        f"- quest completion count: {summary['quest_completion_count']}",
+        f"- reward granted count: {summary['reward_granted_count']}",
+        f"- duplicate reward prevention count: {summary['duplicate_reward_prevention_count']}",
+        f"- next quest transition count: {summary['next_quest_transition_count']}",
+        f"- run complete count: {summary['run_complete_count']}",
+        f"- completion blocked by min turns count: {summary['completion_blocked_by_min_turns_count']}",
         "",
         "## Agent Summary",
     ]
@@ -137,7 +151,8 @@ def _render_batch_report(summary: dict) -> str:
     for run in summary["runs"]:
         lines.append(
             f"- seed {run['seed']} / {run['agent_id']}: outcome={run['result_type']} turns={run['turn_count']} "
-            f"stop_reason={run['stop_reason']} warnings={run['warning_count']}"
+            f"stop_reason={run['stop_reason']} quest_complete={run.get('quest_completion_count', 0)} "
+            f"reward={run.get('reward_granted_count', 0)} warnings={run['warning_count']}"
         )
     lines.extend(["", "## Notable Cases"])
     notable = [run for run in summary["runs"] if run["crashed"] or run["warning_count"]]
@@ -165,6 +180,17 @@ def _trace_warnings(trace: list[dict]) -> list[str]:
         if fallback:
             warnings.append(f"turn {entry.get('turn')}: fallback {fallback}")
     return warnings
+
+
+def _lifecycle_counts(trace: list[dict]) -> dict[str, int]:
+    return {
+        "quest_completion_count": sum(1 for entry in trace if entry.get("quest_success")),
+        "reward_granted_count": sum(1 for entry in trace if entry.get("reward_granted")),
+        "duplicate_reward_prevention_count": sum(1 for entry in trace if entry.get("duplicate_reward_prevented")),
+        "next_quest_transition_count": sum(1 for entry in trace if entry.get("next_quest_id")),
+        "run_complete_count": sum(1 for entry in trace if entry.get("run_complete")),
+        "completion_blocked_by_min_turns_count": sum(1 for entry in trace if entry.get("completion_blocked_by_min_turns")),
+    }
 
 
 def _parse_seeds(raw: str) -> list[int]:

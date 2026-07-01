@@ -39,6 +39,27 @@ def build_trace_entry(
         "objective_delta": _int_delta(before.quest_progress, turn["quest_progress"]),
         "next_event_tags_delta": [tag for tag in after_tags if tag not in before.next_event_tags],
     }
+    for key in (
+        "quest_lifecycle_event",
+        "quest_completed",
+        "quest_success",
+        "completed_quest_id",
+        "completed_required_objective_ids",
+        "reward_granted",
+        "reward_delta",
+        "reward_score_delta",
+        "resources_before",
+        "resources_after",
+        "reward_reason",
+        "duplicate_reward_prevented",
+        "next_quest_id",
+        "no_next_quest",
+        "next_quest_onboarding",
+        "run_complete",
+        "completion_blocked_by_min_turns",
+    ):
+        if key in turn:
+            entry[key] = turn[key]
     if is_onboarding_turn:
         entry["onboarding_turn"] = int(turn["turn"])
     return entry
