@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
-from typing import Protocol
+from typing import TextIO
 
 from fateweaver.choice_resolver import ChoiceSeen, ChoiceSelection, build_choices_seen, select_choice, selected_choice_from_seen
 from fateweaver.data_loader import load_project_data
@@ -17,24 +17,14 @@ from fateweaver.text_mud_log import save_text_mud_log
 from fateweaver.validator import validate_bundle
 
 
-class InputPort(Protocol):
-    def isatty(self) -> bool: ...
-
-    def readline(self) -> str: ...
-
-
-class OutputPort(Protocol):
-    def write(self, text: str) -> int: ...
-
-
 def run_console_simulation(
     project_root: Path,
     scenario_path: Path,
     seed_override: int | None,
     runs: int,
     logs_dir: Path,
-    stdin: InputPort,
-    stdout: OutputPort,
+    stdin: TextIO,
+    stdout: TextIO,
     profile: str = "balanced",
 ) -> list[Path]:
     loaded = load_project_data(project_root, scenario_path)
@@ -56,7 +46,7 @@ def run_console_simulation(
     return saved_paths
 
 
-def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Path, stdin: InputPort, stdout: OutputPort, profile: str) -> Path:
+def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Path, stdin: TextIO, stdout: TextIO, profile: str) -> Path:
     rng = Random(seed + run_number - 1)
     state = dict(scenario.initial_status)
     inventory = tuple(scenario.initial_items)
@@ -122,8 +112,8 @@ def _run_once(bundle, scenario, events, seed: int, run_number: int, logs_dir: Pa
 
 def _choose(
     choices_seen: tuple[ChoiceSeen, ...],
-    stdin: InputPort,
-    stdout: OutputPort,
+    stdin: TextIO,
+    stdout: TextIO,
     profile: str,
     state,
     seed: int,
@@ -140,7 +130,7 @@ def _choose(
     return ChoiceSelection(selected, "profile=manual: selected by interactive input", {}, ())
 
 
-def _choice_feedback(selected: ChoiceSeen, auto_reason: str, stdin: InputPort, stdout: OutputPort) -> PlayerChoiceFeedback:
+def _choice_feedback(selected: ChoiceSeen, auto_reason: str, stdin: TextIO, stdout: TextIO) -> PlayerChoiceFeedback:
     if not stdin.isatty():
         return PlayerChoiceFeedback(
             choice_reason=auto_reason,
@@ -156,7 +146,7 @@ def _choice_feedback(selected: ChoiceSeen, auto_reason: str, stdin: InputPort, s
     return PlayerChoiceFeedback(reason, expected_risk, regret_score)
 
 
-def _run_feedback(turns: list[JsonMap], run_failed: bool, stdin: InputPort, stdout: OutputPort) -> RunFeedback:
+def _run_feedback(turns: list[JsonMap], run_failed: bool, stdin: TextIO, stdout: TextIO) -> RunFeedback:
     meaningful_count = sum(1 for turn in turns if turn["influenced_by"])
     auto_restart = 4 if meaningful_count >= 3 else 2
     auto_woven = 4 if _has_item_or_status_influence(turns) else 2

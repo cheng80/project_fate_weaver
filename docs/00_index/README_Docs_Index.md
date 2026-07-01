@@ -97,7 +97,7 @@ docs/
 - `docs/01_foundation/00_Project_FateWeaver_Current_Baseline_v0.7.md`
   - 현재 단계가 Console Validation임을 고정한다.
 - `docs/01_foundation/01_Project_Structure_Guide_v0.1.md`
-  - `docs/`, `data/`, `src/`, `tools/`, `logs/`, `archive/`, 향후 `fate_weaver/`의 역할을 정의한다.
+  - `docs/`, `data/`, `src/`, `tools/`, `logs/`, 향후 `fate_weaver/`의 역할을 정의한다.
 - `docs/01_foundation/02_Data_Architecture_v0.7.md`
   - `data/core`, `data/content`, `data/scenarios` 구조와 장기 데이터 원칙을 정의한다.
 - `docs/01_foundation/03_Game_Structure_Replan_v0.1.md`

@@ -67,7 +67,6 @@ project_fate_weaver/
   src/                   # Python Console Validation 검증 엔진 영역
   tools/                 # Python 실행 도구 영역
   logs/                  # 콘솔 검증 로그
-  archive/               # 이전 문서/폐기 문서 보관
 
   .python-version        # Python 버전 기준
   requirements.txt       # Python 의존성

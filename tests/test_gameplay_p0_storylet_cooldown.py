@@ -108,7 +108,7 @@ class GameplayP0StoryletCooldownTests(unittest.TestCase):
         scenario_path = Path("data/scenarios/tutorial_herb_quest.yaml")
 
         # When
-        bundle, _scenario = load_project_data(Path("."), scenario_path)
+        bundle = load_project_data(Path("."), scenario_path).bundle
         event = bundle.events_by_id["forest_injured_traveler_hint"]
 
         # Then

@@ -10,7 +10,7 @@ from fateweaver.gameplay_p0_cards import card_available
 from fateweaver.gameplay_p0_data import load_foundation
 from fateweaver.gameplay_p0_models import RepeatMemory, RunClock, RunState
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report
-from fateweaver.text_mud_sections import format_quest_report
+from fateweaver.text_mud_report import format_quest_report
 from fateweaver.validator import validate_scenario_file
 
 
@@ -135,7 +135,7 @@ class GameplayP0EnrichmentPack2Tests(unittest.TestCase):
         self.assertTrue(card_available(card, state_with_item, "village_well_trouble"))
 
     def test_pack_2_text_mud_report_can_surface_ending(self) -> None:
-        bundle, _ = load_project_data(PROJECT_ROOT, PROJECT_ROOT / "data/scenarios/tutorial_herb_quest.yaml")
+        bundle = load_project_data(PROJECT_ROOT, PROJECT_ROOT / "data/scenarios/tutorial_herb_quest.yaml").bundle
         foundation = load_foundation(PROJECT_ROOT, "herb_gathering_tutorial")
         state = _state(
             inventory=("clear_water_vial",),
@@ -151,7 +151,7 @@ class GameplayP0EnrichmentPack2Tests(unittest.TestCase):
         self.assertIn("Run Ending: clear_report_return / 납득된 보고", lines)
 
     def test_pack_2_ending_can_match_resource_bound(self) -> None:
-        bundle, _ = load_project_data(PROJECT_ROOT, PROJECT_ROOT / "data/scenarios/tutorial_herb_quest.yaml")
+        bundle = load_project_data(PROJECT_ROOT, PROJECT_ROOT / "data/scenarios/tutorial_herb_quest.yaml").bundle
         foundation = load_foundation(PROJECT_ROOT, "herb_gathering_tutorial")
         state = _state(
             inventory=(),

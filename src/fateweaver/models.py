@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TypeAlias
@@ -162,10 +161,6 @@ class ProjectData:
 class LoadedProject:
     bundle: ProjectData
     scenario: Scenario
-
-    def __iter__(self) -> Iterator[ProjectData | Scenario]:
-        yield self.bundle
-        yield self.scenario
 
 
 @dataclass(frozen=True, slots=True)

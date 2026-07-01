@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, Literal, Protocol
+from typing import Final, Literal, TextIO
 
 from fateweaver.models import Event, JsonMap, ProjectData, Scenario, StatusMap
 
@@ -13,16 +13,6 @@ CandidateTier = Literal["critical", "strong", "normal", "flavor", "blocked"]
 BlockedReason = Literal["", "completed_objective", "unavailable_requirement"]
 
 
-class InputPort(Protocol):
-    def isatty(self) -> bool: ...
-
-    def readline(self) -> str: ...
-
-
-class OutputPort(Protocol):
-    def write(self, text: str) -> int: ...
-
-
 @dataclass(frozen=True, slots=True)
 class GameplayRunRequest:
     bundle: ProjectData
@@ -31,8 +21,8 @@ class GameplayRunRequest:
     seed: int
     run_number: int
     logs_dir: Path
-    stdin: InputPort
-    stdout: OutputPort
+    stdin: TextIO
+    stdout: TextIO
     profile: str
 
 

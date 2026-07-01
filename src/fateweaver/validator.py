@@ -22,10 +22,10 @@ def validate_scenario_file(project_root: Path, scenario_path: Path) -> list[str]
     if not scenario_path.exists():
         return [f"Scenario path does not exist: {scenario_path}"]
     try:
-        bundle, scenario = load_project_data(project_root, scenario_path)
+        loaded = load_project_data(project_root, scenario_path)
     except (OSError, TypeError, ValueError) as error:
         return [str(error)]
-    return validate_bundle(bundle, scenario)
+    return validate_bundle(loaded.bundle, loaded.scenario)
 
 
 def _validate_scenario_references(bundle: ProjectData, scenario: Scenario) -> list[str]:

@@ -35,7 +35,6 @@ Status: PASS
 - [x] `src/fateweaver/`가 존재한다.
 - [x] `tools/`가 존재한다.
 - [x] `logs/`가 존재한다.
-- [x] `archive/`가 존재한다.
 - [x] `fate_weaver/`는 아직 생성하지 않았다.
 
 ---

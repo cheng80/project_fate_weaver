@@ -9,7 +9,7 @@ from fateweaver.text_mud_log import render_text_mud_log
 class TextMudLogTests(unittest.TestCase):
     def test_format_quest_report_when_failure_taxonomy_present_then_renders_existing_lines(self) -> None:
         # Given
-        from fateweaver.text_mud_sections import format_quest_report
+        from fateweaver.text_mud_report import format_quest_report
 
         quest_report: JsonMap = {
             "result_type": "failure",

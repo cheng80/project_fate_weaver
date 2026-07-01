@@ -49,7 +49,6 @@ project_fate_weaver/
   src/
   tools/
   logs/
-  archive/
 
   fate_weaver/
 ```
@@ -123,12 +122,6 @@ Python 실행 도구다.
 ## logs/
 
 Console Validation 테스트 결과 저장소다.
-
----
-
-## archive/
-
-이전 문서와 폐기된 구조를 보관한다.
 
 ---
 
