@@ -325,6 +325,8 @@ docs/
   - Ontology Core seed, validator, Reasoner-lite, Situation Director-lite event weighting, Standard Run 재검증 결과를 보관한다.
 - `docs/07_reviews/48_Card_Candidate_Repetition_Gate_Result_v0.1.md`
   - Standard Run card candidate 반복률을 long-run frequency, repeat-group, fallback, ontology card modifier 기반으로 개선한 결과를 보관한다.
+- `docs/07_reviews/49_Standard_Run_Play_Quality_Audit_v0.1.md`
+  - Standard Run 25~35 Turn 검증 이후, 실제 Text MUD / JSON 로그를 기준으로 플레이 품질을 감사한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
