@@ -8,6 +8,8 @@ from fateweaver.choice_resolver import requirements_met
 from fateweaver.event_selector import select_event
 from fateweaver.gameplay_p0_errors import ExpectedMappingError
 from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, Quest, RepeatMemory, RunClock, RunState
+from fateweaver.gameplay_p0_rule_scoring import director_event_score, ontology_event_weight
+from fateweaver.gameplay_p0_run_json import clock_json, influences, multi_select_json
 from fateweaver.gameplay_p0_repeat_memory import repeat_memory_json, update_repeat_memory
 from fateweaver.models import Event, JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.state_manager import apply_choice_result
@@ -62,39 +64,6 @@ def select_storylet(
     return select_event(pool, state.status, state.inventory, state.run_tags, rng, state.recent_event_ids)
 
 
-def ontology_event_weight(event: Event, ontology_inference: JsonMap | None) -> int:
-    if not ontology_inference:
-        return 0
-    event_tags = set((*event.region_tags, *event.event_tags, *event.danger_tags, *event.storylet_tags, *event.card_candidate_hints))
-    total = 0
-    for modifier in _modifier_maps(ontology_inference.get("event_weight_modifiers", [])):
-        tags = set(string_tuple(modifier.get("tags", [])))
-        if event_tags & tags:
-            total += int(modifier.get("amount", 0))
-    return total
-
-
-def director_event_score(event: Event, state: RunState, ontology_inference: JsonMap | None) -> int:
-    tags = set((*event.region_tags, *event.event_tags, *event.danger_tags, *event.storylet_tags, *event.card_candidate_hints))
-    score = event.base_weight + min(1, ontology_event_weight(event, ontology_inference))
-    score += min(4, 2 * len(tags & set(state.next_event_tags)))
-    intent_terms = {part for intent in string_tuple((ontology_inference or {}).get("situation_intents", [])) for part in str(intent).removeprefix("intent.").split("_")}
-    score += min(3, len(tags & intent_terms))
-    if state.clues and tags & {"clue_followup", "reveal_clue"}:
-        score += 3
-    if state.omens and tags & {"omen", "omen_escalation", "escalate_risk", "introduce_omen"}:
-        score += 3
-    completed = sum(1 for value in state.quest_progress.values() if value > 0)
-    if completed >= 2 or state.clock.turn >= state.clock.max_turns - 5:
-        score += 4 if tags & {"aftermath", "invite_return", "resolve_objective", "return_report", "secure_evidence"} else 0
-        score -= 4 if tags & {"test_survival", "unlock_route", "reveal_clue"} else 0
-    score -= min(4, 2 * state.recent_event_ids[-4:].count(event.id))
-    score -= min(3, state.repeat_memory.recent_storylets.count(event.id))
-    score -= 3 if event.repeat_group and any(counter.key == event.repeat_group for counter in state.repeat_memory.repeat_groups) else 0
-    score -= min(3, len(set(event.cooldown_tags) & {counter.key for counter in state.repeat_memory.cooldown_tags}))
-    return max(1, score)
-
-
 def _select_event_with_ontology_weight(events: tuple[Event, ...], state: RunState, rng: Random, ontology_inference: JsonMap) -> Event:
     eligible = tuple(event for event in events if _event_eligible(event, state))
     if not eligible:
@@ -117,12 +86,6 @@ def _event_eligible(event: Event, state: RunState) -> bool:
     if event.cooldown_turns is not None and event.id in state.recent_event_ids[-event.cooldown_turns :]:
         return False
     return True
-
-
-def _modifier_maps(raw: JsonValue) -> tuple[JsonMap, ...]:
-    if not isinstance(raw, list):
-        return ()
-    return tuple(item for item in raw if isinstance(item, dict))
 
 
 def select_cards(
@@ -182,36 +145,6 @@ def advance_clock(clock: RunClock) -> RunClock:
     if next_turns_today >= clock.turns_per_day:
         return replace(clock, day=clock.day + 1, turn=next_turn, turns_today=0, time_of_day="morning", act=min(5, clock.act + 1))
     return replace(clock, turn=next_turn, turns_today=next_turns_today, time_of_day=TIME_OF_DAY[next_turns_today])
-
-
-def multi_select_json(combo: ComboRule | None, selected_ids: list[str]) -> JsonMap:
-    if combo is None:
-        return {"selected": False, "selected_cards": selected_ids}
-    return {"selected": True, "rule_id": combo.id, "selected_cards": selected_ids, "cost_applied": True, "combo_applied": True}
-
-
-def influences(selected: tuple[CardRule, ...], combo: ComboRule | None) -> list[str]:
-    values: list[str] = []
-    for card in selected:
-        values.append(f"card:{card.id}")
-        values.append(f"slot:{card.slot_role}")
-    if combo is not None:
-        values.append(f"combo:{combo.id}")
-        values.append("cost:default_extra_cost")
-    return values
-
-
-def clock_json(clock: RunClock) -> JsonMap:
-    return {
-        "day": clock.day,
-        "turn": clock.turn,
-        "turns_today": clock.turns_today,
-        "time_of_day": clock.time_of_day,
-        "act": clock.act,
-        "max_days": clock.max_days,
-        "max_turns": clock.max_turns,
-        "turns_per_day": clock.turns_per_day,
-    }
 
 
 def available_combo(cards: tuple[CardRule, ...], combos: tuple[ComboRule, ...]) -> ComboRule | None:
