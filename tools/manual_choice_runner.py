@@ -8,9 +8,11 @@ from random import Random
 from typing import TextIO
 
 try:
+    from .manual_choice_runner_agents import build_agent_context, choose_agent_index, policy_ids
     from .manual_choice_runner_trace import build_trace_entry
     from .manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 except ImportError:
+    from manual_choice_runner_agents import build_agent_context, choose_agent_index, policy_ids
     from manual_choice_runner_trace import build_trace_entry
     from manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 
@@ -78,7 +80,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         if args.max_turns is not None and len(turns) >= args.max_turns:
             stop_reason = "max_turn_reached"
             break
-        if args.choice_source != "interactive" and choice_offset >= len(args.choices):
+        if args.choice_source not in {"interactive", "agent"} and choice_offset >= len(args.choices):
             stop_reason = "choice_sequence_exhausted"
             break
         ontology_inference = run_reasoner(ontology_core, _ontology_context(foundation.quest.id, state))
@@ -93,8 +95,11 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         if len(cards) < 3:
             stop_reason = "no_available_cards_handled"
             break
-        selected_index = _next_choice(args, choice_offset, state.clock.turn, stdin, stdout)
-        choice_offset += 1
+        if args.choice_source == "agent":
+            selected_index = _agent_choice(args, cards, selection.candidate_pool, foundation.quest.id, state)
+        else:
+            selected_index = _next_choice(args, choice_offset, state.clock.turn, stdin, stdout)
+            choice_offset += 1
         selected_cards = (cards[selected_index - 1],)
         result = combined_result(selected_cards, None, foundation.card_rules.default_extra_cost)
         result["storylet_id"] = event.id
@@ -137,8 +142,11 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     elif len(turns) >= scenario.target_turns and stop_reason == "completed":
         stop_reason = "target_turn_reached"
     log = _run_log(request, foundation.quest, turns, state, report)
+    log["seed"] = args.seed
+    log["max_turns"] = args.max_turns if args.max_turns is not None else scenario.target_turns
     log["manual_choice_mode"] = True
     log["choice_source"] = args.choice_source
+    log["agent_policy"] = args.agent_policy
     log["manual_choice_trace"] = trace
     log["unused_choices"] = max(0, len(args.choices) - choice_offset)
     log["stop_reason"] = stop_reason
@@ -153,15 +161,16 @@ def _parse_args(project_root: Path) -> ManualRunnerArgs:
     parser.add_argument("--choices")
     parser.add_argument("--choice-file")
     parser.add_argument("--interactive", action="store_true")
+    parser.add_argument("--agent-policy", choices=policy_ids())
     parser.add_argument("--max-turns", type=int)
     parser.add_argument("--output-dir", required=True)
     namespace = parser.parse_args()
-    sources = sum(1 for value in (namespace.choices, namespace.choice_file, namespace.interactive) if value)
+    sources = sum(1 for value in (namespace.choices, namespace.choice_file, namespace.interactive, namespace.agent_policy) if value)
     if sources != 1:
-        parser.error("provide exactly one of --choices, --choice-file, or --interactive")
+        parser.error("provide exactly one of --choices, --choice-file, --interactive, or --agent-policy")
     scenario_path = Path(namespace.scenario)
     output_dir = Path(namespace.output_dir)
-    choices, source = _choice_source(namespace.choices, namespace.choice_file, namespace.interactive)
+    choices, source = _choice_source(namespace.choices, namespace.choice_file, namespace.interactive, namespace.agent_policy)
     return ManualRunnerArgs(
         project_root=project_root,
         scenario_path=scenario_path if scenario_path.is_absolute() else project_root / scenario_path,
@@ -170,16 +179,19 @@ def _parse_args(project_root: Path) -> ManualRunnerArgs:
         choices=choices,
         choice_source=source,
         max_turns=namespace.max_turns,
+        agent_policy=namespace.agent_policy,
     )
 
 
-def _choice_source(raw_choices: str | None, choice_file: str | None, interactive: bool) -> tuple[tuple[int, ...], str]:
+def _choice_source(raw_choices: str | None, choice_file: str | None, interactive: bool, agent_policy: str | None) -> tuple[tuple[int, ...], str]:
     if raw_choices is not None:
         return _parse_choices(raw_choices), "sequence"
     if choice_file is not None:
         return _parse_choices(Path(choice_file).read_text(encoding="utf-8")), "file"
     if interactive:
         return (), "interactive"
+    if agent_policy is not None:
+        return (), "agent"
     raise InvalidManualScenarioError("manual choice source required")
 
 
@@ -219,6 +231,12 @@ def _next_choice(args: ManualRunnerArgs, offset: int, turn: int, stdin: TextIO, 
     return args.choices[offset]
 
 
+def _agent_choice(args: ManualRunnerArgs, cards: tuple, candidate_pool: tuple, active_quest_id: str, state) -> int:
+    if args.agent_policy is None:
+        raise InvalidManualScenarioError("agent choice source requires --agent-policy")
+    return choose_agent_index(args.agent_policy, build_agent_context(cards, candidate_pool, active_quest_id, state))
+
+
 def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) -> tuple[Path, Path, Path, Path]:
     from fateweaver.text_mud_log import render_text_mud_log
 
@@ -230,6 +248,7 @@ def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) ->
     summary = {
         "manual_choice_mode": True,
         "choice_source": log["choice_source"],
+        "agent_policy": log.get("agent_policy"),
         "turn_count": len(log["turns"]),
         "ending": log["quest_report"].get("ending"),
         "result_type": log["quest_report"].get("result_type"),

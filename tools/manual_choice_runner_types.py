@@ -14,6 +14,7 @@ class ManualRunnerArgs:
     choices: tuple[int, ...]
     choice_source: str
     max_turns: int | None
+    agent_policy: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
