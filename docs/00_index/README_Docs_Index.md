@@ -206,6 +206,8 @@ docs/
   - FateWeaver Text MUD / console playtest를 사람이 진행할 때 사용할 절차와 관찰 기준 문서다.
 - `docs/05_validation/19_Human_Playtest_Feedback_Form_v0.1.md`
   - FateWeaver P1 human playtest 후 플레이어 피드백을 수집하기 위한 양식이다.
+- `docs/05_validation/20_Human_Playtest_Run_1_Player_Sheet_v0.1.md`
+  - P1 Human Playtest Run 1에서 플레이어가 선택 이유, 헷갈림, 흥미, 반복감을 기록하기 위한 sheet다.
 
 ---
 
@@ -245,6 +247,8 @@ docs/
   - FateWeaver P0 playable milestone 이후 P1의 목표, 우선순위, 첫 실행 작업을 정리한 planning 문서다.
 - `docs/06_plans/12_P1_Human_Playtest_Scenario_Pack_v0.1.md`
   - P0 playable milestone 이후 사람이 직접 읽고 선택할 수 있는 P1 human playtest용 scenario pack 문서다.
+- `docs/06_plans/13_P1_Human_Playtest_Run_1_Plan_v0.1.md`
+  - P1 Human Playtest Run 1의 primary/optional run 선정, 진행자 체크리스트, 관찰 지표, evidence 연결을 정리한 계획 문서다.
 
 ---
 
@@ -359,6 +363,10 @@ docs/
   - P1 human playtest 1회차 결과를 기록하기 위한 템플릿이다.
 - `docs/07_reviews/60_P1_Human_Playtest_Scenario_Pack_Result_v0.1.md`
   - P1 첫 작업으로 human playtest scenario pack, protocol, feedback form, result template을 구성한 결과를 보관한다.
+- `docs/07_reviews/61_Human_Playtest_Run_1_Result_v0.1.md`
+  - P1 Human Playtest Run 1의 실제 feedback을 기록하기 위한 ready draft 결과 문서다.
+- `docs/07_reviews/62_P1_Human_Playtest_Run_1_Preparation_Result_v0.1.md`
+  - P1 Human Playtest Run 1을 실행할 수 있도록 run selection, player sheet, result draft, Text MUD/JSON evidence를 준비한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
