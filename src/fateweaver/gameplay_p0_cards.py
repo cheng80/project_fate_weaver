@@ -10,6 +10,7 @@ from fateweaver.gameplay_p0_card_modifiers import (
     modifier,
     ontology_card_modifier,
 )
+from fateweaver.gameplay_p0_card_staleness import completed_objective_blocked
 from fateweaver.gameplay_p0_errors import ExpectedMappingError, MissingCardSlotError
 from fateweaver.gameplay_p0_models import (
     BlockedReason,
@@ -70,7 +71,7 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
     matched_objectives = tuple(objective_id for objective_id in card.applies_to_quest_objectives if objective_id in active_optional_objectives(context.quest))
     matched_storylet_hints = (card.id,) if card.id in context.card_candidate_hints else ()
     cooldown_penalty = candidate_cooldown_penalty(card, state, context)
-    blocked_reason = card_blocked_reason(card, state, context.quest.id)
+    blocked_reason = card_blocked_reason(card, state, context.quest)
     repeat_penalty = modifier(card, "recent_repeat_penalty") if recently_seen_card(card, state) else 0
     frequency_penalty = candidate_frequency_penalty(card, state, context)
     fallback_penalty = candidate_fallback_penalty(card, state)
@@ -125,10 +126,10 @@ def candidate_score(candidate: CandidateScoreInput) -> int:
             assert_never(unreachable)
 
 
-def card_blocked_reason(card: CardRule, state: RunState, quest_id: str) -> BlockedReason:
-    if card.progress_key and state.quest_progress.get(card.progress_key, 0) > 0:
+def card_blocked_reason(card: CardRule, state: RunState, quest: Quest) -> BlockedReason:
+    if completed_objective_blocked(card, state, quest):
         return "completed_objective"
-    if not card_available(card, state, quest_id):
+    if not card_available(card, state, quest.id):
         return "unavailable_requirement"
     return ""
 

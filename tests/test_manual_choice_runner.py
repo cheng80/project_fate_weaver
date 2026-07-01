@@ -6,6 +6,9 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from typing import assert_never
+
+from fateweaver.gameplay_p0_models import CardRule, QuestObjective
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +65,19 @@ class ManualChoiceRunnerTests(unittest.TestCase):
         self.assertEqual("completed", payload["manual_stop_reason"])
         self.assertEqual("completed", summary["stop_reason"])
         self.assertEqual("completed", summary["manual_stop_reason"])
+
+    def test_completed_objective_refresh_filters_stale_quest_progress_cards(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            completed = _run_manual(output_dir, ALL_ONES)
+            payload = json.loads((output_dir / "manual_seed_202.json").read_text(encoding="utf-8"))
+
+        stale_turns = _stale_unscoped_quest_progress_turns(payload)
+
+        self.assertEqual(0, completed.returncode)
+        self.assertEqual([], stale_turns)
+        self.assertTrue(all(len(turn["presented_cards"]) == 3 for turn in payload["turns"]))
+        self.assertTrue(all(_unique_presented_cards(turn) for turn in payload["turns"]))
 
     def test_manual_choice_runner_stops_cleanly_at_max_turns(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -186,6 +202,64 @@ def _run_manual_file(output_dir: Path, choice_file: Path) -> subprocess.Complete
         capture_output=True,
         text=True,
     )
+
+
+def _stale_unscoped_quest_progress_turns(payload: dict) -> list[dict]:
+    from fateweaver.data_loader import load_project_data
+    from fateweaver.gameplay_p0_data import load_foundation
+
+    loaded = load_project_data(PROJECT_ROOT, SCENARIO_PATH)
+    foundation = load_foundation(PROJECT_ROOT, loaded.scenario.active_quest_id)
+    card_by_id = {card.id: card for card in foundation.card_rules.cards}
+    stale_turns: list[dict] = []
+    previous_completed = False
+    selected_card_ids: list[str] = []
+    region = foundation.quest.start_region
+    for turn in payload["turns"]:
+        if previous_completed:
+            stale_cards = [
+                card["card_id"]
+                for card in turn["presented_cards"]
+                if _is_recent_unscoped_quest_progress_card(card_by_id[str(card["card_id"])], selected_card_ids)
+            ]
+            if stale_cards:
+                stale_turns.append({"turn": int(turn["turn"]), "card_ids": stale_cards})
+        region = str(turn["result"].get("move_to_region", region))
+        selected_card_ids.extend(str(card_id) for card_id in turn["selected_cards"])
+        previous_completed = _required_objectives_complete(foundation.quest.objectives, turn, region)
+    return stale_turns
+
+
+def _unique_presented_cards(turn: dict) -> bool:
+    card_ids = [card["card_id"] for card in turn["presented_cards"]]
+    return len(card_ids) == len(set(card_ids))
+
+
+def _is_recent_unscoped_quest_progress_card(card: CardRule, selected_card_ids: list[str]) -> bool:
+    return card.slot_role == "quest_progress" and not card.quest_ids and card.id in selected_card_ids[-3:]
+
+
+def _required_objectives_complete(objectives: tuple[QuestObjective, ...], turn: dict, region: str) -> bool:
+    return all(_objective_complete(objective, turn, region) for objective in objectives if objective.required)
+
+
+def _objective_complete(objective: QuestObjective, turn: dict, region: str) -> bool:
+    progress = turn["quest_progress"]
+    status = turn["state_after"]
+    clues = set(turn.get("clues", []))
+    match objective.objective_type:
+        case "collect_item":
+            return int(progress.get(objective.target, 0)) >= objective.count
+        case "return_to_region":
+            return region == objective.target and int(progress.get(objective.progress_key, 0)) >= objective.value
+        case "survive_expedition" | "keep_resource_at_least":
+            return int(status.get(objective.target, 0)) >= objective.value
+        case "discover_clue":
+            return objective.target in clues
+        case "optional_action":
+            return int(progress.get(objective.progress_key, 0)) >= objective.value
+        case unreachable:
+            assert_never(unreachable)
 
 
 def _env() -> dict[str, str]:

@@ -16,7 +16,7 @@ SCORE_TOLERANCE: Final = 10
 
 def select_cards_from_pool(pool: tuple[CardCandidate, ...], context: CardSelectionContext) -> CardSelectionResult:
     available = tuple(candidate for candidate in _ranked_candidates(pool) if candidate.tier != "blocked")
-    picks = tuple(_pick_for_slot(available, slot, context) for slot in SLOT_ROLES)
+    picks = _pick_cards(available, context)
     windows = {slot: _variety_window(_deprioritize_overused(available, slot), slot) for slot in SLOT_ROLES}
     return CardSelectionResult(
         cards=(picks[0].card, picks[1].card, picks[2].card),
@@ -24,11 +24,38 @@ def select_cards_from_pool(pool: tuple[CardCandidate, ...], context: CardSelecti
     )
 
 
-def _pick_for_slot(candidates: tuple[CardCandidate, ...], slot: str, context: CardSelectionContext) -> CardCandidate:
+def _pick_cards(candidates: tuple[CardCandidate, ...], context: CardSelectionContext) -> tuple[CardCandidate, CardCandidate, CardCandidate]:
+    picks: list[CardCandidate] = []
+    for slot in SLOT_ROLES:
+        picks.append(_pick_for_slot_or_fallback(candidates, slot, context, tuple(picks)))
+    return (picks[0], picks[1], picks[2])
+
+
+def _pick_for_slot_or_fallback(
+    candidates: tuple[CardCandidate, ...],
+    slot: str,
+    context: CardSelectionContext,
+    selected: tuple[CardCandidate, ...],
+) -> CardCandidate:
     window = _variety_window(_deprioritize_overused(candidates, slot), slot)
-    if not window:
+    selected_ids = {item.card.id for item in selected}
+    fresh_window = tuple(candidate for candidate in window if candidate.card.id not in selected_ids)
+    if fresh_window:
+        return _seeded_pick(fresh_window, context, slot)
+    remaining = _fallback_window(candidates, selected_ids)
+    if not remaining:
         raise MissingCardSlotError(slot)
-    return min(window, key=lambda candidate: _weighted_seed_value(candidate, _selection_seed_key(context, slot)))
+    return _seeded_pick(remaining, context, slot)
+
+
+def _seeded_pick(candidates: tuple[CardCandidate, ...], context: CardSelectionContext, slot: str) -> CardCandidate:
+    return min(candidates, key=lambda candidate: _weighted_seed_value(candidate, _selection_seed_key(context, slot)))
+
+
+def _fallback_window(candidates: tuple[CardCandidate, ...], selected_ids: set[str]) -> tuple[CardCandidate, ...]:
+    remaining = tuple(candidate for candidate in candidates if candidate.card.id not in selected_ids)
+    ranked = sorted(remaining, key=lambda candidate: (candidate.frequency_penalty, TIER_RANK[candidate.tier], candidate.score, candidate.card.id), reverse=True)
+    return tuple(ranked[:VARIETY_WINDOW_SIZE])
 
 
 def _deprioritize_overused(candidates: tuple[CardCandidate, ...], slot: str) -> tuple[CardCandidate, ...]:
