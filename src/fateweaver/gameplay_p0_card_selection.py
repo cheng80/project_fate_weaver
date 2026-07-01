@@ -17,7 +17,7 @@ SCORE_TOLERANCE: Final = 10
 def select_cards_from_pool(pool: tuple[CardCandidate, ...], context: CardSelectionContext) -> CardSelectionResult:
     available = tuple(candidate for candidate in _ranked_candidates(pool) if candidate.tier != "blocked")
     picks = tuple(_pick_for_slot(available, slot, context) for slot in SLOT_ROLES)
-    windows = {slot: _variety_window(available, slot) for slot in SLOT_ROLES}
+    windows = {slot: _variety_window(_deprioritize_overused(available, slot), slot) for slot in SLOT_ROLES}
     return CardSelectionResult(
         cards=(picks[0].card, picks[1].card, picks[2].card),
         candidate_pool=_with_selection_evidence(pool, picks, windows, context),
@@ -25,10 +25,23 @@ def select_cards_from_pool(pool: tuple[CardCandidate, ...], context: CardSelecti
 
 
 def _pick_for_slot(candidates: tuple[CardCandidate, ...], slot: str, context: CardSelectionContext) -> CardCandidate:
-    window = _variety_window(candidates, slot)
+    window = _variety_window(_deprioritize_overused(candidates, slot), slot)
     if not window:
         raise MissingCardSlotError(slot)
     return min(window, key=lambda candidate: _weighted_seed_value(candidate, _selection_seed_key(context, slot)))
+
+
+def _deprioritize_overused(candidates: tuple[CardCandidate, ...], slot: str) -> tuple[CardCandidate, ...]:
+    slot_candidates = tuple(candidate for candidate in candidates if candidate.card.slot_role == slot)
+    fresh = tuple(candidate for candidate in slot_candidates if not _overused(candidate))
+    if not fresh:
+        return candidates
+    fresh_ids = {candidate.card.id for candidate in fresh}
+    return tuple(candidate for candidate in candidates if candidate.card.slot_role != slot or candidate.card.id in fresh_ids)
+
+
+def _overused(candidate: CardCandidate) -> bool:
+    return candidate.frequency_penalty <= -36
 
 
 def _variety_window(candidates: tuple[CardCandidate, ...], slot: str) -> tuple[CardCandidate, ...]:

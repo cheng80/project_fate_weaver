@@ -124,6 +124,9 @@ class CardCandidate:
     variety_window: bool = False
     selected_by: str = ""
     repeat_penalty: int = 0
+    frequency_penalty: int = 0
+    fallback_penalty: int = 0
+    ontology_modifier_applied: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,6 +142,8 @@ class RepeatMemory:
     recent_storylets: tuple[str, ...] = ()
     cooldown_tags: tuple[CooldownCounter, ...] = ()
     repeat_groups: tuple[CooldownCounter, ...] = ()
+    card_counts: tuple[CooldownCounter, ...] = ()
+    repeat_group_counts: tuple[CooldownCounter, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,6 +193,7 @@ class CardCandidateContext:
     card_candidate_hints: tuple[str, ...] = ()
     cooldown_tags: tuple[str, ...] = ()
     repeat_group: str = ""
+    ontology_inference: JsonMap | None = None
 
 
 @dataclass(frozen=True, slots=True)

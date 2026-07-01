@@ -5,7 +5,8 @@ from pathlib import Path
 from random import Random
 
 from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
-from fateweaver.gameplay_p0_cards import build_card_candidate_pool, card_candidate_pool_json, card_json
+from fateweaver.gameplay_p0_card_json import card_candidate_pool_json, card_json
+from fateweaver.gameplay_p0_cards import build_card_candidate_pool
 from fateweaver.gameplay_p0_data import load_foundation
 from fateweaver.gameplay_p0_models import CardCandidateContext, CardSelectionContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
 from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
@@ -43,7 +44,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
     ):
         ontology_inference = run_reasoner(ontology_core, _ontology_context(foundation.quest.id, state))
         event = select_storylet(request.events, state, rng, foundation.quest.id, ontology_inference)
-        context = card_candidate_context(foundation.quest, event, state)
+        context = card_candidate_context(foundation.quest, event, state, ontology_inference)
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
         selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
         candidate_pool = selection.candidate_pool
@@ -119,7 +120,7 @@ def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
     return tuple(dict.fromkeys(tags))
 
 
-def card_candidate_context(quest: Quest, event: Event, state: RunState) -> CardCandidateContext:
+def card_candidate_context(quest: Quest, event: Event, state: RunState, ontology_inference: JsonMap | None = None) -> CardCandidateContext:
     return CardCandidateContext(
         quest=quest,
         storylet_tags=storylet_tags(event, state),
@@ -127,6 +128,7 @@ def card_candidate_context(quest: Quest, event: Event, state: RunState) -> CardC
         card_candidate_hints=event.card_candidate_hints,
         cooldown_tags=event.cooldown_tags,
         repeat_group=event.repeat_group,
+        ontology_inference=ontology_inference,
     )
 
 

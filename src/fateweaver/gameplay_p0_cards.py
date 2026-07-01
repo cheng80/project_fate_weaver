@@ -4,6 +4,12 @@ from dataclasses import dataclass
 from typing import Final, assert_never
 
 from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
+from fateweaver.gameplay_p0_card_modifiers import (
+    candidate_fallback_penalty,
+    candidate_frequency_penalty,
+    modifier,
+    ontology_card_modifier,
+)
 from fateweaver.gameplay_p0_errors import ExpectedMappingError, MissingCardSlotError
 from fateweaver.gameplay_p0_models import (
     BlockedReason,
@@ -19,19 +25,6 @@ from fateweaver.models import JsonMap, JsonValue, StatusMap
 
 
 TIER_RANK: Final = {"critical": 4, "strong": 3, "normal": 2, "flavor": 1, "blocked": 0}
-DEFAULT_MODIFIERS: Final = {
-    "quest_objective_match": 30,
-    "storylet_tag_match": 20,
-    "region_match": 10,
-    "slot_role_bonus": 5,
-    "storylet_hint_bonus": 25,
-    "cooldown_tag_penalty": -15,
-    "repeat_group_penalty": -30,
-    "recent_repeat_penalty": -25,
-    "already_completed": -999,
-    "unavailable": -999,
-    "low_food_penalty": -10,
-}
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,7 +72,13 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
     cooldown_penalty = candidate_cooldown_penalty(card, state, context)
     blocked_reason = card_blocked_reason(card, state, context.quest.id)
     repeat_penalty = modifier(card, "recent_repeat_penalty") if recently_seen_card(card, state) else 0
+    frequency_penalty = candidate_frequency_penalty(card, state, context)
+    fallback_penalty = candidate_fallback_penalty(card, state)
+    ontology_modifier = ontology_card_modifier(card, context)
     score = candidate_score(CandidateScoreInput(card, state, matched_tags, matched_objectives, matched_storylet_hints, cooldown_penalty, blocked_reason))
+    score += frequency_penalty + fallback_penalty + ontology_modifier
+    if not blocked_reason:
+        score = max(1, score)
     return CardCandidate(
         card=card,
         score=score,
@@ -90,6 +89,9 @@ def score_card(card: CardRule, state: RunState, context: CardCandidateContext) -
         matched_storylet_hints=matched_storylet_hints,
         cooldown_penalty=cooldown_penalty,
         repeat_penalty=repeat_penalty,
+        frequency_penalty=frequency_penalty,
+        fallback_penalty=fallback_penalty,
+        ontology_modifier_applied=ontology_modifier,
     )
 
 
@@ -169,42 +171,6 @@ def best_for_slot(candidates: tuple[CardCandidate, ...], slot: str) -> CardCandi
     raise MissingCardSlotError(slot)
 
 
-def card_candidate_pool_json(pool: tuple[CardCandidate, ...]) -> list[JsonMap]:
-    return [
-        {
-            "card_id": candidate.card.id,
-            "slot_role": candidate.card.slot_role,
-            "score": candidate.score,
-            "tier": candidate.tier,
-            "matched_tags": list(candidate.matched_tags),
-            "matched_objectives": list(candidate.matched_objectives),
-            "matched_storylet_hints": list(candidate.matched_storylet_hints),
-            "blocked_reason": candidate.blocked_reason,
-            "selection_seed_key": candidate.selection_seed_key,
-            "variety_window": candidate.variety_window,
-            "selected_by": candidate.selected_by,
-            "repeat_penalty": candidate.repeat_penalty,
-            "cooldown_penalty": candidate.cooldown_penalty,
-        }
-        for candidate in pool
-    ]
-
-
-def modifier(card: CardRule, key: str) -> int:
-    value = card.weight_modifiers.get(key)
-    match value:
-        case None:
-            return DEFAULT_MODIFIERS[key]
-        case bool():
-            return DEFAULT_MODIFIERS[key]
-        case int() | float() | str():
-            return int(value)
-        case list() | dict():
-            return DEFAULT_MODIFIERS[key]
-        case unreachable:
-            assert_never(unreachable)
-
-
 def low_food_penalty_applies(card: CardRule, state: RunState) -> bool:
     status = as_mapping(card.result.get("status", {}))
     food_delta = status.get("food", 0)
@@ -215,25 +181,6 @@ def low_food_penalty_applies(card: CardRule, state: RunState) -> bool:
             return False
         case unreachable:
             assert_never(unreachable)
-
-
-def card_json(card: CardRule) -> JsonMap:
-    return {
-        "choice_id": card.id,
-        "card_id": card.id,
-        "choice_text": card.title,
-        "title": card.title,
-        "description": card.description,
-        "slot_role": card.slot_role,
-        "choice_type": card.slot_role,
-        "quest_ids": list(card.quest_ids),
-        "available": True,
-        "unavailable_reason": None,
-        "hidden": False,
-        "expected_risk": "low" if card.slot_role != "risk_discovery" else "medium",
-        "influenced_by": card_influences(card),
-        "result": card.result,
-    }
 
 
 def card_available(card: CardRule, state: RunState, quest_id: str) -> bool:
@@ -266,16 +213,6 @@ def status_matches(requirements: JsonMap, status: StatusMap) -> bool:
 
 def active_optional_objectives(quest: Quest) -> set[str]:
     return {objective.id for objective in quest.objectives if not objective.required}
-
-
-def card_influences(card: CardRule) -> list[str]:
-    values = [f"slot:{card.slot_role}"]
-    values.extend(f"tag:{tag}" for tag in card.tags)
-    values.extend(f"storylet_tag:{tag}" for tag in card.applies_to_storylet_tags)
-    values.extend(f"objective:{objective_id}" for objective_id in card.applies_to_quest_objectives)
-    if card.progress_key:
-        values.append(f"progress:{card.progress_key}")
-    return values
 
 
 def as_mapping(value: JsonValue) -> JsonMap:

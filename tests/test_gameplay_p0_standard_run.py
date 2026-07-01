@@ -44,7 +44,7 @@ class GameplayP0StandardRunTests(unittest.TestCase):
         self.assertGreaterEqual(len(set(presented_ids)), 15)
         self.assertGreaterEqual(len(set(selected_ids)), 8)
         self.assertGreaterEqual(len(event_counts), 5)
-        self.assertLessEqual(top_repeat[1], 15)
+        self.assertLessEqual(top_repeat[1], 10)
         self.assertTrue(ITEM_GATED_SURFACE_CARDS.issubset(set(presented_ids)))
         self.assertGreaterEqual(len(final_turn["clues"]), 3)
         self.assertGreaterEqual(len(final_turn["omens"]), 1)

@@ -123,6 +123,19 @@ p0_cards:
       score_changes: {discovery: 4}
       next_event_tags: [safe_path]
       message: 안전한 숲길 정보를 얻었다.
+  - id: read_departure_signs
+    title: 출발 전 징조를 살핀다
+    description: 마을 입구의 바람, 발자국, 젖은 흙을 살펴 길의 위험을 가늠한다.
+    slot_role: risk_discovery
+    base_weight: 35
+    tier_hint: flavor
+    regions: [village]
+    tags: [village, scouting, clue, weather]
+    result:
+      gain_clues: [old_hunter_trail]
+      score_changes: {discovery: 3}
+      next_event_tags: [forest, scouting]
+      message: 마을 입구의 흔적을 보고 숲길의 위험을 가늠했다.
   - id: use_torch_to_search
     title: 횃불을 켜고 살핀다
     description: 어두운 덤불 사이를 횃불로 비춘다.
