@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,9 +28,26 @@ class InvalidManualScenarioError(ValueError):
     pass
 
 
+class RequiredObjectiveTrace(TypedDict):
+    id: str
+    objective_type: str
+    target: str
+    progress_key: str
+    required: bool
+    before_value: int
+    after_value: int
+    completed_after: bool
+
+
 class TraceEntry(TypedDict):
     turn: int
     day: int
+    active_quest_id: str
+    active_quest_title: str
+    quest_onboarding: bool
+    onboarding_reason: str
+    required_objective_ids: list[str]
+    required_objectives: list[RequiredObjectiveTrace]
     presented_card_ids: list[str]
     selected_index: int
     selected_card_id: str
@@ -39,3 +56,4 @@ class TraceEntry(TypedDict):
     resource_delta: dict[str, int]
     objective_delta: dict[str, int]
     next_event_tags_delta: list[str]
+    onboarding_turn: NotRequired[int]

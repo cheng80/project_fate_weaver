@@ -8,9 +8,11 @@ from random import Random
 from typing import TextIO
 
 try:
-    from .manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs, TraceEntry
+    from .manual_choice_runner_trace import build_trace_entry
+    from .manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 except ImportError:
-    from manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs, TraceEntry
+    from manual_choice_runner_trace import build_trace_entry
+    from manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 
 
 def main() -> int:
@@ -120,7 +122,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         turn["manual_choice_mode"] = True
         turn["manual_selected_index"] = selected_index
         turns.append(turn)
-        trace.append(_trace_entry(turn, selected_index, before.next_event_tags, before.quest_progress))
+        trace.append(build_trace_entry(foundation.quest, turn, selected_index, before, state))
         if (
             quest_completed(foundation.quest, state, bundle, foundation.score_rules)
             and state.clock.turn >= _minimum_completion_turn(scenario.run_clock)
@@ -215,27 +217,6 @@ def _next_choice(args: ManualRunnerArgs, offset: int, turn: int, stdin: TextIO, 
     if offset >= len(args.choices):
         raise InvalidManualChoiceError(f"missing choice for turn {turn}")
     return args.choices[offset]
-
-
-def _trace_entry(turn: dict, selected_index: int, before_next_event_tags: tuple[str, ...], before_objectives: dict[str, int]) -> TraceEntry:
-    after_tags = tuple(str(value) for value in turn["next_event_tags"])
-    return {
-        "turn": turn["turn"],
-        "day": turn["run_clock"]["day"],
-        "presented_card_ids": [card["card_id"] for card in turn["presented_cards"]],
-        "selected_index": selected_index,
-        "selected_card_id": turn["selected_cards"][0],
-        "selected_card_slot_role": turn["selected_choice_type"],
-        "result_summary": turn["choice_reason"],
-        "resource_delta": _int_delta(turn["state_before"], turn["state_after"]),
-        "objective_delta": _int_delta(before_objectives, turn["quest_progress"]),
-        "next_event_tags_delta": [tag for tag in after_tags if tag not in before_next_event_tags],
-    }
-
-
-def _int_delta(before: dict, after: dict) -> dict[str, int]:
-    keys = sorted({str(key) for key in before} | {str(key) for key in after})
-    return {key: int(after.get(key, 0)) - int(before.get(key, 0)) for key in keys}
 
 
 def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) -> tuple[Path, Path, Path, Path]:
