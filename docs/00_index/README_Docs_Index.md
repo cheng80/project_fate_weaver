@@ -373,6 +373,8 @@ docs/
   - P1 Human Playtest Run 1을 실행할 수 있도록 run selection, player sheet, result draft, Text MUD/JSON evidence를 준비한 결과를 보관한다.
 - `docs/07_reviews/63_P1_Human_Playtest_Findings_Audit_v0.1.md`
   - Turn 18에서 중단된 P1 Human Playtest Run 1을 completion evidence가 아니라 critical findings evidence로 감사한 결과를 보관한다.
+- `docs/07_reviews/64_Manual_Choice_Driven_Standard_Run_Runner_Result_v0.1.md`
+  - P1 Human Playtest Run 1 중단 원인인 facilitator runner 부재를 해결한 manual choice-driven runner 구현 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

@@ -189,3 +189,19 @@ FateWeaver Human Playtest Run 1을 Codex-facilitated 방식으로 진행하자.
 2026-07-01 Run 1 attempt에서는 이 protocol의 입력 규칙은 확인됐지만, 진행자가 고정 seed 202 autoplayer log를 재생해 사용자의 `1/2/3` 선택이 실제 state transition을 구동하지 못했다.
 
 따라서 v0.3 protocol을 다시 사용하려면 먼저 manual choice-driven Standard Run runner가 필요하다.
+
+## 12. Runner Requirement
+
+Codex-facilitated playtest는 반드시 manual choice-driven runner를 사용한다.
+
+고정 autoplayer evidence replay는 interactive playtest evidence로 사용하지 않는다.
+
+Required runner command shape:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/manual_choice_runner.py \
+  --scenario data/scenarios/standard_run_25_35_turn.yaml \
+  --seed 202 \
+  --interactive \
+  --output-dir .omo/ulw-loop/evidence/manual-choice-driven-runner-YYYYMMDD
+```

@@ -25,6 +25,12 @@ Task brief:
 CODEX_TASK_Manual_Choice_Driven_Standard_Run_Runner_v0.1.md
 ```
 
+Status:
+
+```text
+implemented in docs/07_reviews/64_Manual_Choice_Driven_Standard_Run_Runner_Result_v0.1.md
+```
+
 목표:
 
 - 매 turn 사용자의 `1/2/3` 선택 index를 실제 selected card로 적용한다.
