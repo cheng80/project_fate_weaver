@@ -174,6 +174,8 @@ docs/
   - Codex가 기존 구조를 해치지 않고 게임 구조 재정의와 후속 구현 계획을 수행하기 위한 작업 브리프다.
 - `docs/04_codex/15_Codex_P1_First_Task_Brief_v0.1.md`
   - P0 playable milestone 이후 P1 첫 작업을 Codex가 바로 이어서 수행할 수 있도록 정리한 brief 초안이다.
+- `docs/04_codex/16_Codex_P1_Post_Playtest_Critical_Fixes_Brief_v0.1.md`
+  - 중단된 Human Playtest Run 1에서 발견된 critical findings를 후속 구현 작업으로 분리하기 위한 brief다.
 
 ---
 
@@ -208,6 +210,8 @@ docs/
   - FateWeaver P1 human playtest 후 플레이어 피드백을 수집하기 위한 양식이다.
 - `docs/05_validation/20_Human_Playtest_Run_1_Player_Sheet_v0.1.md`
   - P1 Human Playtest Run 1에서 플레이어가 선택 이유, 헷갈림, 흥미, 반복감을 기록하기 위한 sheet다.
+- `docs/05_validation/21_Codex_Facilitated_Human_Playtest_Protocol_v0.3.md`
+  - Codex가 진행자 역할을 하고 사용자는 오직 1/2/3 번호만 선택하는 대화형 human playtest protocol이다.
 
 ---
 
@@ -367,6 +371,8 @@ docs/
   - P1 Human Playtest Run 1의 실제 feedback을 기록하기 위한 ready draft 결과 문서다.
 - `docs/07_reviews/62_P1_Human_Playtest_Run_1_Preparation_Result_v0.1.md`
   - P1 Human Playtest Run 1을 실행할 수 있도록 run selection, player sheet, result draft, Text MUD/JSON evidence를 준비한 결과를 보관한다.
+- `docs/07_reviews/63_P1_Human_Playtest_Findings_Audit_v0.1.md`
+  - Turn 18에서 중단된 P1 Human Playtest Run 1을 completion evidence가 아니라 critical findings evidence로 감사한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
