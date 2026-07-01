@@ -202,6 +202,10 @@ docs/
   - Gameplay Replan 구현 또는 콘텐츠 확장 작업을 완료로 판단하기 위한 최소 승인 기준이다.
 - `docs/05_validation/17_P0_Playable_Milestone_Checklist_v0.1.md`
   - FateWeaver P0 playable 상태를 유지하기 위한 검증 체크리스트다.
+- `docs/05_validation/18_Human_Playtest_Protocol_v0.1.md`
+  - FateWeaver Text MUD / console playtest를 사람이 진행할 때 사용할 절차와 관찰 기준 문서다.
+- `docs/05_validation/19_Human_Playtest_Feedback_Form_v0.1.md`
+  - FateWeaver P1 human playtest 후 플레이어 피드백을 수집하기 위한 양식이다.
 
 ---
 
@@ -239,6 +243,8 @@ docs/
   - P0 playable milestone 이후 P1에서 다룰 후보 작업을 정리한 backlog 문서다.
 - `docs/06_plans/11_P1_Planning_After_P0_Playable_v0.1.md`
   - FateWeaver P0 playable milestone 이후 P1의 목표, 우선순위, 첫 실행 작업을 정리한 planning 문서다.
+- `docs/06_plans/12_P1_Human_Playtest_Scenario_Pack_v0.1.md`
+  - P0 playable milestone 이후 사람이 직접 읽고 선택할 수 있는 P1 human playtest용 scenario pack 문서다.
 
 ---
 
@@ -349,6 +355,10 @@ docs/
   - FateWeaver P0 playable 상태를 고정하고, P1 이전에 유지해야 할 검증 기준과 watch item을 정리한 milestone freeze 문서다.
 - `docs/07_reviews/58_P1_Planning_After_P0_Playable_Result_v0.1.md`
   - P0 playable milestone freeze 이후 P1 planning을 수행하고 첫 P1 작업 후보를 정리한 결과를 보관한다.
+- `docs/07_reviews/59_Human_Playtest_Run_1_Result_Template_v0.1.md`
+  - P1 human playtest 1회차 결과를 기록하기 위한 템플릿이다.
+- `docs/07_reviews/60_P1_Human_Playtest_Scenario_Pack_Result_v0.1.md`
+  - P1 첫 작업으로 human playtest scenario pack, protocol, feedback form, result template을 구성한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
