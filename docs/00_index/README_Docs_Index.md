@@ -313,6 +313,8 @@ docs/
   - Content Enrichment Pack 1의 Card Candidate / Clue / Omen 데이터 확장 결과를 보관한다.
 - `docs/07_reviews/44_Enrichment_Pack_2_Item_Ending_Result_v0.1.md`
   - Content Enrichment Catalog의 Pack 2 후보를 기반으로 Item / Ending 콘텐츠를 확장한 결과를 보관한다.
+- `docs/07_reviews/45_Standard_Run_25_35_Turn_Verification_Result_v0.1.md`
+  - Content Enrichment Pack 1/2 이후 Standard Run 25~35 Turn JSON/Text MUD/Ending 검증 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

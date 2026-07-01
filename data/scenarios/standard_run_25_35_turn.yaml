@@ -1,0 +1,27 @@
+id: standard_run_25_35_turn
+name: Standard Run 25-35 Turn Verification
+gameplay_mode: p0_foundation
+active_quest_id: survive_the_storm_pass
+content_sources: [data/content/base/regions.yaml, data/content/base/items.yaml, data/content/base/events.yaml, data/content/base/endings.yaml]
+include_regions: [village, forest]
+include_event_ids:
+  - storm_pass_shelter_hint
+  - storm_pass_pack1_enrichment
+  - suspicious_merchant
+  - quiet_camp
+  - sudden_storm
+  - hunger_night
+exclude_event_ids: []
+exclude_event_tags: []
+initial_status: {health: 9, food: 9, money: 4, reputation: 1, curse: 1}
+initial_items:
+  - torch
+  - camp_tarp
+  - spare_ration_cache
+  - reed_whistle
+  - clear_water_vial
+  - red_thread_charm
+run_clock: {day: 1, turn: 1, turns_today: 0, time_of_day: morning, act: 1, max_days: 7, max_turns: 30, turns_per_day: 4, min_turns_before_completion: 25}
+target_turns: 30
+seed: 42
+validation_targets: {min_events: 4, min_item_count: 5}

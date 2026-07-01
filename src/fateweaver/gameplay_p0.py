@@ -69,7 +69,10 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
                 ),
             ),
         )
-        if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules) or is_failed(state.status, request.bundle.statuses):
+        if (
+            quest_completed(foundation.quest, state, request.bundle, foundation.score_rules)
+            and state.clock.turn >= _minimum_completion_turn(request.scenario.run_clock)
+        ) or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)
     quest_report = build_quest_report(QuestReportRequest(foundation.quest, state, request.bundle, foundation.score_rules))
@@ -85,6 +88,10 @@ def _continue_state(state: RunState, event: Event) -> RunState:
     from dataclasses import replace
 
     return replace(state, clock=advance_clock(state.clock), recent_event_ids=(*state.recent_event_ids, event.id))
+
+
+def _minimum_completion_turn(run_clock: JsonMap) -> int:
+    return int(run_clock.get("min_turns_before_completion", 0))
 
 
 def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
