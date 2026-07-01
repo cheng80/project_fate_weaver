@@ -327,6 +327,8 @@ docs/
   - Standard Run card candidate 반복률을 long-run frequency, repeat-group, fallback, ontology card modifier 기반으로 개선한 결과를 보관한다.
 - `docs/07_reviews/49_Standard_Run_Play_Quality_Audit_v0.1.md`
   - Standard Run 25~35 Turn 검증 이후, 실제 Text MUD / JSON 로그를 기준으로 플레이 품질을 감사한 결과를 보관한다.
+- `docs/07_reviews/51_Director_Tuning_Second_Pass_Result_v0.1.md`
+  - Storylet Pool Expansion 이후 늘어난 Storylet/Event 후보를 Situation Director가 더 잘 활용하도록 조정한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
