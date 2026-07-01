@@ -98,7 +98,7 @@ def select_cards(
     if combo is not None and not state.combo_used:
         return tuple(card for card in cards if card.id in combo.cards), combo
     if profile == "balanced" and state.clock.turn < state.clock.max_turns - 5:
-        if (state.status.get("food", 0) <= 2 or state.status.get("health", 0) <= 5 or state.status.get("money", 0) <= 1) and cards[2].id not in state.selected_choice_history:
+        if (state.status.get("food", 0) <= 3 or state.status.get("health", 0) <= 5 or state.status.get("money", 0) <= 1) and cards[2].id not in state.selected_choice_history:
             return (cards[2],), None
         if sum(1 for value in state.quest_progress.values() if value > 0) >= 3 and cards[1].id not in state.selected_choice_history:
             return (cards[1],), None
