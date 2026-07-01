@@ -158,3 +158,182 @@ relations:
     description: "A scenario loads one or more YAML content source files."
     source_fields: ["data/scenarios/*.yaml:content_sources"]
     future_use: "Trace scenario dependencies and export source sets."
+
+ontology_core:
+  version: 0.1
+  purpose: "Seed deterministic Entity/Relation/Fact/Rule data for Reasoner-lite and Situation Director-lite without replacing existing tag matching."
+  entity_types:
+    - id: quest
+      description: "Playable quest thread used by active scenarios."
+    - id: region
+      description: "Broad travel or settlement area used by scenario filtering."
+    - id: event_tag
+      description: "Existing event tag retained as the runtime matching vocabulary."
+    - id: danger_tag
+      description: "Existing danger tag retained as the runtime risk vocabulary."
+    - id: item
+      description: "Inventory item that can unlock, mitigate, or explain situations."
+    - id: resource
+      description: "Numeric run status such as health, food, money, reputation, or curse."
+    - id: objective
+      description: "Quest objective or progress key."
+    - id: situation_intent
+      description: "Director-facing story pressure or opportunity."
+  predicates:
+    - id: quest_starts_in
+      subject_type: quest
+      object_type: region
+    - id: quest_tracks_objective
+      subject_type: quest
+      object_type: objective
+    - id: region_supports_tag
+      subject_type: region
+      object_type: event_tag
+    - id: region_exposes_danger
+      subject_type: region
+      object_type: danger_tag
+    - id: item_counters_danger
+      subject_type: item
+      object_type: danger_tag
+    - id: item_supports_intent
+      subject_type: item
+      object_type: situation_intent
+    - id: resource_supports_intent
+      subject_type: resource
+      object_type: situation_intent
+    - id: objective_supports_intent
+      subject_type: objective
+      object_type: situation_intent
+  entities:
+    - {id: quest.survive_the_storm_pass, type: quest, label: "Survive the Storm Pass", tags: [survival, exploration]}
+    - {id: quest.village_well_trouble, type: quest, label: "Village Well Trouble", tags: [local_problem, investigation]}
+    - {id: quest.hidden_grove_discovery, type: quest, label: "Hidden Grove Discovery", tags: [investigation_mystery, exploration]}
+    - {id: region.village, type: region, label: "Village", tags: [village, trade, rest]}
+    - {id: region.forest, type: region, label: "Forest", tags: [forest, survival, exploration]}
+    - {id: region.ruin, type: region, label: "Ruin", tags: [ruin, magic, curse]}
+    - {id: tag.local_problem, type: event_tag, label: "Local Problem", tags: [local_problem]}
+    - {id: tag.investigation_mystery, type: event_tag, label: "Investigation Mystery", tags: [investigation_mystery]}
+    - {id: tag.survival_exploration, type: event_tag, label: "Survival Exploration", tags: [survival_exploration]}
+    - {id: danger.storm, type: danger_tag, label: "Storm", tags: [storm]}
+    - {id: danger.hunger, type: danger_tag, label: "Hunger", tags: [hunger]}
+    - {id: danger.bandit, type: danger_tag, label: "Bandit", tags: [bandit]}
+    - {id: danger.beast, type: danger_tag, label: "Beast", tags: [beast]}
+    - {id: item.torch, type: item, label: "Torch", tags: [light, tool]}
+    - {id: item.camp_tarp, type: item, label: "Camp Tarp", tags: [travel, tool]}
+    - {id: item.spare_ration_cache, type: item, label: "Spare Ration Cache", tags: [consumable]}
+    - {id: item.clear_water_vial, type: item, label: "Clear Water Vial", tags: [consumable, healing]}
+    - {id: resource.health, type: resource, label: "Health", tags: [survival]}
+    - {id: resource.food, type: resource, label: "Food", tags: [survival]}
+    - {id: resource.money, type: resource, label: "Money", tags: [trade]}
+    - {id: resource.curse, type: resource, label: "Curse", tags: [curse]}
+    - {id: objective.find_shelter, type: objective, label: "Find Shelter", tags: [survival_exploration]}
+    - {id: objective.gather_clues, type: objective, label: "Gather Clues", tags: [investigation_mystery]}
+    - {id: objective.resolve_local_threat, type: objective, label: "Resolve Local Threat", tags: [local_problem]}
+  relations:
+    - {id: rel.storm_pass.starts_forest, predicate: quest_starts_in, subject: quest.survive_the_storm_pass, object: region.forest}
+    - {id: rel.well.starts_village, predicate: quest_starts_in, subject: quest.village_well_trouble, object: region.village}
+    - {id: rel.grove.starts_forest, predicate: quest_starts_in, subject: quest.hidden_grove_discovery, object: region.forest}
+    - {id: rel.storm_pass.find_shelter, predicate: quest_tracks_objective, subject: quest.survive_the_storm_pass, object: objective.find_shelter}
+    - {id: rel.well.resolve_local, predicate: quest_tracks_objective, subject: quest.village_well_trouble, object: objective.resolve_local_threat}
+    - {id: rel.grove.gather_clues, predicate: quest_tracks_objective, subject: quest.hidden_grove_discovery, object: objective.gather_clues}
+    - {id: rel.village.trade, predicate: region_supports_tag, subject: region.village, object: tag.local_problem}
+    - {id: rel.forest.survival, predicate: region_supports_tag, subject: region.forest, object: tag.survival_exploration}
+    - {id: rel.ruin.mystery, predicate: region_supports_tag, subject: region.ruin, object: tag.investigation_mystery}
+    - {id: rel.forest.storm, predicate: region_exposes_danger, subject: region.forest, object: danger.storm}
+    - {id: rel.forest.hunger, predicate: region_exposes_danger, subject: region.forest, object: danger.hunger}
+    - {id: rel.village.bandit, predicate: region_exposes_danger, subject: region.village, object: danger.bandit}
+    - {id: rel.forest.beast, predicate: region_exposes_danger, subject: region.forest, object: danger.beast}
+    - {id: rel.torch.counters_darkness, predicate: item_counters_danger, subject: item.torch, object: danger.beast}
+    - {id: rel.tarp.counters_storm, predicate: item_counters_danger, subject: item.camp_tarp, object: danger.storm}
+    - {id: rel.ration.counters_hunger, predicate: item_counters_danger, subject: item.spare_ration_cache, object: danger.hunger}
+    - {id: rel.water.supports_recovery, predicate: item_supports_intent, subject: item.clear_water_vial, object: intent.resource_recovery}
+    - {id: rel.food.supports_recovery, predicate: resource_supports_intent, subject: resource.food, object: intent.resource_recovery}
+    - {id: rel.health.supports_rest, predicate: resource_supports_intent, subject: resource.health, object: intent.safe_rest}
+    - {id: rel.curse.supports_omen, predicate: resource_supports_intent, subject: resource.curse, object: intent.omen_escalation}
+    - {id: rel.shelter.supports_survival, predicate: objective_supports_intent, subject: objective.find_shelter, object: intent.shelter_search}
+  facts:
+    - {id: fact.storm_pass_needs_shelter, subject: quest.survive_the_storm_pass, predicate: needs, object: objective.find_shelter}
+    - {id: fact.storm_pass_has_storm_pressure, subject: quest.survive_the_storm_pass, predicate: exposes, object: danger.storm}
+    - {id: fact.forest_supports_survival_exploration, subject: region.forest, predicate: supports, object: tag.survival_exploration}
+    - {id: fact.village_supports_local_problem, subject: region.village, predicate: supports, object: tag.local_problem}
+    - {id: fact.ruin_supports_mystery, subject: region.ruin, predicate: supports, object: tag.investigation_mystery}
+    - {id: fact.tarp_mitigates_storm, subject: item.camp_tarp, predicate: counters, object: danger.storm}
+    - {id: fact.ration_mitigates_hunger, subject: item.spare_ration_cache, predicate: counters, object: danger.hunger}
+    - {id: fact.water_supports_recovery, subject: item.clear_water_vial, predicate: supports, object: intent.resource_recovery}
+  state_facts:
+    - {id: state.low_food, source: status, key: food, op: lte, value: 3}
+    - {id: state.critical_food, source: status, key: food, op: lte, value: 1}
+    - {id: state.low_health, source: status, key: health, op: lte, value: 4}
+    - {id: state.safe_health, source: status, key: health, op: gte, value: 7}
+    - {id: state.high_curse, source: status, key: curse, op: gte, value: 4}
+    - {id: state.has_shelter_item, source: inventory, key: camp_tarp, op: contains}
+    - {id: state.has_ration_cache, source: inventory, key: spare_ration_cache, op: contains}
+    - {id: state.has_clear_water, source: inventory, key: clear_water_vial, op: contains}
+    - {id: state.missing_storm_clue, source: clue, key: storm_warning, op: missing}
+    - {id: state.has_omen, source: omen_count, op: gte, value: 1}
+  situation_intents:
+    - {id: intent.shelter_search, label: "Shelter Search", tags: [survival, exploration, storm]}
+    - {id: intent.resource_recovery, label: "Resource Recovery", tags: [survival, rest, hunger]}
+    - {id: intent.local_problem_probe, label: "Local Problem Probe", tags: [trade, village, bandit]}
+    - {id: intent.mystery_probe, label: "Mystery Probe", tags: [magic, curse, ancient]}
+    - {id: intent.safe_rest, label: "Safe Rest", tags: [rest, village]}
+    - {id: intent.omen_escalation, label: "Omen Escalation", tags: [curse, storm, ancient]}
+    - {id: intent.item_payoff, label: "Item Payoff", tags: [survival, trade]}
+    - {id: intent.route_commitment, label: "Route Commitment", tags: [forest, lost]}
+  rules:
+    - id: rule.low_food_seek_recovery
+      when: {state_fact: state.low_food}
+      then:
+        suggest_intent: intent.resource_recovery
+        add_event_weight: {tags: [survival, hunger, rest], amount: 3}
+    - id: rule.critical_food_hard_recovery
+      when: {state_fact: state.critical_food}
+      then:
+        suggest_intent: intent.resource_recovery
+        add_event_weight: {tags: [hunger, survival], amount: 5}
+    - id: rule.low_health_safe_rest
+      when: {state_fact: state.low_health}
+      then:
+        suggest_intent: intent.safe_rest
+        add_event_weight: {tags: [rest, village], amount: 4}
+    - id: rule.high_curse_omen
+      when: {state_fact: state.high_curse}
+      then:
+        suggest_intent: intent.omen_escalation
+        add_event_weight: {tags: [curse, magic, ancient], amount: 4}
+    - id: rule.storm_pass_shelter
+      when:
+        all:
+          - {fact: fact.storm_pass_needs_shelter}
+          - {state_fact: state.has_shelter_item}
+      then:
+        suggest_intent: intent.shelter_search
+        add_event_weight: {tags: [storm, survival, exploration], amount: 4}
+    - id: rule.missing_storm_clue
+      when: {state_fact: state.missing_storm_clue}
+      then:
+        suggest_intent: intent.mystery_probe
+        add_event_weight: {tags: [exploration, magic], amount: 2}
+    - id: rule.has_omen_escalate
+      when: {state_fact: state.has_omen}
+      then:
+        suggest_intent: intent.omen_escalation
+        add_event_weight: {tags: [storm, curse], amount: 2}
+    - id: rule.ration_item_payoff
+      when: {state_fact: state.has_ration_cache}
+      then:
+        suggest_intent: intent.item_payoff
+        add_event_weight: {tags: [survival, hunger], amount: 2}
+    - id: rule.water_item_recovery
+      when: {state_fact: state.has_clear_water}
+      then:
+        suggest_intent: intent.resource_recovery
+        add_event_weight: {tags: [rest, survival], amount: 2}
+    - id: rule.forest_route_commitment
+      when:
+        all:
+          - {fact: fact.forest_supports_survival_exploration}
+          - {relation: rel.forest.survival}
+      then:
+        suggest_intent: intent.route_commitment
+        add_event_weight: {tags: [forest, lost, exploration], amount: 1}

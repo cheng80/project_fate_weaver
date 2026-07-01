@@ -321,6 +321,8 @@ docs/
   - Content Enrichment Pack 1/2 이후 Standard Run 25~35 Turn JSON/Text MUD/Ending 검증 결과를 보관한다.
 - `docs/07_reviews/46_Ontology_Core_Model_Replan_Result_v0.1.md`
   - Ontology-lite에서 Ontology Core Model로 확장하기 위한 재설계 결과를 보관한다.
+- `docs/07_reviews/47_Ontology_Core_To_Director_Loop_Result_v0.1.md`
+  - Ontology Core seed, validator, Reasoner-lite, Situation Director-lite event weighting, Standard Run 재검증 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙

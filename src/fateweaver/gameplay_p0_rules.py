@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from dataclasses import replace
 from random import Random
 
+from fateweaver.choice_resolver import requirements_met
 from fateweaver.event_selector import select_event
 from fateweaver.gameplay_p0_errors import ExpectedMappingError
 from fateweaver.gameplay_p0_models import TIME_OF_DAY, CardRule, ComboRule, CooldownCounter, Quest, RepeatMemory, RunClock, RunState
@@ -45,11 +46,61 @@ def run_clock(scenario: Scenario, quest: Quest) -> RunClock:
     )
 
 
-def select_storylet(events: tuple[Event, ...], state: RunState, rng: Random, quest_id: str = "") -> Event:
+def select_storylet(
+    events: tuple[Event, ...],
+    state: RunState,
+    rng: Random,
+    quest_id: str = "",
+    ontology_inference: JsonMap | None = None,
+) -> Event:
     gated = tuple(event for event in events if not event.quest_ids or quest_id in event.quest_ids)
     regional = tuple(event for event in gated if state.region in event.region_tags)
     pool = regional if regional else gated
+    if ontology_inference:
+        return _select_event_with_ontology_weight(pool, state, rng, ontology_inference)
     return select_event(pool, state.status, state.inventory, state.run_tags, rng, state.recent_event_ids)
+
+
+def ontology_event_weight(event: Event, ontology_inference: JsonMap | None) -> int:
+    if not ontology_inference:
+        return 0
+    event_tags = set((*event.region_tags, *event.event_tags, *event.danger_tags, *event.storylet_tags, *event.card_candidate_hints))
+    total = 0
+    for modifier in _modifier_maps(ontology_inference.get("event_weight_modifiers", [])):
+        tags = set(string_tuple(modifier.get("tags", [])))
+        if event_tags & tags:
+            total += int(modifier.get("amount", 0))
+    return total
+
+
+def _select_event_with_ontology_weight(events: tuple[Event, ...], state: RunState, rng: Random, ontology_inference: JsonMap) -> Event:
+    eligible = tuple(event for event in events if _event_eligible(event, state))
+    if not eligible:
+        raise ValueError("No eligible events")
+    weights = tuple(max(1, event.base_weight + min(1, ontology_event_weight(event, ontology_inference))) for event in eligible)
+    threshold = rng.uniform(0, float(sum(weights)))
+    cursor = 0.0
+    for event, weight in zip(eligible, weights):
+        cursor += float(weight)
+        if threshold <= cursor:
+            return event
+    return eligible[-1]
+
+
+def _event_eligible(event: Event, state: RunState) -> bool:
+    if not requirements_met(event.requires_item, event.requires_status, event.requires_run_tag, state.status, state.inventory, state.run_tags):
+        return False
+    if event.max_occurrences_per_run is not None and state.recent_event_ids.count(event.id) >= event.max_occurrences_per_run:
+        return False
+    if event.cooldown_turns is not None and event.id in state.recent_event_ids[-event.cooldown_turns :]:
+        return False
+    return True
+
+
+def _modifier_maps(raw: JsonValue) -> tuple[JsonMap, ...]:
+    if not isinstance(raw, list):
+        return ()
+    return tuple(item for item in raw if isinstance(item, dict))
 
 
 def select_cards(

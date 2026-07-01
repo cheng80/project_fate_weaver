@@ -48,6 +48,7 @@ class TurnLogRequest:
     selected: tuple["CardRule", ...]
     combo: "ComboRule | None"
     result: JsonMap
+    ontology_inference: JsonMap
 
 
 @dataclass(frozen=True, slots=True)

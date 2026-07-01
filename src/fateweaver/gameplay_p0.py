@@ -18,18 +18,21 @@ from fateweaver.gameplay_p0_rules import (
     initial_state,
     int_map,
     multi_select_json,
+    ontology_event_weight,
     repeat_memory_json,
     select_cards,
     select_storylet,
 )
 from fateweaver.logger import save_run_log
 from fateweaver.models import Event, JsonMap
+from fateweaver.ontology_reasoner import OntologyReasonerContext, load_ontology_core, run_reasoner
 from fateweaver.state_manager import is_failed
 from fateweaver.text_mud_log import save_text_mud_log
 
 
 def run_gameplay_p0(request: GameplayRunRequest) -> Path:
     foundation = load_foundation(request.bundle.project_root, request.scenario.active_quest_id)
+    ontology_core = load_ontology_core(request.bundle.project_root)
     rng = Random(request.seed + request.run_number - 1)
     state = initial_state(request.scenario, foundation.quest)
     turns: list[JsonMap] = []
@@ -38,7 +41,8 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         and state.clock.turn <= state.clock.max_turns
         and not is_failed(state.status, request.bundle.statuses)
     ):
-        event = select_storylet(request.events, state, rng, foundation.quest.id)
+        ontology_inference = run_reasoner(ontology_core, _ontology_context(foundation.quest.id, state))
+        event = select_storylet(request.events, state, rng, foundation.quest.id, ontology_inference)
         context = card_candidate_context(foundation.quest, event, state)
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
         selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
@@ -66,6 +70,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
                     selected=selected_cards,
                     combo=combo,
                     result=result,
+                    ontology_inference=ontology_inference,
                 ),
             ),
         )
@@ -92,6 +97,19 @@ def _continue_state(state: RunState, event: Event) -> RunState:
 
 def _minimum_completion_turn(run_clock: JsonMap) -> int:
     return int(run_clock.get("min_turns_before_completion", 0))
+
+
+def _ontology_context(quest_id: str, state: RunState) -> OntologyReasonerContext:
+    return OntologyReasonerContext(
+        quest_id=quest_id,
+        region=state.region,
+        status=state.status,
+        inventory=state.inventory,
+        clues=state.clues,
+        omens=state.omens,
+        quest_progress=state.quest_progress,
+        next_event_tags=state.next_event_tags,
+    )
 
 
 def storylet_tags(event: Event, state: RunState) -> tuple[str, ...]:
@@ -142,6 +160,8 @@ def _turn_log(request: TurnLogRequest) -> JsonMap:
         "card_candidate_hints": list(request.context.card_candidate_hints),
         "cooldown_tags": list(request.context.cooldown_tags),
         "repeat_group": request.context.repeat_group,
+        "ontology_inference": request.ontology_inference,
+        "ontology_weight_applied": ontology_event_weight(request.event, request.ontology_inference),
         "danger_tags": list(request.event.danger_tags),
         "state_before": dict(request.before.status),
         "inventory_before": list(request.before.inventory),
