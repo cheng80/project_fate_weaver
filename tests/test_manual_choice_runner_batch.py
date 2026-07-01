@@ -87,10 +87,54 @@ class ManualChoiceRunnerBatchTests(unittest.TestCase):
         self.assertIn("quest_completion_count", summary)
         self.assertIn("reward_granted_count", summary)
         self.assertIn("run_complete_count", summary)
+        self.assertIn("stop_reason_counts", summary)
+        self.assertIn("same_turn_duplicate_count", summary)
+        self.assertIn("no_next_quest_count", summary)
+        self.assertIn("reward_missing_after_success_count", summary)
+        self.assertIn("duplicate_reward_detected_count", summary)
+        self.assertIn("completed_quest_dragged_to_max_turn_count", summary)
+        self.assertIn("seed_agent_matrix", summary)
         self.assertEqual(0, summary["completion_blocked_by_min_turns_count"])
         self.assertEqual({"goal_focused", "safety_first", "risk_seeking", "explorer", "contrarian"}, set(summary["agent_summary"]))
         self.assertIn("# Subagent Auto-Play Batch Report", report)
         self.assertIn("## Run Matrix", report)
+        self.assertIn("stop reason counts", report)
+
+    def test_batch_runner_accepts_seed_ranges_and_report_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir) / "runs"
+            report_path = Path(tmpdir) / "baseline.md"
+            completed = subprocess.run(
+                [
+                    ".venv/bin/python",
+                    "tools/manual_choice_runner_batch.py",
+                    "--scenario",
+                    str(SCENARIO_PATH),
+                    "--seeds",
+                    "202-203",
+                    "--agents",
+                    "goal_focused",
+                    "--max-turns",
+                    "2",
+                    "--output-dir",
+                    str(output_dir),
+                    "--report-md",
+                    str(report_path),
+                ],
+                cwd=PROJECT_ROOT,
+                env=_env(),
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            summary = json.loads((output_dir / "batch_summary.json").read_text(encoding="utf-8"))
+            report = report_path.read_text(encoding="utf-8")
+
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertEqual([202, 203], summary["seeds"])
+        self.assertEqual(2, summary["total_runs"])
+        self.assertIn("MANUAL_BATCH_REPORT_MD", completed.stdout)
+        self.assertIn("## Quest Lifecycle Summary", report)
 
 
 def _env() -> dict[str, str]:
