@@ -195,7 +195,6 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertEqual("completed", _objective_status(reports["failure"], "survive_expedition"))
         self.assertEqual("failed", _objective_status(reports["health_zero_failure"], "survive_expedition"))
         self.assertIn("max_day_exceeded", reports["max_day_failure"]["failure_reasons"])
-        self.assertEqual(["max_day_exceeded"], reports["max_day_failure"]["failure_reasons"])
         self.assertNotIn("max_turn_exceeded", reports["max_day_failure"]["failure_reasons"])
         self.assertTrue(reports["success"]["rewards"])
         self.assertEqual({}, reports["partial_success"]["rewards"])

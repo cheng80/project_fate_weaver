@@ -331,6 +331,8 @@ docs/
   - Storylet Pool Expansion 이후 늘어난 Storylet/Event 후보를 Situation Director가 더 잘 활용하도록 조정한 결과를 보관한다.
 - `docs/07_reviews/52_Gameplay_P0_Rules_Refactor_Gate_Result_v0.1.md`
   - Gameplay Balance Pass 전에 `gameplay_p0_rules.py`를 기능 변경 없이 분리한 Refactor Gate 결과를 보관한다.
+- `docs/07_reviews/53_Gameplay_Balance_Pass_Result_v0.1.md`
+  - Standard Run의 reward 반복, quest_progress 선택 편중, resource pressure, score/ending threshold를 1차로 조정한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
