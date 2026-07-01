@@ -133,6 +133,8 @@ docs/
   - Quest, Expedition Clock, Storylet, Card Candidate, Multi-Select, Result, Score, Quest Report를 데이터 계약으로 정의한다.
 - `docs/02_schema/13_Quest_Design_Guide_v0.1.md`
   - FateWeaver Quest를 목적, 제한 시간, 지역, Objective, 3-Card 패턴, Storylet tag, 자원 변화, 성공/부분 성공/실패, 보상/해금으로 설계하기 위한 제작 기준 문서다.
+- `docs/02_schema/14_Ontology_Core_Model_v0.1.md`
+  - FateWeaver의 Ontology-lite를 Entity / Relation / Fact / Rule / Situation Intent 기반 Ontology Core로 확장하기 위한 schema 설계 문서다.
 ---
 
 # 5. 03_specs
@@ -227,6 +229,8 @@ docs/
   - Quest Type Catalog 기반 Category Probe, Stability Review, Bulk Fill의 실행 순서와 게이트를 잠근 ULW Loop 계획 문서다.
 - `docs/06_plans/08_Content_Enrichment_Catalog_v0.1.md`
   - Card Candidate / Clue / Omen / Item / Ending 확장을 위한 구현 후보 카탈로그다.
+- `docs/06_plans/09_Ontology_Core_And_Director_Roadmap_v0.1.md`
+  - Ontology Core Model에서 Reasoner-lite와 Situation Director-lite까지 확장하기 위한 실행 로드맵이다.
 
 ---
 
@@ -315,6 +319,8 @@ docs/
   - Content Enrichment Catalog의 Pack 2 후보를 기반으로 Item / Ending 콘텐츠를 확장한 결과를 보관한다.
 - `docs/07_reviews/45_Standard_Run_25_35_Turn_Verification_Result_v0.1.md`
   - Content Enrichment Pack 1/2 이후 Standard Run 25~35 Turn JSON/Text MUD/Ending 검증 결과를 보관한다.
+- `docs/07_reviews/46_Ontology_Core_Model_Replan_Result_v0.1.md`
+  - Ontology-lite에서 Ontology Core Model로 확장하기 위한 재설계 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
