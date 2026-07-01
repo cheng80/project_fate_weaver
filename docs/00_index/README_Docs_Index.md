@@ -172,6 +172,8 @@ docs/
   - Codex가 Console Validation 프로토타입을 만들 때 따라야 할 작업 브리프다.
 - `docs/04_codex/14_Codex_Gameplay_Replan_Brief_v0.1.md`
   - Codex가 기존 구조를 해치지 않고 게임 구조 재정의와 후속 구현 계획을 수행하기 위한 작업 브리프다.
+- `docs/04_codex/15_Codex_P1_First_Task_Brief_v0.1.md`
+  - P0 playable milestone 이후 P1 첫 작업을 Codex가 바로 이어서 수행할 수 있도록 정리한 brief 초안이다.
 
 ---
 
@@ -235,6 +237,8 @@ docs/
   - Ontology Core Model에서 Reasoner-lite와 Situation Director-lite까지 확장하기 위한 실행 로드맵이다.
 - `docs/06_plans/10_P1_Backlog_After_P0_Playable_v0.1.md`
   - P0 playable milestone 이후 P1에서 다룰 후보 작업을 정리한 backlog 문서다.
+- `docs/06_plans/11_P1_Planning_After_P0_Playable_v0.1.md`
+  - FateWeaver P0 playable milestone 이후 P1의 목표, 우선순위, 첫 실행 작업을 정리한 planning 문서다.
 
 ---
 
@@ -343,6 +347,8 @@ docs/
   - Resource Alternative Surface Gate 이후 10개 seed Standard Run에서 resource_alternative 후보/제시/선택 비율과 자원 압박을 검증한 결과를 보관한다.
 - `docs/07_reviews/57_P0_Playable_Milestone_Freeze_Result_v0.1.md`
   - FateWeaver P0 playable 상태를 고정하고, P1 이전에 유지해야 할 검증 기준과 watch item을 정리한 milestone freeze 문서다.
+- `docs/07_reviews/58_P1_Planning_After_P0_Playable_Result_v0.1.md`
+  - P0 playable milestone freeze 이후 P1 planning을 수행하고 첫 P1 작업 후보를 정리한 결과를 보관한다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
