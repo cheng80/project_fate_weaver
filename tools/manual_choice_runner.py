@@ -3,10 +3,14 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 from random import Random
-from typing import TextIO, TypedDict
+from typing import TextIO
+
+try:
+    from .manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs, TraceEntry
+except ImportError:
+    from manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs, TraceEntry
 
 
 def main() -> int:
@@ -15,62 +19,19 @@ def main() -> int:
 
     try:
         args = _parse_args(project_root)
-        outputs = run_manual_choice(args, sys.stdin, sys.stdout)
+        json_path, text_path, trace_path, summary_path = run_manual_choice(args, sys.stdin, sys.stdout)
     except (OSError, TypeError, ValueError, KeyError) as error:
         print(f"MANUAL_RUNNER: ERROR {error}", file=sys.stderr)
         return 1
 
-    print(f"MANUAL_RUN_JSON: {outputs.json_path}")
-    print(f"MANUAL_RUN_TEXT_MUD: {outputs.text_path}")
-    print(f"MANUAL_RUN_TRACE: {outputs.trace_path}")
-    print(f"MANUAL_RUN_SUMMARY: {outputs.summary_path}")
+    print(f"MANUAL_RUN_JSON: {json_path}")
+    print(f"MANUAL_RUN_TEXT_MUD: {text_path}")
+    print(f"MANUAL_RUN_TRACE: {trace_path}")
+    print(f"MANUAL_RUN_SUMMARY: {summary_path}")
     return 0
 
 
-@dataclass(frozen=True, slots=True)
-class ManualRunnerArgs:
-    project_root: Path
-    scenario_path: Path
-    seed: int
-    output_dir: Path
-    choices: tuple[int, ...]
-    choice_source: str
-
-
-@dataclass(frozen=True, slots=True)
-class ManualRunnerOutputs:
-    json_path: Path
-    text_path: Path
-    trace_path: Path
-    summary_path: Path
-
-
-@dataclass(frozen=True, slots=True)
-class InvalidManualChoiceError(ValueError):
-    raw_choice: str
-
-    def __str__(self) -> str:
-        return f"invalid manual choice {self.raw_choice!r}; expected 1, 2, or 3"
-
-
-class InvalidManualScenarioError(ValueError):
-    pass
-
-
-class TraceEntry(TypedDict):
-    turn: int
-    day: int
-    presented_card_ids: list[str]
-    selected_index: int
-    selected_card_id: str
-    selected_card_slot_role: str
-    result_summary: str
-    resource_delta: dict[str, int]
-    objective_delta: dict[str, int]
-    next_event_tags_delta: list[str]
-
-
-def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> ManualRunnerOutputs:
+def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> tuple[Path, Path, Path, Path]:
     from fateweaver.data_loader import load_project_data
     from fateweaver.gameplay_p0 import (
         _continue_state,
@@ -84,6 +45,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
     from fateweaver.gameplay_p0_cards import build_card_candidate_pool
     from fateweaver.gameplay_p0_data import load_foundation
+    from fateweaver.gameplay_p0_errors import MissingCardSlotError
     from fateweaver.gameplay_p0_models import GameplayRunRequest, TurnLogRequest
     from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
     from fateweaver.gameplay_p0_rules import apply_turn_result, combined_result, initial_state, select_storylet
@@ -109,17 +71,26 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     turns = []
     trace = []
     choice_offset = 0
-    stopped_reason = ""
+    stop_reason = "completed"
     while len(turns) < scenario.target_turns and state.clock.turn <= state.clock.max_turns and not is_failed(state.status, bundle.statuses):
+        if args.max_turns is not None and len(turns) >= args.max_turns:
+            stop_reason = "max_turn_reached"
+            break
         if args.choice_source != "interactive" and choice_offset >= len(args.choices):
-            stopped_reason = "manual_choices_exhausted"
+            stop_reason = "choice_sequence_exhausted"
             break
         ontology_inference = run_reasoner(ontology_core, _ontology_context(foundation.quest.id, state))
         event = select_storylet(events, state, rng, foundation.quest.id, ontology_inference)
         context = card_candidate_context(foundation.quest, event, state, ontology_inference)
         candidate_pool = build_card_candidate_pool(foundation.card_rules.cards, state, context)
-        selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
+        try:
+            selection = select_cards_from_pool(candidate_pool, _selection_context(request, foundation.quest, state))
+        except MissingCardSlotError as error:
+            raise InvalidManualScenarioError(str(error)) from error
         cards = selection.cards
+        if len(cards) < 3:
+            stop_reason = "no_available_cards_handled"
+            break
         selected_index = _next_choice(args, choice_offset, state.clock.turn, stdin, stdout)
         choice_offset += 1
         selected_cards = (cards[selected_index - 1],)
@@ -154,16 +125,22 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
             quest_completed(foundation.quest, state, bundle, foundation.score_rules)
             and state.clock.turn >= _minimum_completion_turn(scenario.run_clock)
         ) or is_failed(state.status, bundle.statuses):
+            stop_reason = "failure" if is_failed(state.status, bundle.statuses) else "target_turn_reached"
             break
         state = _continue_state(state, event)
 
     report = build_quest_report(QuestReportRequest(foundation.quest, state, bundle, foundation.score_rules))
+    if stop_reason in {"completed", "target_turn_reached"} and report.get("result_type") == "success":
+        stop_reason = "completed"
+    elif len(turns) >= scenario.target_turns and stop_reason == "completed":
+        stop_reason = "target_turn_reached"
     log = _run_log(request, foundation.quest, turns, state, report)
     log["manual_choice_mode"] = True
     log["choice_source"] = args.choice_source
     log["manual_choice_trace"] = trace
     log["unused_choices"] = max(0, len(args.choices) - choice_offset)
-    log["manual_stop_reason"] = stopped_reason
+    log["stop_reason"] = stop_reason
+    log["manual_stop_reason"] = stop_reason
     return _write_outputs(args.output_dir, args.seed, log, trace)
 
 
@@ -174,6 +151,7 @@ def _parse_args(project_root: Path) -> ManualRunnerArgs:
     parser.add_argument("--choices")
     parser.add_argument("--choice-file")
     parser.add_argument("--interactive", action="store_true")
+    parser.add_argument("--max-turns", type=int)
     parser.add_argument("--output-dir", required=True)
     namespace = parser.parse_args()
     sources = sum(1 for value in (namespace.choices, namespace.choice_file, namespace.interactive) if value)
@@ -189,6 +167,7 @@ def _parse_args(project_root: Path) -> ManualRunnerArgs:
         output_dir=output_dir if output_dir.is_absolute() else project_root / output_dir,
         choices=choices,
         choice_source=source,
+        max_turns=namespace.max_turns,
     )
 
 
@@ -259,7 +238,7 @@ def _int_delta(before: dict, after: dict) -> dict[str, int]:
     return {key: int(after.get(key, 0)) - int(before.get(key, 0)) for key in keys}
 
 
-def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) -> ManualRunnerOutputs:
+def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) -> tuple[Path, Path, Path, Path]:
     from fateweaver.text_mud_log import render_text_mud_log
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -276,13 +255,14 @@ def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) ->
         "selected_indexes": [entry["selected_index"] for entry in trace],
         "selected_card_ids": [entry["selected_card_id"] for entry in trace],
         "unused_choices": log["unused_choices"],
+        "stop_reason": log["stop_reason"],
         "manual_stop_reason": log["manual_stop_reason"],
     }
     json_path.write_text(json.dumps(log, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     text_path.write_text(render_text_mud_log(log), encoding="utf-8")
     trace_path.write_text(json.dumps(trace, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return ManualRunnerOutputs(json_path, text_path, trace_path, summary_path)
+    return json_path, text_path, trace_path, summary_path
 
 
 if __name__ == "__main__":

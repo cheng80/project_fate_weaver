@@ -11,6 +11,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCENARIO_PATH = PROJECT_ROOT / "data/scenarios/standard_run_25_35_turn.yaml"
 CHOICES = "1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1"
+ALL_ONES = ",".join("1" for _ in range(25))
 
 
 class ManualChoiceRunnerTests(unittest.TestCase):
@@ -42,8 +43,53 @@ class ManualChoiceRunnerTests(unittest.TestCase):
         if len(turns) > 1:
             self.assertEqual(turns[0]["state_after"], turns[1]["state_before"])
         self.assertEqual(len(turns), summary["turn_count"])
+        self.assertTrue(payload["stop_reason"])
+        self.assertEqual(payload["stop_reason"], payload["manual_stop_reason"])
+        self.assertEqual(summary["stop_reason"], summary["manual_stop_reason"])
         self.assertIn("manual_seed_202.json", completed.stdout)
         self.assertIn("[Run 종료]", text_log)
+
+    def test_manual_choice_runner_marks_completed_success(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            completed = _run_manual(output_dir, ALL_ONES)
+            payload = json.loads((output_dir / "manual_seed_202.json").read_text(encoding="utf-8"))
+            summary = json.loads((output_dir / "manual_seed_202_summary.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(0, completed.returncode)
+        self.assertEqual("success", summary["result_type"])
+        self.assertEqual("completed", payload["stop_reason"])
+        self.assertEqual("completed", payload["manual_stop_reason"])
+        self.assertEqual("completed", summary["stop_reason"])
+        self.assertEqual("completed", summary["manual_stop_reason"])
+
+    def test_manual_choice_runner_stops_cleanly_at_max_turns(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            completed = _run_manual(output_dir, CHOICES, "--max-turns", "5")
+
+            self.assertEqual(0, completed.returncode)
+            payload = json.loads((output_dir / "manual_seed_202.json").read_text(encoding="utf-8"))
+            summary = json.loads((output_dir / "manual_seed_202_summary.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(5, summary["turn_count"])
+        self.assertEqual("max_turn_reached", payload["stop_reason"])
+        self.assertEqual("max_turn_reached", payload["manual_stop_reason"])
+        self.assertEqual("max_turn_reached", summary["stop_reason"])
+        self.assertEqual("max_turn_reached", summary["manual_stop_reason"])
+
+    def test_manual_choice_runner_stops_cleanly_when_sequence_exhausted(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            completed = _run_manual(output_dir, "1")
+            payload = json.loads((output_dir / "manual_seed_202.json").read_text(encoding="utf-8"))
+            summary = json.loads((output_dir / "manual_seed_202_summary.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(0, completed.returncode)
+        self.assertEqual("choice_sequence_exhausted", payload["stop_reason"])
+        self.assertEqual("choice_sequence_exhausted", payload["manual_stop_reason"])
+        self.assertEqual("choice_sequence_exhausted", summary["stop_reason"])
+        self.assertEqual("choice_sequence_exhausted", summary["manual_stop_reason"])
 
     def test_manual_choice_runner_rejects_invalid_choice_index(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -97,7 +143,7 @@ class ManualChoiceRunnerTests(unittest.TestCase):
         self.assertTrue(all(len(turn["presented_cards"]) == 3 for turn in payload["turns"]))
 
 
-def _run_manual(output_dir: Path, choices: str) -> subprocess.CompletedProcess[str]:
+def _run_manual(output_dir: Path, choices: str, *extra_args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             ".venv/bin/python",
@@ -110,6 +156,7 @@ def _run_manual(output_dir: Path, choices: str) -> subprocess.CompletedProcess[s
             choices,
             "--output-dir",
             str(output_dir),
+            *extra_args,
         ],
         cwd=PROJECT_ROOT,
         env=_env(),
