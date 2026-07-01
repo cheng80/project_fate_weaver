@@ -198,6 +198,8 @@ docs/
   - Quest, Day/Turn, 3-Card UI, Multi-Select, 경제/점수/평판/후속 사건 연결 검증 체크리스트다.
 - `docs/05_validation/16_Gameplay_Replan_Acceptance_Gate_v0.1.md`
   - Gameplay Replan 구현 또는 콘텐츠 확장 작업을 완료로 판단하기 위한 최소 승인 기준이다.
+- `docs/05_validation/17_P0_Playable_Milestone_Checklist_v0.1.md`
+  - FateWeaver P0 playable 상태를 유지하기 위한 검증 체크리스트다.
 
 ---
 
@@ -231,6 +233,8 @@ docs/
   - Card Candidate / Clue / Omen / Item / Ending 확장을 위한 구현 후보 카탈로그다.
 - `docs/06_plans/09_Ontology_Core_And_Director_Roadmap_v0.1.md`
   - Ontology Core Model에서 Reasoner-lite와 Situation Director-lite까지 확장하기 위한 실행 로드맵이다.
+- `docs/06_plans/10_P1_Backlog_After_P0_Playable_v0.1.md`
+  - P0 playable milestone 이후 P1에서 다룰 후보 작업을 정리한 backlog 문서다.
 
 ---
 
@@ -337,6 +341,8 @@ docs/
   - Standard Run seed 202의 resource_alternative 후보/제시/선택 표면화 문제를 진단하고 최소 보정한 결과를 보관한다.
 - `docs/07_reviews/55_Resource_Balance_Validation_Result_v0.1.md`
   - Resource Alternative Surface Gate 이후 10개 seed Standard Run에서 resource_alternative 후보/제시/선택 비율과 자원 압박을 검증한 결과를 보관한다.
+- `docs/07_reviews/57_P0_Playable_Milestone_Freeze_Result_v0.1.md`
+  - FateWeaver P0 playable 상태를 고정하고, P1 이전에 유지해야 할 검증 기준과 watch item을 정리한 milestone freeze 문서다.
 ---
 
 # 10. 신규 게임 구조 재정의 문서 적용 원칙
