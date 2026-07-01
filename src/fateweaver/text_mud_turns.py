@@ -26,6 +26,7 @@ def format_turn(turn: JsonMap) -> list[str]:
         f"Quest: {text(turn.get('quest_title'))}",
         f"Region: {_region(turn)}",
         f"장소: {_place(turn)}",
+        f"장면: {_scene_line(turn)}",
         f"현재 상태와 자원: {text(turn.get('state_before'))}",
         f"보유 아이템: {text(turn.get('inventory_before'))}",
         f"감지된 단서: {_clues(turn)}",
@@ -39,11 +40,15 @@ def format_turn(turn: JsonMap) -> list[str]:
         [
             "선택:",
             f"- {_selected_cards(turn)}",
+            f"선택의 의미: {_choice_intent(selected, turn)}",
             f"선택 결과: {_choice_result_line(selected, result)}",
             f"위험/보상 판단: {_risk_reward_judgment(turn)}",
             f"결과 메시지: {text(result.get('message'))}",
+            f"결과 해석: {_result_narrative(result)}",
             f"상태 변화: {_state_changes(json_map(turn.get('state_before')), json_map(turn.get('state_after')))}",
+            f"변화 의미: {_state_change_narrative(json_map(turn.get('state_before')), json_map(turn.get('state_after')))}",
             f"아이템/단서/징조 영향: {_influences(turn)}",
+            f"단서/징조 해석: {_clue_omen_narrative(result)}",
             f"다음 사건 변화: {_event_weight(result)}",
             f"Quest Progress: {text(turn.get('quest_progress'))}",
             f"Score Change: {text(turn.get('score_change'))}",
@@ -89,6 +94,17 @@ def _event_line(turn: JsonMap) -> str:
     return name if description == MISSING else f"{name} - {description}"
 
 
+def _scene_line(turn: JsonMap) -> str:
+    event_name = text(turn.get("event_name"))
+    description = text(turn.get("event_description"))
+    risk = text(turn.get("expected_risk"))
+    if description != MISSING:
+        return f"{description} 위험도는 {risk}로 읽힌다."
+    if event_name != MISSING:
+        return f"{event_name} 앞에서 다음 선택을 고른다."
+    return "원정대는 다음 선택지를 살핀다."
+
+
 def _selected_choice(turn: JsonMap) -> JsonMap:
     selected_id = text(turn.get("selected_choice_id"))
     for choice in json_maps(turn.get("choices_seen")):
@@ -99,6 +115,35 @@ def _selected_choice(turn: JsonMap) -> JsonMap:
 
 def _choice_result_line(selected: JsonMap, result: JsonMap) -> str:
     return f"{text(selected.get('choice_text'))} -> {_reward_hint(result)}"
+
+
+def _choice_intent(selected: JsonMap, turn: JsonMap) -> str:
+    role = text(selected.get("slot_role"))
+    if role == MISSING:
+        role = text(selected.get("choice_type"))
+    if role == MISSING:
+        role = text(turn.get("selected_choice_type"))
+    meanings = {
+        "quest_progress": "목표에 직접 다가가는 선택이다.",
+        "risk_discovery": "위험을 감수하고 더 많은 정보를 얻는다.",
+        "resource_alternative": "보급과 휴식을 관리해 다음 구간을 버틴다.",
+        "clue_followup": "이미 얻은 단서를 다음 판단으로 잇는다.",
+        "omen_escalation": "불길한 징조를 확인하고 대비한다.",
+        "return": "확인한 내용을 들고 돌아갈 때를 고른다.",
+        "aftermath": "남은 일을 정리하고 결과를 굳힌다.",
+        "resolve_objective": "마지막 목표를 매듭짓는 선택이다.",
+    }
+    return meanings.get(role, "현재 상황에서 가장 그럴듯한 길을 고른다.")
+
+
+def _result_narrative(result: JsonMap) -> str:
+    message = text(result.get("message"))
+    if message != MISSING:
+        return message
+    hint = _reward_hint(result)
+    if hint != MISSING:
+        return f"선택의 대가와 보상이 바로 드러난다: {hint}"
+    return "상황은 크게 흔들리지 않았지만 선택의 흔적은 남는다."
 
 
 def _risk_reward_judgment(turn: JsonMap) -> str:
@@ -188,5 +233,48 @@ def _inventory_changes(before: tuple[JsonValue, ...], after: tuple[JsonValue, ..
 
 def _state_changes(before: JsonMap, after: JsonMap) -> str:
     keys = sorted(before.keys() | after.keys())
-    changes = [f"{key}: {text(before.get(key))} -> {text(after.get(key))}" for key in keys if before.get(key) != after.get(key)]
+    changes = [_state_change_line(key, before.get(key), after.get(key)) for key in keys if before.get(key) != after.get(key)]
     return ", ".join(changes) if changes else "변화 없음"
+
+
+def _state_change_line(key: str, before: JsonValue | None, after: JsonValue | None) -> str:
+    delta = _numeric_delta(before, after)
+    if delta is None:
+        return f"{key}: {text(before)} -> {text(after)}"
+    sign = f"+{delta}" if delta > 0 else str(delta)
+    narrative = _resource_delta_narrative(key, delta)
+    return f"{key}: {text(before)} -> {text(after)} ({sign}) - {narrative}"
+
+
+def _numeric_delta(before: JsonValue | None, after: JsonValue | None) -> int | None:
+    if isinstance(before, int) and isinstance(after, int):
+        return after - before
+    return None
+
+
+def _resource_delta_narrative(key: str, delta: int) -> str:
+    if key == "food":
+        return "식량이 조금 늘어 다음 이동의 여유가 생긴다." if delta > 0 else "식량이 줄어 다음 휴식의 압박이 커진다."
+    if key == "health":
+        return "몸 상태가 나아져 위험을 버틸 힘이 생긴다." if delta > 0 else "피로와 상처가 다음 선택을 무겁게 만든다."
+    if key == "money":
+        return "쓸 수 있는 돈이 늘어 선택지가 넓어진다." if delta > 0 else "돈을 써서 당장의 실마리를 확보한다."
+    if key == "reputation":
+        return "평판이 올라 다음 부탁이 쉬워진다." if delta > 0 else "평판이 흔들려 다음 만남이 까다로워진다."
+    if key == "curse":
+        return "불안한 상태가 짙어진다." if delta > 0 else "불안한 상태가 조금 가라앉는다."
+    return "상태가 바뀌어 다음 장면의 조건이 달라진다."
+
+
+def _state_change_narrative(before: JsonMap, after: JsonMap) -> str:
+    keys = [key for key in sorted(before.keys() | after.keys()) if before.get(key) != after.get(key)]
+    if not keys:
+        return "자원은 그대로지만 선택의 정보가 다음 장면에 남는다."
+    return "; ".join(_resource_delta_narrative(key, _numeric_delta(before.get(key), after.get(key)) or 0) for key in keys)
+
+
+def _clue_omen_narrative(result: JsonMap) -> str:
+    parts = []
+    parts.extend(f"단서: {text(clue)} - 다음 판단에 연결할 실마리가 생긴다." for clue in json_values(result.get("gain_clues")))
+    parts.extend(f"징조: {text(omen)} - 위험이 모습을 드러낸다." for omen in json_values(result.get("gain_omens")))
+    return " / ".join(parts) if parts else "새 단서나 징조는 뚜렷하게 늘지 않았다."

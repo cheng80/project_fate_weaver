@@ -118,6 +118,97 @@ class TextMudLogTests(unittest.TestCase):
         header = "\n".join(text_log.splitlines()[:5])
         self.assertNotIn("curse", header)
 
+    def test_render_text_mud_log_when_polished_then_frames_choice_and_ending_as_story(self) -> None:
+        # Given
+        log: JsonMap = {
+            "run_id": "standard-run-polish",
+            "scenario_id": "standard_run_25_35_turn",
+            "seed": 202,
+            "profile": "balanced",
+            "turns": [
+                {
+                    "turn": 21,
+                    "quest_title": "폭풍 산길 생존 귀환",
+                    "run_clock": {"day": 6, "time_of_day": "morning", "turn": 21},
+                    "event_name": "두 번째 목격자의 엇갈린 증언",
+                    "event_description": "상인의 말과 다른 발자국 이야기가 나온다.",
+                    "region_tags": ["village"],
+                    "event_tags": ["clue"],
+                    "danger_tags": ["storm"],
+                    "state_before": {"food": 3, "health": 8, "money": 17, "reputation": 5},
+                    "inventory_before": ["torch"],
+                    "choices_seen": [
+                        {
+                            "choice_id": "ration_the_last_supplies",
+                            "choice_text": "남은 보급을 배분한다",
+                            "choice_type": "resource_alternative",
+                            "slot_role": "resource_alternative",
+                            "available": True,
+                            "expected_risk": "low",
+                            "result": {
+                                "status": {"food": 1},
+                                "message": "남은 식량을 더 오래 버티도록 나눴다.",
+                            },
+                        },
+                    ],
+                    "selected_choice_id": "ration_the_last_supplies",
+                    "selected_choice_type": "resource_alternative",
+                    "selected_choice_reason": "balanced: resource caution",
+                    "choice_reason": "남은 보급을 배분한다",
+                    "expected_risk": "low",
+                    "regret_score": 1,
+                    "influenced_by": ["slot:resource_alternative"],
+                    "result": {
+                        "status": {"food": 1},
+                        "gain_clues": ["old_route_receipt"],
+                        "gain_omens": ["storm_break"],
+                        "next_event_tags": ["storm_pass", "ration"],
+                        "message": "남은 식량을 더 오래 버티도록 나눴다.",
+                    },
+                    "state_after": {"food": 4, "health": 8, "money": 17, "reputation": 5},
+                    "inventory_after": ["torch"],
+                    "quest_progress": {"storm_shelter_found": 1},
+                    "score_change": {"resource_management": 4},
+                }
+            ],
+            "run_summary": {
+                "final_state": {"food": 4, "health": 8, "money": 17, "reputation": 5},
+                "final_inventory": ["torch"],
+                "run_failed": False,
+                "narrative_summary": "route prepared",
+                "next_run_intent": "complete",
+            },
+            "quest_report": {
+                "result_type": "success",
+                "failure_kind": "none",
+                "character_outcome": "alive",
+                "result_reason": "all_required_objectives_complete",
+                "review_text": "피난처와 보급을 확인해 산길을 넘을 준비를 마쳤다.",
+                "partial_reasons": [],
+                "failure_reasons": [],
+                "completed_objectives": ["storm_shelter_found"],
+                "failed_objectives": [],
+                "reward_status": "full_reward",
+                "score": 576,
+                "score_breakdown": {"resource_management": 4},
+                "resource_summary": {"food": 4, "health": 8},
+                "ending": {"id": "prepared_frontier_route", "name": "준비된 변경의 길"},
+            },
+        }
+
+        # When
+        text_log = render_text_mud_log(log)
+
+        # Then
+        self.assertIn("장면:", text_log)
+        self.assertIn("선택의 의미: 보급과 휴식을 관리해 다음 구간을 버틴다.", text_log)
+        self.assertIn("결과 해석: 남은 식량을 더 오래 버티도록 나눴다.", text_log)
+        self.assertIn("food: 3 -> 4 (+1) - 식량이 조금 늘어 다음 이동의 여유가 생긴다.", text_log)
+        self.assertIn("단서: old_route_receipt - 다음 판단에 연결할 실마리가 생긴다.", text_log)
+        self.assertIn("징조: storm_break - 위험이 모습을 드러낸다.", text_log)
+        self.assertIn("Run 결말: prepared_frontier_route / 준비된 변경의 길", text_log)
+        self.assertIn("Ending 해석: 준비와 단서가 이어져 변경을 넘을 길이 열린다.", text_log)
+
 
 if __name__ == "__main__":
     unittest.main()
