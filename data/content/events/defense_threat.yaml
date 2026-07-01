@@ -157,6 +157,107 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: silent_birds_circle_ridge
+  name: 능선을 맴도는 침묵한 새들
+  description: 새들이 울지 않은 채 낮은 능선을 돌며 짐승의 접근 방향을 그린다.
+  quest_ids:
+  - beast_of_zarechka
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - zarechka_beast
+  - omen
+  - introduce_omen
+  - escalate_risk
+  - quest_related
+  card_candidate_hints:
+  - identify_beast_tracks
+  - set_beast_watchfire
+  cooldown_tags:
+  - zarechka_beast
+  - silent_birds
+  repeat_group: zarechka_beast_omen_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 새들이 도는 방향을 본다
+    type: risky
+    risk_level: medium
+    result:
+      message: 새들의 침묵은 마을 쪽보다 낮은 능선의 위험을 더 크게 만든다.
+- id: fresh_claw_marks_near_tarp
+  name: 방수포 옆의 새 발톱 자국
+  description: 막 세운 방수포 가장자리에 아직 젖은 발톱 자국이 이어져 있다.
+  quest_ids:
+  - beast_of_zarechka
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - zarechka_beast
+  - clue_followup
+  - reveal_clue
+  - test_survival
+  - quest_related
+  card_candidate_hints:
+  - bait_the_threat_path
+  - identify_beast_tracks
+  cooldown_tags:
+  - zarechka_beast
+  - claw_marks
+  repeat_group: zarechka_beast_clue_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 발톱 자국의 깊이를 잰다
+    type: risky
+    risk_level: medium
+    result:
+      message: 자국은 짐승이 방어선을 시험했다는 사실을 드러낸다.
+- id: watchfire_gutters_wrong_way
+  name: 반대로 꺼지는 경계 불
+  description: 경계 불꽃이 바람 반대 방향으로 꺼지며 밤길의 빈틈을 드러낸다.
+  quest_ids:
+  - defend_the_village_night
+  region_tags:
+  - village
+  event_tags:
+  - combat
+  danger_tags:
+  - beast
+  storylet_tags:
+  - night_threat
+  - watch
+  - escalate_risk
+  - offer_optional_help
+  - quest_related
+  card_candidate_hints:
+  - raise_night_watch
+  - mark_weak_fence_line
+  cooldown_tags:
+  - night_threat
+  - watchfire
+  repeat_group: village_defense_omen_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 불꽃이 꺼진 방향을 표시한다
+    type: safe
+    risk_level: low
+    result:
+      message: 경계 불은 어느 울타리부터 보강해야 할지 알려 준다.
 - id: zarechka_beast_pack1_enrichment
   name: 자레치카 추가 위협 징후
   description: 자레치카 추가 위협 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.

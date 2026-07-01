@@ -8,6 +8,15 @@ include_event_ids:
   - storm_pass_shelter_hint
   - storm_pass_pack1_enrichment
   - suspicious_merchant
+  - nervous_merchant_revises_story
+  - second_witness_contradicts_merchant
+  - trade_gossip_points_elsewhere
+  - merchant_receipt_marks_old_route
+  - wind_gap_reveals_safe_descent
+  - frost_on_pack_straps
+  - distant_tree_line_breaks_storm
+  - snowmelt_points_to_shelter
+  - ridge_echo_marks_return
   - quiet_camp
   - sudden_storm
   - hunger_night

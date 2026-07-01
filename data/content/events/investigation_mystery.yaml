@@ -219,6 +219,142 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: wet_charcoal_marks_route
+  name: 젖은 숯가루가 남긴 이동선
+  description: 비에 젖은 숯가루가 사라지는 마을의 오래된 이동선을 따라 번져 있다.
+  quest_ids:
+  - vanishing_village
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - vanishing
+  - clue_followup
+  - reveal_clue
+  - unlock_route
+  - quest_related
+  card_candidate_hints:
+  - mark_returning_path
+  - find_vanishing_trace
+  cooldown_tags:
+  - vanishing
+  - charcoal_trace
+  repeat_group: vanishing_village_followup_clue
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 숯가루 방향을 기록한다
+    type: safe
+    risk_level: low
+    result:
+      message: 숯가루의 선은 마을이 사라진 방향보다 돌아올 기준을 먼저 알려 준다.
+- id: broken_signpost_matches_map
+  name: 지도와 맞아떨어지는 부러진 표지판
+  description: 부러진 표지판의 못 자국이 오래된 사례 기록의 표식과 맞아떨어진다.
+  quest_ids:
+  - vanishing_village
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - exploration
+  danger_tags:
+  - lost
+  storylet_tags:
+  - vanishing
+  - clue_followup
+  - reveal_clue
+  - resolve_objective
+  - quest_related
+  card_candidate_hints:
+  - consult_old_case_notes
+  - map_conflicting_testimony
+  cooldown_tags:
+  - vanishing
+  - signpost
+  repeat_group: vanishing_village_followup_clue
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 표지판과 기록을 대조한다
+    type: safe
+    risk_level: low
+    result:
+      message: 표지판은 증언보다 오래 버틴 단서로 남는다.
+- id: blue_flame_over_old_cut
+  name: 오래된 절단면 위의 푸른 불꽃
+  description: 낡은 목재 절단면에서 푸른 불꽃이 흔들리며 거짓 신호의 방향을 가린다.
+  quest_ids:
+  - abandoned_lighthouse_signal
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - lighthouse
+  - omen
+  - introduce_omen
+  - escalate_risk
+  - quest_related
+  card_candidate_hints:
+  - test_the_false_signal
+  - decode_lighthouse_signal
+  cooldown_tags:
+  - lighthouse
+  - blue_flame
+  repeat_group: lighthouse_omen_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 푸른 불꽃을 관찰한다
+    type: risky
+    risk_level: medium
+    result:
+      message: 불꽃은 신호가 아니라 누군가 남긴 유인 장치처럼 흔들린다.
+- id: oil_sheen_points_to_false_signal
+  name: 거짓 신호를 가리키는 기름막
+  description: 빗물 위 기름막이 등대가 아닌 숲가 임시 램프 쪽으로 흐른다.
+  quest_ids:
+  - abandoned_lighthouse_signal
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - lighthouse
+  - clue_followup
+  - reveal_clue
+  - test_reputation
+  - quest_related
+  card_candidate_hints:
+  - inspect_signal_lamp
+  - reconstruct_last_known_path
+  cooldown_tags:
+  - lighthouse
+  - oil_sheen
+  repeat_group: lighthouse_clue_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 기름막의 흐름을 따라간다
+    type: safe
+    risk_level: low
+    result:
+      message: 기름막은 등대의 신호가 꾸며진 것이라는 의심을 남긴다.
 - id: lighthouse_signal_pack1_enrichment
   name: 등대 추가 신호 단서
   description: 등대 추가 신호 단서가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.

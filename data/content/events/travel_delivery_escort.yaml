@@ -221,6 +221,108 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: guide_demands_storm_fee
+  name: 폭풍 추가요금을 요구하는 안내인
+  description: 안내인이 길은 안다면서도 비가 오기 전 대가를 먼저 올려 부른다.
+  quest_ids:
+  - caravan_to_border_fort
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - caravan
+  - trade
+  - offer_resource_tradeoff
+  - test_reputation
+  - quest_related
+  card_candidate_hints:
+  - listen_to_border_gossip
+  - negotiate_safe_passage
+  cooldown_tags:
+  - caravan
+  - guide_fee
+  repeat_group: caravan_resource_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 안내인의 조건을 따져 본다
+    type: safe
+    risk_level: low
+    result:
+      message: 추가요금은 길 정보와 평판을 맞바꾸는 문제로 남는다.
+- id: caravan_rut_avoids_flood
+  name: 물길을 피한 상단 수레 자국
+  description: 오래된 수레 자국이 젖은 길을 피해 낮은 둔덕으로 비켜 간다.
+  quest_ids:
+  - caravan_to_border_fort
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - caravan
+  - route
+  - unlock_route
+  - test_survival
+  - quest_related
+  card_candidate_hints:
+  - choose_sheltered_detour
+  - test_caravan_risk
+  cooldown_tags:
+  - caravan
+  - rut_route
+  repeat_group: caravan_route_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 수레 자국의 높이를 본다
+    type: safe
+    risk_level: low
+    result:
+      message: 수레 자국은 물길보다 안전한 둔덕을 먼저 알려 준다.
+- id: bridge_rope_frays_in_wind
+  name: 바람에 닳은 다리 밧줄
+  description: 작은 다리의 밧줄이 폭풍 방향으로만 닳아 있어 건널 시간을 제한한다.
+  quest_ids:
+  - winter_wagon_delivery
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - winter_wagon
+  - equipment
+  - escalate_risk
+  - offer_resource_tradeoff
+  - quest_related
+  card_candidate_hints:
+  - repair_load_straps
+  - read_weather_marks
+  cooldown_tags:
+  - winter_wagon
+  - bridge_rope
+  repeat_group: winter_wagon_risk_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 밧줄이 닳은 방향을 확인한다
+    type: risky
+    risk_level: medium
+    result:
+      message: 밧줄은 지금 건널지 보급을 들여 고칠지 결정하라고 압박한다.
 - id: winter_wagon_pack1_enrichment
   name: 겨울 마차 추가 날씨 표식
   description: 겨울 마차 추가 날씨 표식가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.

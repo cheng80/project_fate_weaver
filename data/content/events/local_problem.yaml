@@ -152,6 +152,141 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: nervous_merchant_revises_story
+  name: 말을 고치는 수상한 상인
+  description: 폭풍 소식을 묻자 길가 상인이 방금 한 말을 급히 바꾼다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - trade
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - merchant
+  - trade
+  - test_reputation
+  - reveal_clue
+  - quest_related
+  card_candidate_hints:
+  - buy_local_hint
+  - read_departure_signs
+  cooldown_tags:
+  - merchant_rumor
+  - storm_pass_social
+  repeat_group: storm_pass_merchant_social
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 상인의 말을 대조한다
+    type: safe
+    risk_level: low
+    result:
+      message: 상인의 말은 피난처보다 우회로 쪽으로 더 많은 단서를 남긴다.
+- id: second_witness_contradicts_merchant
+  name: 상인을 반박하는 두 번째 목격자
+  description: 장터 끝의 목격자가 상인이 말한 폭풍 시간을 정면으로 부정한다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  event_tags:
+  - trade
+  danger_tags:
+  - bandit
+  storylet_tags:
+  - witness
+  - merchant
+  - test_reputation
+  - offer_optional_help
+  - reveal_clue
+  - quest_related
+  card_candidate_hints:
+  - buy_local_hint
+  - read_departure_signs
+  cooldown_tags:
+  - merchant_rumor
+  - witness
+  repeat_group: storm_pass_merchant_social
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 목격자의 시간을 기록한다
+    type: safe
+    risk_level: low
+    result:
+      message: 엇갈린 증언이 산길에 남은 시간을 더 분명하게 만든다.
+- id: trade_gossip_points_elsewhere
+  name: 다른 길을 가리키는 거래 소문
+  description: 값싼 물건보다 오래된 우회로 이야기가 장터 사람들 사이에 더 빨리 돈다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  event_tags:
+  - trade
+  danger_tags:
+  - hunger
+  storylet_tags:
+  - trade
+  - rumor
+  - offer_resource_tradeoff
+  - unlock_route
+  - quest_related
+  card_candidate_hints:
+  - buy_local_hint
+  - read_departure_signs
+  cooldown_tags:
+  - merchant_rumor
+  - route_gossip
+  repeat_group: storm_pass_trade_gossip
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 소문의 방향을 좁힌다
+    type: safe
+    risk_level: low
+    result:
+      message: 소문은 돈을 쓰지 않아도 폭풍을 피할 길목 하나를 남긴다.
+- id: merchant_receipt_marks_old_route
+  name: 낡은 길이 찍힌 상인 영수증
+  description: 구겨진 영수증 뒷면에 산길의 오래된 하역 지점이 표시되어 있다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - trade
+  danger_tags:
+  - storm
+  storylet_tags:
+  - merchant
+  - route
+  - unlock_route
+  - invite_return
+  - quest_related
+  card_candidate_hints:
+  - read_departure_signs
+  - return_from_storm_pass
+  cooldown_tags:
+  - merchant_rumor
+  - old_route
+  repeat_group: storm_pass_trade_gossip
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 영수증의 길을 맞춰 본다
+    type: safe
+    risk_level: low
+    result:
+      message: 영수증의 표식은 폭풍 뒤에도 돌아올 수 있는 길을 가리킨다.
 - id: village_wrongness_pack1_enrichment
   name: 초보 마을 추가 이상 징후
   description: 초보 마을 추가 이상 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.

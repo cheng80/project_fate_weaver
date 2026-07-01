@@ -95,6 +95,108 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: old_rune_matches_storm_scar
+  name: 폭풍 흉터와 맞는 오래된 룬
+  description: 비에 드러난 돌 흉터가 오래된 문의 룬 배열과 같은 방향을 가리킨다.
+  quest_ids:
+  - activate_the_old_gate
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - old_gate
+  - rune
+  - clue_followup
+  - reveal_clue
+  - quest_related
+  card_candidate_hints:
+  - copy_the_rune_sequence
+  - find_gate_runes
+  cooldown_tags:
+  - old_gate
+  - storm_scar
+  repeat_group: old_gate_clue_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 룬과 흉터를 맞춰 본다
+    type: safe
+    risk_level: low
+    result:
+      message: 룬 배열은 폭풍이 남긴 흉터와 같은 순서로 이어진다.
+- id: sealed_stone_hums_under_rain
+  name: 비 아래 울리는 봉인석
+  description: 봉인석이 빗방울을 맞을 때마다 낮은 음으로 울리며 계단의 빈 곳을 알린다.
+  quest_ids:
+  - old_well_awakening
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - well_seal
+  - omen
+  - introduce_omen
+  - test_survival
+  - quest_related
+  card_candidate_hints:
+  - brace_the_old_stairs
+  - listen_beyond_the_seal
+  cooldown_tags:
+  - old_well_awakening
+  - humming_stone
+  repeat_group: old_well_omen_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 봉인석의 울림을 듣는다
+    type: risky
+    risk_level: medium
+    result:
+      message: 울림은 아래쪽 계단이 비어 있다는 위험 신호가 된다.
+- id: ritual_smoke_bends_uphill
+  name: 언덕 위로 휘는 의식 연기
+  description: 꺼진 의식 자리의 연기가 비탈 아래가 아니라 언덕 위 폐문 쪽으로 휘어진다.
+  quest_ids:
+  - activate_the_old_gate
+  region_tags:
+  - village
+  - ruin
+  event_tags:
+  - exploration
+  danger_tags:
+  - ancient
+  storylet_tags:
+  - old_gate
+  - ritual
+  - escalate_risk
+  - resolve_objective
+  - quest_related
+  card_candidate_hints:
+  - test_the_ritual_component
+  - leave_a_return_marker
+  cooldown_tags:
+  - old_gate
+  - ritual_smoke
+  repeat_group: old_gate_ritual_followup
+  base_weight: 7
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 연기가 휘는 방향을 본다
+    type: safe
+    risk_level: low
+    result:
+      message: 연기는 의식 재료보다 귀환 표식을 먼저 남겨야 한다고 알려 준다.
 - id: old_gate_pack1_enrichment
   name: 오래된 문 추가 룬 반응
   description: 오래된 문 추가 룬 반응가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.

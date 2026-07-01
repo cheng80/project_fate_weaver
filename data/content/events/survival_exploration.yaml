@@ -95,6 +95,173 @@ events:
     risk_level: low
     result:
       message: 추가 단서와 징조가 다음 선택의 판단 재료가 된다.
+- id: wind_gap_reveals_safe_descent
+  name: 바람 틈이 드러낸 하산로
+  description: 비가 잠깐 갈라진 틈으로 젖지 않은 하산 자국이 보인다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - storm_pass
+  - route
+  - unlock_route
+  - test_survival
+  - quest_related
+  card_candidate_hints:
+  - read_storm_pass_sky
+  - return_from_storm_pass
+  cooldown_tags:
+  - storm_pass
+  - route_gap
+  repeat_group: storm_pass_route_followup
+  base_weight: 9
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 하산로를 표시한다
+    type: safe
+    risk_level: low
+    result:
+      message: 바람 틈이 닫히기 전에 돌아갈 방향을 분명히 했다.
+- id: frost_on_pack_straps
+  name: 짐끈에 맺힌 서리
+  description: 짐끈의 서리가 피난처보다 장비 상태를 먼저 점검하라고 경고한다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - village
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  - hunger
+  storylet_tags:
+  - storm_pass
+  - equipment
+  - offer_resource_tradeoff
+  - test_survival
+  - quest_related
+  card_candidate_hints:
+  - ration_the_last_supplies
+  - secure_storm_shelter
+  cooldown_tags:
+  - storm_pass
+  - equipment
+  repeat_group: storm_pass_resource_followup
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 장비 상태를 점검한다
+    type: safe
+    risk_level: low
+    result:
+      message: 서리는 보급을 아끼는 일과 체온을 지키는 일이 같은 문제임을 알려 준다.
+- id: distant_tree_line_breaks_storm
+  name: 폭풍을 끊는 먼 나무선
+  description: 먼 나무선이 바람을 잘라 내며 잠깐 걸을 수 있는 낮은 길을 만든다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - storm_pass
+  - weather
+  - escalate_risk
+  - unlock_route
+  - quest_related
+  card_candidate_hints:
+  - signal_from_high_ground
+  - read_storm_pass_sky
+  cooldown_tags:
+  - storm_pass
+  - tree_line
+  repeat_group: storm_pass_route_followup
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 나무선의 방향을 읽는다
+    type: risky
+    risk_level: medium
+    result:
+      message: 나무선은 유용하지만 오래 머물면 더 센 바람을 맞게 된다.
+- id: snowmelt_points_to_shelter
+  name: 피난처를 가리키는 눈녹은 줄
+  description: 바위 아래 눈녹은 줄이 이미 누군가 비를 피해 선 자리를 보여 준다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - storm
+  storylet_tags:
+  - storm_pass
+  - shelter
+  - reveal_clue
+  - introduce_omen
+  - quest_related
+  card_candidate_hints:
+  - find_dry_refuge
+  - secure_storm_shelter
+  cooldown_tags:
+  - storm_pass
+  - shelter_trace
+  repeat_group: storm_pass_shelter_followup
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 눈녹은 줄을 따라간다
+    type: safe
+    risk_level: low
+    result:
+      message: 녹은 눈은 숨은 바위틈과 이전 피난자의 흔적을 함께 남겼다.
+- id: ridge_echo_marks_return
+  name: 귀환로를 알려 주는 능선 메아리
+  description: 능선 아래에서 마을 종소리가 젖은 바람을 타고 희미하게 돌아온다.
+  quest_ids:
+  - survive_the_storm_pass
+  region_tags:
+  - forest
+  event_tags:
+  - survival
+  danger_tags:
+  - lost
+  storylet_tags:
+  - storm_pass
+  - return_report
+  - invite_return
+  - resolve_objective
+  - quest_related
+  card_candidate_hints:
+  - return_from_storm_pass
+  - signal_from_high_ground
+  cooldown_tags:
+  - storm_pass
+  - return_echo
+  repeat_group: storm_pass_return_followup
+  base_weight: 8
+  cooldown_turns: 2
+  choices:
+  - id: pass
+    text: 메아리의 방향을 잡는다
+    type: safe
+    risk_level: low
+    result:
+      message: 메아리는 폭풍 속에서도 마을로 돌아갈 마지막 기준점이 된다.
 - id: hidden_grove_pack1_enrichment
   name: 숨은 숲 추가 자연 징후
   description: 숨은 숲 추가 자연 징후가 Pack 1 후보 카드를 실제 선택 문맥에 연결한다.
