@@ -42,6 +42,9 @@ def render_trace_report(run_log: dict, trace: list[dict]) -> str:
             f"- Run Complete: {_value(completion.get('run_complete', 'not_recorded'))}",
             f"- completion_blocked_by_min_turns: {_value(completion.get('completion_blocked_by_min_turns', 'not_recorded'))}",
             "",
+            "## Quest Transitions",
+            *_transition_lines(trace),
+            "",
             "## Turn Timeline",
         ]
     )
@@ -111,6 +114,25 @@ def _warnings(trace: list[dict]) -> list[str]:
         if fallback:
             warnings.append(f"turn {entry.get('turn', 'unknown')}: fallback cards {', '.join(str(card) for card in fallback)}")
     return warnings or ["none"]
+
+
+def _transition_lines(trace: list[dict]) -> list[str]:
+    lifecycle_entries = [entry for entry in trace if entry.get("quest_lifecycle_event")]
+    if not lifecycle_entries:
+        return ["- none"]
+    return [
+        "- turn {turn}: previous={previous} next={next_quest} onboarding={onboarding} "
+        "required={required} no_next_quest={no_next} run_complete={run_complete}".format(
+            turn=_value(entry.get("turn")),
+            previous=_value(entry.get("previous_quest_id", entry.get("completed_quest_id"))),
+            next_quest=_value(entry.get("next_quest_id", "no_next_quest" if entry.get("no_next_quest") else "")),
+            onboarding=_value(entry.get("next_quest_onboarding", "not_recorded")),
+            required=_join(entry.get("next_required_objective_ids")),
+            no_next=_value(entry.get("no_next_quest", "not_recorded")),
+            run_complete=_value(entry.get("run_complete", "not_recorded")),
+        )
+        for entry in lifecycle_entries
+    ]
 
 
 def _invariant_lines(run_log: dict, trace: list[dict]) -> list[str]:

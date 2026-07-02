@@ -9,7 +9,13 @@ from fateweaver.models import JsonMap, ProjectData
 from fateweaver.state_manager import apply_choice_result
 
 
-def complete_quest_lifecycle(quest: Quest, state: RunState, bundle: ProjectData, score_rules: JsonMap) -> tuple[RunState, JsonMap]:
+def complete_quest_lifecycle(
+    quest: Quest,
+    state: RunState,
+    bundle: ProjectData,
+    score_rules: JsonMap,
+    next_quest: Quest | None = None,
+) -> tuple[RunState, JsonMap]:
     reward_tag = f"quest_reward:{quest.id}"
     before = dict(state.status)
     completed_ids = [
@@ -30,7 +36,7 @@ def complete_quest_lifecycle(quest: Quest, state: RunState, bundle: ProjectData,
             run_tags=transition.run_tags,
             score=merge_ints(state.score, score_delta),
         )
-    return after_state, {
+    lifecycle = {
         "quest_lifecycle_event": "quest_success",
         "quest_completed": True,
         "quest_success": True,
@@ -43,12 +49,32 @@ def complete_quest_lifecycle(quest: Quest, state: RunState, bundle: ProjectData,
         "resources_after": dict(after_state.status),
         "reward_reason": "quest_success" if not duplicate else "duplicate_prevented",
         "duplicate_reward_prevented": duplicate,
-        "next_quest_id": "",
-        "no_next_quest": True,
-        "next_quest_onboarding": False,
-        "run_complete": True,
+        "previous_quest_id": quest.id,
         "completion_blocked_by_min_turns": False,
     }
+    if next_quest is None:
+        lifecycle.update(
+            {
+                "next_quest_id": "",
+                "no_next_quest": True,
+                "next_quest_onboarding": False,
+                "run_complete": True,
+            },
+        )
+    else:
+        lifecycle.update(
+            {
+                "quest_transition": True,
+                "transition_reason": "quest_success",
+                "next_quest_id": next_quest.id,
+                "next_required_objective_ids": _required_objective_ids(next_quest),
+                "previous_quest_completed_objective_ids": completed_ids,
+                "no_next_quest": False,
+                "next_quest_onboarding": True,
+                "run_complete": False,
+            },
+        )
+    return after_state, lifecycle
 
 
 def _reward_status_delta(rewards: JsonMap, bundle: ProjectData) -> dict[str, int]:
@@ -58,3 +84,7 @@ def _reward_status_delta(rewards: JsonMap, bundle: ProjectData) -> dict[str, int
 def _reward_score_delta(rewards: JsonMap) -> dict[str, int]:
     score = int(rewards.get("score", 0))
     return {"quest_reward": score} if score else {}
+
+
+def _required_objective_ids(quest: Quest) -> list[str]:
+    return [objective.id for objective in quest.objectives if objective.required]

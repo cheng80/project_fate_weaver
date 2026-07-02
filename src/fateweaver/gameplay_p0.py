@@ -25,6 +25,7 @@ from fateweaver.gameplay_p0_rules import (
     select_cards,
     select_storylet,
 )
+from fateweaver.gameplay_p0_sequence import load_next_foundation
 from fateweaver.logger import save_run_log
 from fateweaver.models import Event, JsonMap
 from fateweaver.ontology_reasoner import OntologyReasonerContext, load_ontology_core, run_reasoner
@@ -38,6 +39,7 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
     rng = Random(request.seed + request.run_number - 1)
     state = initial_state(request.scenario, foundation.quest)
     turns: list[JsonMap] = []
+    onboarding_reason = "run_start"
     while (
         len(turns) < request.scenario.target_turns
         and state.clock.turn <= state.clock.max_turns
@@ -61,7 +63,9 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
         state = apply_turn_result(state, result, request.bundle)
         lifecycle: JsonMap = {}
         if quest_completed(foundation.quest, state, request.bundle, foundation.score_rules):
-            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, request.bundle, foundation.score_rules)
+            next_foundation = load_next_foundation(request.bundle.project_root, request.scenario, foundation.quest.id)
+            next_quest = None if next_foundation is None else next_foundation.quest
+            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, request.bundle, foundation.score_rules, next_quest)
         turn = _turn_log(
             TurnLogRequest(
                 quest=foundation.quest,
@@ -77,8 +81,18 @@ def run_gameplay_p0(request: GameplayRunRequest) -> Path:
                 ontology_inference=ontology_inference,
             ),
         )
+        if onboarding_reason:
+            turn["quest_onboarding"] = True
+            turn["onboarding_reason"] = onboarding_reason
+            turn["onboarding_turn"] = turn["turn"]
+            onboarding_reason = ""
         turn.update(lifecycle)
         turns.append(turn)
+        if lifecycle and not lifecycle.get("run_complete") and next_foundation is not None:
+            foundation = next_foundation
+            state = _continue_state(state, event)
+            onboarding_reason = "quest_transition"
+            continue
         if lifecycle or is_failed(state.status, request.bundle.statuses):
             break
         state = _continue_state(state, event)

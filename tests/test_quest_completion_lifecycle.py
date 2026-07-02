@@ -30,6 +30,7 @@ class QuestCompletionLifecycleTests(unittest.TestCase):
         self.assertTrue(last_trace["quest_success"])
         self.assertFalse(last_trace["completion_blocked_by_min_turns"])
         self.assertTrue(last_trace["run_complete"])
+        self.assertTrue(last_trace["no_next_quest"])
 
     def test_quest_success_grants_reward_once(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -40,13 +41,13 @@ class QuestCompletionLifecycleTests(unittest.TestCase):
 
         reward_entries = [entry for entry in trace if entry.get("reward_granted")]
         final_state = payload["run_summary"]["final_state"]
-        reward_delta = reward_entries[0]["reward_delta"]
+        reward_deltas = [entry["reward_delta"] for entry in reward_entries]
 
         self.assertEqual(0, completed.returncode)
-        self.assertEqual(1, len(reward_entries))
-        self.assertEqual({"money": 2, "reputation": 1}, reward_delta)
-        self.assertEqual(reward_entries[0]["resources_after"]["money"], final_state["money"])
-        self.assertEqual(reward_entries[0]["resources_after"]["reputation"], final_state["reputation"])
+        self.assertEqual(2, len(reward_entries))
+        self.assertEqual([{"money": 2, "reputation": 1}, {"money": 2, "reputation": 1}], reward_deltas)
+        self.assertEqual(reward_entries[-1]["resources_after"]["money"], final_state["money"])
+        self.assertEqual(reward_entries[-1]["resources_after"]["reputation"], final_state["reputation"])
         self.assertEqual(0, sum(1 for entry in trace if entry.get("duplicate_reward_prevented")))
 
 

@@ -9,9 +9,11 @@ from pathlib import Path
 
 try:
     from .manual_choice_runner_agents import policy_ids
+    from .manual_choice_runner_batch_metrics import seed_agent_matrix, stale_previous_quest_card_count
     from .manual_choice_runner_batch_report import render_batch_report
 except ImportError:
     from manual_choice_runner_agents import policy_ids
+    from manual_choice_runner_batch_metrics import seed_agent_matrix, stale_previous_quest_card_count
     from manual_choice_runner_batch_report import render_batch_report
 
 
@@ -86,12 +88,15 @@ def _run_agent(project_root: Path, scenario: str, output_dir: Path, seed: int, a
             "off_quest_warning_count": 0,
             "fallback_warning_count": 0,
             "completion_turns": [],
+            "next_quest_onboarding_count": 0,
+            "stale_previous_quest_card_after_transition_count": 0,
             "run_dir": str(run_dir),
         }
     summary = json.loads((run_dir / f"manual_seed_{seed}_summary.json").read_text(encoding="utf-8"))
     trace = json.loads((run_dir / f"manual_seed_{seed}_choice_trace.json").read_text(encoding="utf-8"))
     warning_details = _trace_warning_details(trace)
     lifecycle = _lifecycle_counts(trace)
+    stale_count = stale_previous_quest_card_count(trace)
     return {
         "seed": seed,
         "agent_id": agent,
@@ -105,6 +110,7 @@ def _run_agent(project_root: Path, scenario: str, output_dir: Path, seed: int, a
         "warning_count": len(warning_details["warnings"]),
         **warning_details,
         **lifecycle,
+        "stale_previous_quest_card_after_transition_count": stale_count,
         "run_dir": str(run_dir),
     }
 
@@ -129,6 +135,8 @@ def _batch_summary(seeds: list[int], agents: list[str], max_turns: int, runs: li
             "quest_completion_count": sum(int(run.get("quest_completion_count", 0)) for run in agent_runs),
             "reward_granted_count": sum(int(run.get("reward_granted_count", 0)) for run in agent_runs),
             "run_complete_count": sum(int(run.get("run_complete_count", 0)) for run in agent_runs),
+            "next_quest_onboarding_count": sum(int(run.get("next_quest_onboarding_count", 0)) for run in agent_runs),
+            "stale_previous_quest_card_after_transition_count": sum(int(run.get("stale_previous_quest_card_after_transition_count", 0)) for run in agent_runs),
             "completion_blocked_by_min_turns_count": sum(int(run.get("completion_blocked_by_min_turns_count", 0)) for run in agent_runs),
         }
     completion_turns = [turn for run in runs for turn in run.get("completion_turns", [])]
@@ -155,7 +163,9 @@ def _batch_summary(seeds: list[int], agents: list[str], max_turns: int, runs: li
         "duplicate_reward_prevention_count": sum(int(run.get("duplicate_reward_prevention_count", 0)) for run in runs),
         "next_quest_transition_count": sum(int(run.get("next_quest_transition_count", 0)) for run in runs),
         "run_complete_count": run_complete_count,
+        "next_quest_onboarding_count": sum(int(run.get("next_quest_onboarding_count", 0)) for run in runs),
         "no_next_quest_count": sum(int(run.get("no_next_quest_count", 0)) for run in runs),
+        "stale_previous_quest_card_after_transition_count": sum(int(run.get("stale_previous_quest_card_after_transition_count", 0)) for run in runs),
         "completion_blocked_by_min_turns_count": sum(int(run.get("completion_blocked_by_min_turns_count", 0)) for run in runs),
         "completed_quest_dragged_to_max_turn_count": sum(1 for run in runs if int(run.get("quest_completion_count", 0)) > 0 and run["stop_reason"] == "max_turn_reached"),
         "average_completion_turn": _average(completion_turns),
@@ -170,7 +180,7 @@ def _batch_summary(seeds: list[int], agents: list[str], max_turns: int, runs: li
         "off_quest_warning_count": sum(int(run.get("off_quest_warning_count", 0)) for run in runs),
         "fallback_warning_count": sum(int(run.get("fallback_warning_count", 0)) for run in runs),
         "agent_summary": agent_summary,
-        "seed_agent_matrix": _seed_agent_matrix(runs),
+        "seed_agent_matrix": seed_agent_matrix(runs),
         "runs": runs,
     }
 
@@ -211,6 +221,7 @@ def _lifecycle_counts(trace: list[dict]) -> dict[str, int]:
         "reward_granted_count": sum(1 for entry in trace if entry.get("reward_granted")),
         "duplicate_reward_prevention_count": sum(1 for entry in trace if entry.get("duplicate_reward_prevented")),
         "next_quest_transition_count": sum(1 for entry in trace if entry.get("next_quest_id")),
+        "next_quest_onboarding_count": sum(1 for entry in trace if entry.get("next_quest_onboarding")),
         "run_complete_count": sum(1 for entry in trace if entry.get("run_complete")),
         "no_next_quest_count": sum(1 for entry in trace if entry.get("no_next_quest")),
         "completion_blocked_by_min_turns_count": sum(1 for entry in trace if entry.get("completion_blocked_by_min_turns")),
@@ -244,27 +255,6 @@ def _average(values: list[int]) -> float:
 
 def _count_warnings(runs: list[dict], needle: str) -> int:
     return sum(1 for run in runs for warning in run["warnings"] if needle in warning)
-
-
-def _seed_agent_matrix(runs: list[dict]) -> list[dict]:
-    return [
-        {
-            "seed": run["seed"],
-            "agent_id": run["agent_id"],
-            "outcome": run["result_type"],
-            "stop_reason": run["stop_reason"],
-            "turns": run["turn_count"],
-            "completion_turn": run.get("completion_turns", [None])[0] if run.get("completion_turns") else None,
-            "quest_success": int(run.get("quest_completion_count", 0)) > 0,
-            "reward_granted": int(run.get("reward_granted_count", 0)) > 0,
-            "run_complete": int(run.get("run_complete_count", 0)) > 0,
-            "no_next_quest": int(run.get("no_next_quest_count", 0)) > 0,
-            "warning_count": run["warning_count"],
-            "invariant_status": "fail" if any("invariant" in warning for warning in run["warnings"]) else "pass",
-            "min_turn_blocked": int(run.get("completion_blocked_by_min_turns_count", 0)) > 0,
-        }
-        for run in runs
-    ]
 
 
 if __name__ == "__main__":

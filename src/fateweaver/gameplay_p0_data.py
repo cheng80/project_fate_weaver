@@ -69,10 +69,17 @@ def validate_gameplay_p0_setup(project_root: Path, scenario: Scenario, bundle: P
     if scenario.active_quest_id is None:
         errors.append("P0 scenario requires active_quest_id")
         return errors
+    if scenario.quest_sequence and scenario.quest_sequence[0] != scenario.active_quest_id:
+        errors.append("P0 quest_sequence must start with active_quest_id")
     try:
         foundation = load_foundation(project_root, scenario.active_quest_id)
     except (OSError, TypeError, ValueError, KeyError) as error:
         return [str(error)]
+    for quest_id in scenario.quest_sequence[1:]:
+        try:
+            load_foundation(project_root, quest_id)
+        except (OSError, TypeError, ValueError, KeyError) as error:
+            errors.append(str(error))
     for card in foundation.card_rules.cards:
         if card.requires_item is not None and card.requires_item not in bundle.items:
             errors.append(f"Unknown P0 card required item {card.requires_item} in {card.id}")

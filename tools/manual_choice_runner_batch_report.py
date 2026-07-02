@@ -23,8 +23,10 @@ def render_batch_report(summary: dict) -> str:
         f"- duplicate reward detected count: {summary['duplicate_reward_detected_count']}",
         f"- duplicate reward prevention count: {summary['duplicate_reward_prevention_count']}",
         f"- next quest transition count: {summary['next_quest_transition_count']}",
+        f"- next quest onboarding count: {summary['next_quest_onboarding_count']}",
         f"- run complete count: {summary['run_complete_count']}",
         f"- no next quest count: {summary['no_next_quest_count']}",
+        f"- stale previous quest card after transition count: {summary['stale_previous_quest_card_after_transition_count']}",
         f"- completion blocked by min turns count: {summary['completion_blocked_by_min_turns_count']}",
         f"- completed quest dragged to max turn count: {summary['completed_quest_dragged_to_max_turn_count']}",
         f"- completion turn distribution: {summary['completion_turn_distribution']}",
@@ -42,7 +44,8 @@ def render_batch_report(summary: dict) -> str:
             f"- seed {run['seed']} / {run['agent_id']}: outcome={run['result_type']} turns={run['turn_count']} "
             f"stop_reason={run['stop_reason']} quest_complete={run.get('quest_completion_count', 0)} "
             f"reward={run.get('reward_granted_count', 0)} run_complete={run.get('run_complete_count', 0)} "
-            f"no_next_quest={run.get('no_next_quest_count', 0)} warnings={run['warning_count']}"
+            f"no_next_quest={run.get('no_next_quest_count', 0)} stale_previous={run.get('stale_previous_quest_card_after_transition_count', 0)} "
+            f"warnings={run['warning_count']}"
         )
     lines.extend(["", "## Notable Cases"])
     notable = [run for run in summary["runs"] if run["crashed"] or run["warning_count"]]

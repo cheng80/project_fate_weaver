@@ -19,14 +19,14 @@ def build_trace_entry(
     after: RunState,
 ) -> TraceEntry:
     after_tags = tuple(str(value) for value in turn["next_event_tags"])
-    is_onboarding_turn = int(turn["turn"]) == 1
+    is_onboarding_turn = bool(turn.get("quest_onboarding")) or int(turn["turn"]) == 1
     entry: TraceEntry = {
         "turn": turn["turn"],
         "day": turn["run_clock"]["day"],
         "active_quest_id": quest.id,
         "active_quest_title": quest.title,
         "quest_onboarding": is_onboarding_turn,
-        "onboarding_reason": "run_start" if is_onboarding_turn else "",
+        "onboarding_reason": str(turn.get("onboarding_reason", "run_start" if is_onboarding_turn else "")),
         "required_objective_ids": _required_objective_ids(quest),
         "required_objectives": _required_objectives_trace(quest, before, after),
         "presented_card_ids": [card["card_id"] for card in turn["presented_cards"]],
@@ -52,7 +52,12 @@ def build_trace_entry(
         "resources_after",
         "reward_reason",
         "duplicate_reward_prevented",
+        "quest_transition",
+        "previous_quest_id",
+        "transition_reason",
         "next_quest_id",
+        "next_required_objective_ids",
+        "previous_quest_completed_objective_ids",
         "no_next_quest",
         "next_quest_onboarding",
         "run_complete",
@@ -104,6 +109,7 @@ def _card_relevance(
     return {
         "card_id": card_id,
         "slot_role": slot_role,
+        "card_quest_ids": list(quest_ids),
         "active_quest_id": quest.id,
         "required_objective_ids": [objective.id for objective in required_objectives],
         "active_quest_linked": active_quest_linked,

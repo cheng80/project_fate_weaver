@@ -132,6 +132,7 @@ class Scenario:
     validation_targets: dict[str, int] = field(default_factory=dict)
     gameplay_mode: str | None = None
     active_quest_id: str | None = None
+    quest_sequence: tuple[str, ...] = ()
     run_clock: JsonMap = field(default_factory=dict)
 
 

@@ -105,6 +105,7 @@ def _load_scenario(project_root: Path, scenario_path: Path) -> Scenario:
         validation_targets={key: int(value) for key, value in mapping_at(raw, "validation_targets").items()},
         gameplay_mode=optional_string(raw, "gameplay_mode"),
         active_quest_id=optional_string(raw, "active_quest_id"),
+        quest_sequence=tuple(_optional_string_list(raw, "quest_sequence")),
         run_clock=mapping_at(raw, "run_clock"),
     )
 

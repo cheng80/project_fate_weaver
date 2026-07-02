@@ -90,6 +90,8 @@ class ManualChoiceRunnerBatchTests(unittest.TestCase):
         self.assertIn("stop_reason_counts", summary)
         self.assertIn("same_turn_duplicate_count", summary)
         self.assertIn("no_next_quest_count", summary)
+        self.assertIn("next_quest_onboarding_count", summary)
+        self.assertIn("stale_previous_quest_card_after_transition_count", summary)
         self.assertIn("reward_missing_after_success_count", summary)
         self.assertIn("duplicate_reward_detected_count", summary)
         self.assertIn("completed_quest_dragged_to_max_turn_count", summary)
@@ -99,6 +101,7 @@ class ManualChoiceRunnerBatchTests(unittest.TestCase):
         self.assertIn("# Subagent Auto-Play Batch Report", report)
         self.assertIn("## Run Matrix", report)
         self.assertIn("stop reason counts", report)
+        self.assertIn("next quest onboarding count", report)
 
     def test_batch_runner_accepts_seed_ranges_and_report_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

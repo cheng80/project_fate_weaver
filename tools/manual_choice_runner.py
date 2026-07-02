@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 from random import Random
@@ -9,10 +8,12 @@ from typing import TextIO
 
 try:
     from .manual_choice_runner_agents import build_agent_context, choose_agent_index, policy_ids
+    from .manual_choice_runner_output import write_outputs
     from .manual_choice_runner_trace import build_trace_entry
     from .manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 except ImportError:
     from manual_choice_runner_agents import build_agent_context, choose_agent_index, policy_ids
+    from manual_choice_runner_output import write_outputs
     from manual_choice_runner_trace import build_trace_entry
     from manual_choice_runner_types import InvalidManualChoiceError, InvalidManualScenarioError, ManualRunnerArgs
 
@@ -53,6 +54,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     from fateweaver.gameplay_p0_models import GameplayRunRequest, TurnLogRequest
     from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
     from fateweaver.gameplay_p0_rules import apply_turn_result, combined_result, initial_state, select_storylet
+    from fateweaver.gameplay_p0_sequence import load_next_foundation
     from fateweaver.ontology_reasoner import load_ontology_core, run_reasoner
     from fateweaver.scenario_filter import filter_events_for_scenario
     from fateweaver.state_manager import is_failed
@@ -76,6 +78,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     trace = []
     choice_offset = 0
     stop_reason = "completed"
+    onboarding_reason = "run_start"
     while len(turns) < scenario.target_turns and state.clock.turn <= state.clock.max_turns and not is_failed(state.status, bundle.statuses):
         if args.max_turns is not None and len(turns) >= args.max_turns:
             stop_reason = "max_turn_reached"
@@ -111,7 +114,9 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         state = apply_turn_result(state, result, bundle)
         lifecycle = {}
         if quest_completed(foundation.quest, state, bundle, foundation.score_rules):
-            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, bundle, foundation.score_rules)
+            next_foundation = load_next_foundation(bundle.project_root, scenario, foundation.quest.id)
+            next_quest = None if next_foundation is None else next_foundation.quest
+            state, lifecycle = complete_quest_lifecycle(foundation.quest, state, bundle, foundation.score_rules, next_quest)
         turn = _turn_log(
             TurnLogRequest(
                 quest=foundation.quest,
@@ -127,11 +132,21 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
                 ontology_inference=ontology_inference,
             ),
         )
+        if onboarding_reason:
+            turn["quest_onboarding"] = True
+            turn["onboarding_reason"] = onboarding_reason
+            turn["onboarding_turn"] = turn["turn"]
+            onboarding_reason = ""
         turn.update(lifecycle)
         turn["manual_choice_mode"] = True
         turn["manual_selected_index"] = selected_index
         turns.append(turn)
         trace.append(build_trace_entry(foundation.quest, turn, selected_index, before, state))
+        if lifecycle and not lifecycle.get("run_complete") and next_foundation is not None:
+            foundation = next_foundation
+            state = _continue_state(state, event)
+            onboarding_reason = "quest_transition"
+            continue
         if lifecycle or is_failed(state.status, bundle.statuses):
             stop_reason = "failure" if is_failed(state.status, bundle.statuses) else "completed"
             break
@@ -152,7 +167,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     log["unused_choices"] = max(0, len(args.choices) - choice_offset)
     log["stop_reason"] = stop_reason
     log["manual_stop_reason"] = stop_reason
-    return _write_outputs(args.output_dir, args.seed, log, trace)
+    return write_outputs(args.output_dir, args.seed, log, trace)
 
 
 def _parse_args(project_root: Path) -> ManualRunnerArgs:
@@ -236,34 +251,6 @@ def _agent_choice(args: ManualRunnerArgs, cards: tuple, candidate_pool: tuple, a
     if args.agent_policy is None:
         raise InvalidManualScenarioError("agent choice source requires --agent-policy")
     return choose_agent_index(args.agent_policy, build_agent_context(cards, candidate_pool, active_quest_id, state))
-
-
-def _write_outputs(output_dir: Path, seed: int, log: dict, trace: list[dict]) -> tuple[Path, Path, Path, Path]:
-    from fateweaver.text_mud_log import render_text_mud_log
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-    json_path = output_dir / f"manual_seed_{seed}.json"
-    text_path = output_dir / f"manual_seed_{seed}_text_mud.txt"
-    trace_path = output_dir / f"manual_seed_{seed}_choice_trace.json"
-    summary_path = output_dir / f"manual_seed_{seed}_summary.json"
-    summary = {
-        "manual_choice_mode": True,
-        "choice_source": log["choice_source"],
-        "agent_policy": log.get("agent_policy"),
-        "turn_count": len(log["turns"]),
-        "ending": log["quest_report"].get("ending"),
-        "result_type": log["quest_report"].get("result_type"),
-        "selected_indexes": [entry["selected_index"] for entry in trace],
-        "selected_card_ids": [entry["selected_card_id"] for entry in trace],
-        "unused_choices": log["unused_choices"],
-        "stop_reason": log["stop_reason"],
-        "manual_stop_reason": log["manual_stop_reason"],
-    }
-    json_path.write_text(json.dumps(log, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    text_path.write_text(render_text_mud_log(log), encoding="utf-8")
-    trace_path.write_text(json.dumps(trace, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return json_path, text_path, trace_path, summary_path
 
 
 if __name__ == "__main__":

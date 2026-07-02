@@ -43,6 +43,7 @@ class RequiredObjectiveTrace(TypedDict):
 class PresentedCardRelevance(TypedDict):
     card_id: str
     slot_role: str
+    card_quest_ids: list[str]
     active_quest_id: str
     required_objective_ids: list[str]
     active_quest_linked: bool
@@ -85,7 +86,12 @@ class TraceEntry(TypedDict):
     resources_after: NotRequired[dict[str, int]]
     reward_reason: NotRequired[str]
     duplicate_reward_prevented: NotRequired[bool]
+    quest_transition: NotRequired[bool]
+    previous_quest_id: NotRequired[str]
+    transition_reason: NotRequired[str]
     next_quest_id: NotRequired[str]
+    next_required_objective_ids: NotRequired[list[str]]
+    previous_quest_completed_objective_ids: NotRequired[list[str]]
     no_next_quest: NotRequired[bool]
     next_quest_onboarding: NotRequired[bool]
     run_complete: NotRequired[bool]

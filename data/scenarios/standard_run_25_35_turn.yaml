@@ -2,6 +2,9 @@ id: standard_run_25_35_turn
 name: Standard Run 25-35 Turn Verification
 gameplay_mode: p0_foundation
 active_quest_id: survive_the_storm_pass
+quest_sequence:
+  - survive_the_storm_pass
+  - hidden_grove_discovery
 content_sources: [data/content/base/regions.yaml, data/content/base/items.yaml, data/content/base/events.yaml, data/content/base/endings.yaml]
 include_regions: [village, forest]
 include_event_ids:
@@ -20,6 +23,8 @@ include_event_ids:
   - quiet_camp
   - sudden_storm
   - hunger_night
+  - hidden_grove_hint
+  - hidden_grove_followup
 exclude_event_ids: []
 exclude_event_tags: []
 initial_status: {health: 9, food: 9, money: 4, reputation: 1, curse: 1}

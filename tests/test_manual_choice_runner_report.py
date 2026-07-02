@@ -46,6 +46,7 @@ class ManualChoiceRunnerReportTests(unittest.TestCase):
         self.assertIn("## Quest Onboarding", report)
         self.assertIn("## Turn Timeline", report)
         self.assertIn("## Quest Completion", report)
+        self.assertIn("## Quest Transitions", report)
         self.assertIn("Reward Granted", report)
         self.assertIn("relevance=", report)
         self.assertIn("manual_stop_reason", report)
@@ -70,10 +71,10 @@ def _run_manual(output_dir: Path) -> subprocess.CompletedProcess[str]:
             str(SCENARIO_PATH),
             "--seed",
             "202",
-            "--choices",
-            "1,2,3",
+            "--agent-policy",
+            "goal_focused",
             "--max-turns",
-            "3",
+            "10",
             "--output-dir",
             str(output_dir),
         ],
