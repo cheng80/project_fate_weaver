@@ -43,12 +43,12 @@
 
 코드:
 
-- `src/fateweaver/gameplay_p0_objectives.py`
+- `src/fateweaver/quest_objectives.py`
 - `src/fateweaver/text_mud_report.py`
 
 테스트:
 
-- `tests/test_gameplay_p0_enrichment_pack_2.py`
+- `tests/test_gameplay_run_enrichment_pack_2.py`
 
 문서:
 
@@ -126,7 +126,7 @@ Pack 2 신규 Ending 8개:
 
 ## 7. Ending과 Quest Report / Run Review 연결
 
-`gameplay_p0_objectives.build_quest_report()`는 기존 `result_type`, `failure_kind`, `character_outcome` 계산 후 `bundle.endings`의 조건을 순서대로 평가한다.
+`quest_objectives.build_quest_report()`는 기존 `result_type`, `failure_kind`, `character_outcome` 계산 후 `bundle.endings`의 조건을 순서대로 평가한다.
 
 새 `ending` 필드는 다음을 포함한다.
 
@@ -181,14 +181,14 @@ Duplicate check:
 
 ## 10. 기존 Scenario 회귀 검증
 
-`tests/test_gameplay_p0_enrichment_pack_2.py`에서 active quest scenario 47개에 대해 `validate_scenario_file()`을 실행했고 PASS했다.
+`tests/test_gameplay_run_enrichment_pack_2.py`에서 active quest scenario 47개에 대해 `validate_scenario_file()`을 실행했고 PASS했다.
 
 이번 작업은 Standard Run 25~35 Turn 검증을 실행하지 않았다. 해당 검증은 다음 단계의 별도 작업 범위다.
 
 ## 11. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_enrichment_pack_2
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_enrichment_pack_2
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest.yaml --seed 42 --runs 1 --logs /tmp/fateweaver-pack2-smoke-final --profile balanced

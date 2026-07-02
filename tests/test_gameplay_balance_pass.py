@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from fateweaver.gameplay_p0_models import CardRule, ComboRule, RepeatMemory, RunClock, RunState
-from fateweaver.gameplay_p0_rules import select_cards
+from fateweaver.gameplay_models import CardRule, ComboRule, RepeatMemory, RunClock, RunState
+from fateweaver.gameplay_rules import select_cards
 
 
 class GameplayBalancePassTests(unittest.TestCase):

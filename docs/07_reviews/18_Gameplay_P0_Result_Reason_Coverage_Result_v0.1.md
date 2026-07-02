@@ -28,12 +28,12 @@ Gameplay P0 Foundation의 결과 타입 검증을 `success`, `partial_success`, 
 
 코드:
 
-- `src/fateweaver/gameplay_p0.py`
+- `src/fateweaver/gameplay_run.py`
 - `src/fateweaver/text_mud_log.py`
 
 테스트:
 
-- `tests/test_gameplay_p0.py`
+- `tests/test_gameplay_run.py`
 
 문서:
 
@@ -109,7 +109,7 @@ Text MUD Play Log에는 `결과 이유`, `부분 성공 이유`, `실패 이유`
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_failure.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_partial_optional_failed.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_failure_health_zero.yaml
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0.GameplayP0Tests
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run.GameplayP0Tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/result-reason-coverage-20260630/evidence/logs-success --profile balanced
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest_partial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/result-reason-coverage-20260630/evidence/logs-partial --profile balanced

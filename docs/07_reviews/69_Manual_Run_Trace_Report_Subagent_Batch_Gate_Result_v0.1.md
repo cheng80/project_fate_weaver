@@ -105,7 +105,7 @@ Manual runner trace는 onboarding, objective delta, relevance metadata를 이미
 ## 실행한 검증 명령과 결과
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_report.py tests/test_manual_choice_runner_batch.py tests/test_manual_choice_runner.py tests/test_manual_choice_runner_onboarding.py tests/test_manual_choice_runner_relevance.py tests/test_gameplay_p0_card_candidates.py
+PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_report.py tests/test_manual_choice_runner_batch.py tests/test_manual_choice_runner.py tests/test_manual_choice_runner_onboarding.py tests/test_manual_choice_runner_relevance.py tests/test_gameplay_run_card_candidates.py
 ```
 
 - PASS: 29 tests

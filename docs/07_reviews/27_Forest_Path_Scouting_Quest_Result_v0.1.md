@@ -34,10 +34,10 @@ Gameplay P0 기반 정리 이후 첫 번째 신규 Quest(퀘스트)인 `forest_p
 - `data/scenarios/forest_path_scouting_tutorial.yaml`
 - `data/scenarios/forest_path_scouting_tutorial_partial.yaml`
 - `data/scenarios/forest_path_scouting_tutorial_failure.yaml`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_cards.py`
-- `src/fateweaver/gameplay_p0_models.py`
-- `tests/test_gameplay_p0_forest_path_scouting.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/card_candidates.py`
+- `src/fateweaver/gameplay_models.py`
+- `tests/test_gameplay_run_forest_path_scouting.py`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
 - `docs/06_plans/05_Quest_Expansion_Roadmap_v0.1.md`
@@ -173,8 +173,8 @@ Text MUD log(텍스트 MUD 로그)에서 success / partial run(성공 / 부분 �
 ## 14. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_forest_path_scouting
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_forest_path_scouting tests.test_gameplay_p0 tests.test_gameplay_p0_card_candidates tests.test_gameplay_p0_storylet_cooldown
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_forest_path_scouting
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_forest_path_scouting tests.test_gameplay_run tests.test_gameplay_run_card_candidates tests.test_gameplay_run_storylet_cooldown
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/forest_path_scouting_tutorial.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/forest_path_scouting_tutorial_partial.yaml
@@ -188,7 +188,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_failure_max_day.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check
-.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/gameplay_p0_data.py src/fateweaver/gameplay_p0_cards.py src/fateweaver/gameplay_p0_models.py tests/test_gameplay_p0_forest_path_scouting.py
+.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/gameplay_setup.py src/fateweaver/card_candidates.py src/fateweaver/gameplay_models.py tests/test_gameplay_run_forest_path_scouting.py
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/forest_path_scouting_tutorial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/forest-path-scouting-20260630/success2 --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/forest_path_scouting_tutorial_partial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/forest-path-scouting-20260630/partial2 --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/forest_path_scouting_tutorial_failure.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/forest-path-scouting-20260630/failure2 --profile balanced

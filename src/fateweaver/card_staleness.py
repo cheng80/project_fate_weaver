@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import assert_never
 
-from fateweaver.gameplay_p0_models import CardRule, Quest, QuestObjective, RunState
+from fateweaver.gameplay_models import CardRule, Quest, QuestObjective, RunState
 
 def completed_objective_blocked(card: CardRule, state: RunState, quest: Quest) -> bool:
     if card.progress_key and state.quest_progress.get(card.progress_key, 0) > 0:

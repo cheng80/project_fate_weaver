@@ -34,12 +34,12 @@
   - output은 `event_weight_modifiers`, `card_weight_modifiers`, `situation_intents`, `next_facts`, `trace`다.
   - LLM reasoning, OWL/RDF/SPARQL은 사용하지 않았다.
 
-- `src/fateweaver/gameplay_p0_rules.py`
+- `src/fateweaver/gameplay_rules.py`
   - `select_storylet`에 optional `ontology_inference`를 추가했다.
   - ontology event weight는 quest/region gate 이후, requirements/cooldown/max occurrence hard block 이후에만 적용된다.
   - 실제 selection weight 반영은 `+1` cap으로 제한했다.
 
-- `src/fateweaver/gameplay_p0.py`
+- `src/fateweaver/gameplay_run.py`
   - 각 turn마다 reasoner를 먼저 실행하고 event selection에 제한 반영한다.
   - run JSON turn log에 `ontology_inference`와 `ontology_weight_applied`를 기록한다.
 

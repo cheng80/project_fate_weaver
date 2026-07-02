@@ -4,8 +4,8 @@ from dataclasses import replace
 from hashlib import sha256
 from typing import Final
 
-from fateweaver.gameplay_p0_errors import MissingCardSlotError
-from fateweaver.gameplay_p0_models import CardCandidate, CardSelectionContext, CardSelectionResult, CardRule
+from fateweaver.gameplay_errors import MissingCardSlotError
+from fateweaver.gameplay_models import CardCandidate, CardSelectionContext, CardSelectionResult, CardRule
 
 
 SLOT_ROLES: Final = ("quest_progress", "risk_discovery", "resource_alternative")

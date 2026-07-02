@@ -16,7 +16,7 @@
 - `data/scenarios/missing_porter_search_intro.yaml`
 - `data/scenarios/missing_porter_search_intro_partial.yaml`
 - `data/scenarios/missing_porter_search_intro_failure.yaml`
-- `tests/test_gameplay_p0_missing_porter_search.py`
+- `tests/test_gameplay_run_missing_porter_search.py`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/06_plans/05_Quest_Expansion_Roadmap_v0.1.md`
 - `docs/07_reviews/28_Missing_Porter_Search_Quest_Result_v0.1.md`
@@ -110,7 +110,7 @@ Failure run(실패 실행):
 
 ## 8. 회귀 검증
 
-`tests/test_gameplay_p0_missing_porter_search.py`에서 다음을 확인했다.
+`tests/test_gameplay_run_missing_porter_search.py`에서 다음을 확인했다.
 
 - `missing_porter_search_intro`의 success / partial_success / failure(성공 / 부분 성공 / 실패) 결과.
 - Storylet/Event Hint(스토리 조각/이벤트 힌트)가 새 카드 후보를 노출하는지.
@@ -130,14 +130,14 @@ Evidence(증거) 경로:
 ## 10. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_missing_porter_search
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_missing_porter_search
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/missing_porter_search_intro.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/missing_porter_search_intro_partial.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/missing_porter_search_intro_failure.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check
-.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py tests/test_gameplay_p0_missing_porter_search.py
+.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py tests/test_gameplay_run_missing_porter_search.py
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/missing_porter_search_intro.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/missing-porter-search-20260630/success --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/missing_porter_search_intro_partial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/missing-porter-search-20260630/partial --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/missing_porter_search_intro_failure.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/missing-porter-search-20260630/failure --profile balanced

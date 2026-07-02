@@ -11,9 +11,9 @@ Standard Run에 최소 2-quest sequence를 추가하고, quest success/reward �
 - `data/scenarios/standard_run_25_35_turn.yaml`
 - `src/fateweaver/models.py`
 - `src/fateweaver/data_loader.py`
-- `src/fateweaver/gameplay_p0.py`
-- `src/fateweaver/gameplay_p0_lifecycle.py`
-- `src/fateweaver/gameplay_p0_sequence.py`
+- `src/fateweaver/gameplay_run.py`
+- `src/fateweaver/quest_lifecycle.py`
+- `src/fateweaver/quest_sequence.py`
 - `tools/manual_choice_runner.py`
 - `tools/manual_choice_runner_output.py`
 - `tools/manual_choice_runner_trace.py`
@@ -245,7 +245,7 @@ PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_onbo
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_relevance.py
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_report.py
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_batch.py
-PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_p0_card_candidates.py
+PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_run_card_candidates.py
 ```
 
 - PASS: `8`, `3`, `2`, `2`, `3`, `12` tests.
@@ -253,7 +253,7 @@ PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_p0_card_candidat
 ```bash
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_quest_sequence_transition.py
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_quest_completion_lifecycle.py
-PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_p0_standard_run.py
+PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_run_standard_run.py
 ```
 
 - PASS: `2`, `2`, `2` tests.

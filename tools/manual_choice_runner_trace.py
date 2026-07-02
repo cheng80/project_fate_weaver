@@ -8,7 +8,7 @@ except ImportError:
     from manual_choice_runner_types import PresentedCardRelevance, RequiredObjectiveTrace, TraceEntry
 
 if TYPE_CHECKING:
-    from fateweaver.gameplay_p0_models import Quest, QuestObjective, RunState
+    from fateweaver.gameplay_models import Quest, QuestObjective, RunState
 
 
 def build_trace_entry(

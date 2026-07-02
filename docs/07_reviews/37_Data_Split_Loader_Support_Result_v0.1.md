@@ -28,9 +28,9 @@
 - `data/core/card_rules.yaml`
 - `data/content/base/quests.yaml`
 - `data/content/base/events.yaml`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_cards.py`
-- `tests/test_gameplay_p0_category_bulk_fill.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/card_candidates.py`
+- `tests/test_gameplay_run_category_bulk_fill.py`
 
 ## 3. 변경 파일
 
@@ -41,12 +41,12 @@
 
 코드:
 
-- `src/fateweaver/gameplay_p0_data.py`
+- `src/fateweaver/gameplay_setup.py`
 
 테스트:
 
-- `tests/test_gameplay_p0_split_card_rules.py`
-- `tests/test_gameplay_p0_category_bulk_fill.py`
+- `tests/test_gameplay_run_split_card_rules.py`
+- `tests/test_gameplay_run_category_bulk_fill.py`
 
 문서:
 
@@ -120,7 +120,7 @@ Migration 후 line 수:
 
 ## 7. Duplicate ID Check
 
-`gameplay_p0_data.py`에 duplicate card id 검사를 추가했다.
+`gameplay_setup.py`에 duplicate card id 검사를 추가했다.
 
 검사 기준:
 
@@ -130,7 +130,7 @@ Migration 후 line 수:
 
 검증:
 
-- `tests/test_gameplay_p0_split_card_rules.py::test_duplicate_card_id_raises_clear_error`
+- `tests/test_gameplay_run_split_card_rules.py::test_duplicate_card_id_raises_clear_error`
 
 ## 8. quest_ids Gate Check
 
@@ -143,7 +143,7 @@ split file에 들어간 card rule은 quest-specific rule로 본다.
 
 검증:
 
-- `tests/test_gameplay_p0_split_card_rules.py::test_split_card_rules_require_quest_ids`
+- `tests/test_gameplay_run_split_card_rules.py::test_split_card_rules_require_quest_ids`
 
 ## 9. 기존 Scenario 회귀 검증
 
@@ -167,7 +167,7 @@ Local problem scenario validate:
 RED proof:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_card_rules
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_card_rules
 ```
 
 초기 결과:
@@ -179,8 +179,8 @@ FAILED (failures=4)
 GREEN / regression:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_card_rules
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_card_rules tests.test_gameplay_p0_category_bulk_fill
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_card_rules
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_card_rules tests.test_gameplay_run_category_bulk_fill
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/village_well_trouble_success.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/beginner_village_wrongness.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/festival_missing_racer.yaml

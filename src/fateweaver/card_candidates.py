@@ -3,16 +3,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Final, assert_never
 
-from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
-from fateweaver.gameplay_p0_card_modifiers import (
+from fateweaver.card_selection import select_cards_from_pool
+from fateweaver.card_candidate_modifiers import (
     candidate_fallback_penalty,
     candidate_frequency_penalty,
     modifier,
     ontology_card_modifier,
 )
-from fateweaver.gameplay_p0_card_staleness import completed_objective_blocked
-from fateweaver.gameplay_p0_errors import ExpectedMappingError, MissingCardSlotError
-from fateweaver.gameplay_p0_models import (
+from fateweaver.card_staleness import completed_objective_blocked
+from fateweaver.gameplay_errors import ExpectedMappingError, MissingCardSlotError
+from fateweaver.gameplay_models import (
     BlockedReason,
     CardCandidate,
     CandidateTier,

@@ -100,8 +100,8 @@ Bulk Fill은 Phase 2 Stability Review 이후에만 진행한다.
 Phase 1의 기본 검증 표면은 CLI와 pytest다.
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0 tests.test_gameplay_p0_forest_path_scouting tests.test_gameplay_p0_missing_porter_search tests.test_gameplay_p0_merchant_lost_pack
-PYTHONPATH=src .venv/bin/python -m unittest tests.test_text_mud_log tests.test_gameplay_p0_failure_outcomes
+PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run tests.test_gameplay_run_forest_path_scouting tests.test_gameplay_run_missing_porter_search tests.test_gameplay_run_merchant_lost_pack
+PYTHONPATH=src .venv/bin/python -m unittest tests.test_text_mud_log tests.test_gameplay_run_failure_outcomes
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 ```
 

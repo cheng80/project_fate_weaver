@@ -203,7 +203,7 @@ class GameplayP0Tests(unittest.TestCase):
         self.assertGreaterEqual(len(partial_reasons), 2)
         self.assertGreaterEqual(len(failure_reasons), 3)
 
-    def test_gameplay_p0_schema_doc_matches_objective_fields(self) -> None:
+    def test_gameplay_run_schema_doc_matches_objective_fields(self) -> None:
         # Given
         doc = Path("docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md").read_text(encoding="utf-8")
 

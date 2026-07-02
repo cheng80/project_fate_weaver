@@ -22,11 +22,11 @@
 ## 3. 변경 파일
 
 - `data/core/card_rules.yaml`
-- `src/fateweaver/gameplay_p0.py`
-- `src/fateweaver/gameplay_p0_cards.py`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_models.py`
-- `tests/test_gameplay_p0_card_candidates.py`
+- `src/fateweaver/gameplay_run.py`
+- `src/fateweaver/card_candidates.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/gameplay_models.py`
+- `tests/test_gameplay_run_card_candidates.py`
 - `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/07_reviews/23_Gameplay_P0_Card_Candidate_Tier_Weight_Result_v0.1.md`
@@ -129,8 +129,8 @@ Text MUD는 사용자용 3장 카드 표시를 유지한다. 전체 candidate po
 ## 10. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_card_candidates
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_card_candidates tests.test_gameplay_p0_optional_action_score
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_card_candidates
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_card_candidates tests.test_gameplay_run_optional_action_score
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_partial.yaml

@@ -38,7 +38,7 @@ def main() -> int:
 
 def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> tuple[Path, Path, Path, Path]:
     from fateweaver.data_loader import load_project_data
-    from fateweaver.gameplay_p0 import (
+    from fateweaver.gameplay_run import (
         _continue_state,
         _ontology_context,
         _run_log,
@@ -46,15 +46,15 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
         _turn_log,
         card_candidate_context,
     )
-    from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
-    from fateweaver.gameplay_p0_cards import build_card_candidate_pool
-    from fateweaver.gameplay_p0_data import load_foundation
-    from fateweaver.gameplay_p0_errors import MissingCardSlotError
-    from fateweaver.gameplay_p0_lifecycle import complete_quest_lifecycle
-    from fateweaver.gameplay_p0_models import GameplayRunRequest, TurnLogRequest
-    from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
-    from fateweaver.gameplay_p0_rules import apply_turn_result, combined_result, initial_state, select_storylet
-    from fateweaver.gameplay_p0_sequence import load_next_foundation
+    from fateweaver.card_selection import select_cards_from_pool
+    from fateweaver.card_candidates import build_card_candidate_pool
+    from fateweaver.gameplay_setup import load_foundation
+    from fateweaver.gameplay_errors import MissingCardSlotError
+    from fateweaver.quest_lifecycle import complete_quest_lifecycle
+    from fateweaver.gameplay_models import GameplayRunRequest, TurnLogRequest
+    from fateweaver.quest_objectives import QuestReportRequest, build_quest_report, quest_completed
+    from fateweaver.gameplay_rules import apply_turn_result, combined_result, initial_state, select_storylet
+    from fateweaver.quest_sequence import load_next_foundation
     from fateweaver.ontology_reasoner import load_ontology_core, run_reasoner
     from fateweaver.scenario_filter import filter_events_for_scenario
     from fateweaver.state_manager import is_failed
@@ -66,7 +66,7 @@ def run_manual_choice(args: ManualRunnerArgs, stdin: TextIO, stdout: TextIO) -> 
     if errors:
         raise InvalidManualScenarioError(f"invalid scenario: {'; '.join(errors)}")
     if scenario.gameplay_mode != "p0_foundation":
-        raise InvalidManualScenarioError("manual choice runner requires p0_foundation scenario")
+        raise InvalidManualScenarioError("manual choice runner requires gameplay run scenario")
 
     events = filter_events_for_scenario(bundle.events, scenario)
     foundation = load_foundation(bundle.project_root, scenario.active_quest_id)

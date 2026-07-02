@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from fateweaver.gameplay_p0_cards import score_card
-from fateweaver.gameplay_p0_models import CardCandidateContext, CardRule, CooldownCounter, Quest, QuestObjective, RepeatMemory, RunClock, RunState
+from fateweaver.card_candidates import score_card
+from fateweaver.gameplay_models import CardCandidateContext, CardRule, CooldownCounter, Quest, QuestObjective, RepeatMemory, RunClock, RunState
 from fateweaver.models import JsonMap
 
 

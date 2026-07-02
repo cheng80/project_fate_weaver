@@ -35,7 +35,7 @@
 - `data/scenarios/merchant_lost_pack_recovery.yaml`
 - `data/scenarios/merchant_lost_pack_recovery_partial.yaml`
 - `data/scenarios/merchant_lost_pack_recovery_failure.yaml`
-- `tests/test_gameplay_p0_merchant_lost_pack.py`
+- `tests/test_gameplay_run_merchant_lost_pack.py`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/06_plans/05_Quest_Expansion_Roadmap_v0.1.md`
 - `docs/07_reviews/29_Merchant_Lost_Pack_Quest_Result_v0.1.md`
@@ -194,19 +194,19 @@ Text MUD log(텍스트 MUD 로그)에서 카드 3장, 선택 카드, money/reput
 - `forest_path_scouting_tutorial.yaml`: score 170
 - `missing_porter_search_intro.yaml`: score 221
 
-`tests/test_gameplay_p0_merchant_lost_pack.py`에서 merchant lost pack 전용 카드가 기존 Quest(퀘스트)의 presented/selected cards(제시/선택 카드)에 섞이지 않는 것을 확인했다.
+`tests/test_gameplay_run_merchant_lost_pack.py`에서 merchant lost pack 전용 카드가 기존 Quest(퀘스트)의 presented/selected cards(제시/선택 카드)에 섞이지 않는 것을 확인했다.
 
 ## 15. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_merchant_lost_pack
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_merchant_lost_pack
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/merchant_lost_pack_recovery.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/merchant_lost_pack_recovery_partial.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/merchant_lost_pack_recovery_failure.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check
-.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py tests/test_gameplay_p0_merchant_lost_pack.py
+.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py tests/test_gameplay_run_merchant_lost_pack.py
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/merchant-lost-pack-20260630/success --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery_partial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/merchant-lost-pack-20260630/partial --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery_failure.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/merchant-lost-pack-20260630/failure --profile balanced

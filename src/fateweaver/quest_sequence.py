@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import Foundation
+from fateweaver.gameplay_setup import load_foundation
+from fateweaver.gameplay_models import Foundation
 from fateweaver.models import Scenario
 
 

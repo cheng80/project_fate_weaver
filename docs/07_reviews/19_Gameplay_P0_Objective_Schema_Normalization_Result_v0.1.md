@@ -28,16 +28,16 @@ Gameplay P0의 `success`, `partial_success`, `failure`, `quest_report`, reason, 
 
 코드:
 
-- `src/fateweaver/gameplay_p0.py`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_models.py`
-- `src/fateweaver/gameplay_p0_objectives.py`
+- `src/fateweaver/gameplay_run.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/gameplay_models.py`
+- `src/fateweaver/quest_objectives.py`
 - `src/fateweaver/text_mud_log.py`
 - `src/fateweaver/text_mud_objectives.py`
 
 테스트:
 
-- `tests/test_gameplay_p0.py`
+- `tests/test_gameplay_run.py`
 
 문서:
 
@@ -84,7 +84,7 @@ Gameplay P0의 `success`, `partial_success`, `failure`, `quest_report`, reason, 
 
 ## 6. Quest Outcome Resolver 변경
 
-`src/fateweaver/gameplay_p0_objectives.py`에서 objective evaluation을 기반으로 `result_type`을 계산한다.
+`src/fateweaver/quest_objectives.py`에서 objective evaluation을 기반으로 `result_type`을 계산한다.
 
 - `survive_expedition` failed이면 failure.
 - required objective가 모두 completed이면 success.

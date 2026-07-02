@@ -31,8 +31,8 @@
 - `docs/07_reviews/37_Data_Split_Loader_Support_Result_v0.1.md`
 - `data/core/card_rules.yaml`
 - `data/content/card_rules/local_problem.yaml`
-- `src/fateweaver/gameplay_p0_data.py`
-- `tests/test_gameplay_p0_split_card_rules.py`
+- `src/fateweaver/gameplay_setup.py`
+- `tests/test_gameplay_run_split_card_rules.py`
 
 ## 3. 변경 파일
 
@@ -47,7 +47,7 @@
 
 테스트:
 
-- `tests/test_gameplay_p0_split_card_rules.py`
+- `tests/test_gameplay_run_split_card_rules.py`
 
 문서:
 
@@ -185,7 +185,7 @@ MISSING:survival_exploration
 Targeted GREEN:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_card_rules tests.test_gameplay_p0_category_bulk_fill
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_card_rules tests.test_gameplay_run_category_bulk_fill
 ```
 
 결과:

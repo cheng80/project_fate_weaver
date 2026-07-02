@@ -8,10 +8,10 @@ Standard Run manual trace now explains presented card relevance per card, and se
 
 ## Modified Files
 
-- `src/fateweaver/gameplay_p0_card_selection.py`
+- `src/fateweaver/card_selection.py`
 - `tools/manual_choice_runner_trace.py`
 - `tools/manual_choice_runner_types.py`
-- `tests/test_gameplay_p0_card_candidates.py`
+- `tests/test_gameplay_run_card_candidates.py`
 - `tests/test_manual_choice_runner_relevance.py`
 - `docs/07_reviews/68_Choice_Relevance_Noise_Gate_Result_v0.1.md`
 
@@ -89,7 +89,7 @@ PASS: 8 tests OK
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_onboarding.py tests/test_manual_choice_runner_relevance.py
 PASS: 5 tests OK
 
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_p0_card_candidates.py
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_run_card_candidates.py
 PASS: 12 tests OK
 
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest
@@ -104,7 +104,7 @@ PASS: VALIDATION: PASS
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --ontology
 PASS: VALIDATION: PASS
 
-.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.14.1/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/gameplay_p0_card_selection.py tools/manual_choice_runner_trace.py tools/manual_choice_runner_types.py tests/test_manual_choice_runner_relevance.py tests/test_gameplay_p0_card_candidates.py
+.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.14.1/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/card_selection.py tools/manual_choice_runner_trace.py tools/manual_choice_runner_types.py tests/test_manual_choice_runner_relevance.py tests/test_gameplay_run_card_candidates.py
 PASS: no violations in 5 file(s)
 ```
 

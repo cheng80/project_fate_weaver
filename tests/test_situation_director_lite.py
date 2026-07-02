@@ -8,9 +8,9 @@ import unittest
 from pathlib import Path
 from random import Random
 
-from fateweaver.gameplay_p0_rules import select_storylet
-from fateweaver.gameplay_p0_rules import ontology_event_weight
-from fateweaver.gameplay_p0_models import RepeatMemory, RunClock, RunState
+from fateweaver.gameplay_rules import select_storylet
+from fateweaver.gameplay_rules import ontology_event_weight
+from fateweaver.gameplay_models import RepeatMemory, RunClock, RunState
 from fateweaver.models import Event
 
 

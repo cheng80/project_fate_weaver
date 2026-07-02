@@ -10,10 +10,10 @@ from pathlib import Path
 
 import yaml
 
-from fateweaver.gameplay_p0_cards import present_cards
-from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import CardCandidateContext
-from fateweaver.gameplay_p0_rules import initial_state
+from fateweaver.card_candidates import present_cards
+from fateweaver.gameplay_setup import load_foundation
+from fateweaver.gameplay_models import CardCandidateContext
+from fateweaver.gameplay_rules import initial_state
 from fateweaver.models import Scenario
 
 

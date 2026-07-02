@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 from random import Random
 
-from fateweaver.gameplay_p0_models import CooldownCounter, RepeatMemory, RunClock, RunState
-from fateweaver.gameplay_p0_rules import director_event_score, select_storylet
+from fateweaver.gameplay_models import CooldownCounter, RepeatMemory, RunClock, RunState
+from fateweaver.gameplay_rules import director_event_score, select_storylet
 from fateweaver.models import Event
 
 

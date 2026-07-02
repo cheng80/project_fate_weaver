@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from fateweaver.gameplay_p0_rules import select_cards
+from fateweaver.gameplay_rules import select_cards
 from tests.test_gameplay_balance_pass import _cards, _state
 
 

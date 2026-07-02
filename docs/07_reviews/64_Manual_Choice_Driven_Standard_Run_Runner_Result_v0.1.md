@@ -54,7 +54,7 @@ Flow:
 5. 기존 `apply_turn_result()`로 state/resource/objective/next_event_tags를 갱신한다.
 6. 갱신된 state로 다음 turn의 event/card selection을 진행한다.
 
-기존 autoplayer path인 `tools/console_simulator.py`와 `run_gameplay_p0()`는 변경하지 않았다.
+기존 autoplayer path인 `tools/console_simulator.py`와 `run_gameplay()`는 변경하지 않았다.
 
 ## 6. Choice Trace
 

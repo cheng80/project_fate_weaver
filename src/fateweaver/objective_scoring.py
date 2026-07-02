@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Final, Literal, assert_never
 
-from fateweaver.gameplay_p0_models import QuestObjective
+from fateweaver.gameplay_models import QuestObjective
 from fateweaver.models import JsonMap
 
 ObjectiveStatus = Literal["completed", "partial", "failed"]

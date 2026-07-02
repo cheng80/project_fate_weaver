@@ -8,7 +8,7 @@ from typing import TextIO
 from fateweaver.choice_resolver import ChoiceSeen, ChoiceSelection, build_choices_seen, select_choice, selected_choice_from_seen
 from fateweaver.data_loader import load_project_data
 from fateweaver.event_selector import select_event
-from fateweaver.gameplay_p0 import GameplayRunRequest, run_gameplay_p0
+from fateweaver.gameplay_run import GameplayRunRequest, run_gameplay
 from fateweaver.logger import save_run_log
 from fateweaver.models import JsonMap, PlayerChoiceFeedback, RunFeedback
 from fateweaver.scenario_filter import filter_events_for_scenario
@@ -39,7 +39,7 @@ def run_console_simulation(
     for run_number in range(1, runs + 1):
         if scenario.gameplay_mode == "p0_foundation":
             saved_paths.append(
-                run_gameplay_p0(GameplayRunRequest(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
+                run_gameplay(GameplayRunRequest(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))
             )
         else:
             saved_paths.append(_run_once(bundle, scenario, events, seed, run_number, logs_dir, stdin, stdout, profile))

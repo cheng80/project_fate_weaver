@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from fateweaver.gameplay_p0_models import Quest, RunState
-from fateweaver.gameplay_p0_objectives import evaluate_objectives
-from fateweaver.gameplay_p0_rules import merge_ints
+from fateweaver.gameplay_models import Quest, RunState
+from fateweaver.quest_objectives import evaluate_objectives
+from fateweaver.gameplay_rules import merge_ints
 from fateweaver.models import JsonMap, ProjectData
 from fateweaver.state_manager import apply_choice_result
 

@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 from fateweaver.data_loader import load_project_data
-from fateweaver.gameplay_p0_data import load_foundation
+from fateweaver.gameplay_setup import load_foundation
 from fateweaver.scenario_filter import filter_events_for_scenario
 
 

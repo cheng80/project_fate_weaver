@@ -29,11 +29,11 @@ Gameplay P0 Foundation의 기존 success 중심 검증을 보강해 `success`, `
 
 코드:
 
-- `src/fateweaver/gameplay_p0.py`
+- `src/fateweaver/gameplay_run.py`
 
 테스트:
 
-- `tests/test_gameplay_p0.py`
+- `tests/test_gameplay_run.py`
 
 문서:
 
@@ -102,7 +102,7 @@ Quest Report는 outcome별로 다음 필드를 구분해 저장한다.
 - `rewards`
 - `review_text`
 
-`tests/test_gameplay_p0.py`에서 세 outcome의 result_type, objectives, rewards, score ordering, failure penalty, Text MUD review text 출력을 함께 검증한다.
+`tests/test_gameplay_run.py`에서 세 outcome의 result_type, objectives, rewards, score ordering, failure penalty, Text MUD review text 출력을 함께 검증한다.
 
 ## 7. JSON / Text MUD Log 검증
 
@@ -125,7 +125,7 @@ Quest Report는 outcome별로 다음 필드를 구분해 저장한다.
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_partial.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_failure.yaml
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0.GameplayP0Tests.test_tutorial_herb_quest_cli_covers_success_partial_and_failure_outcomes
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run.GameplayP0Tests.test_tutorial_herb_quest_cli_covers_success_partial_and_failure_outcomes
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/outcome-coverage-20260630/evidence/logs-success --profile balanced
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest_partial.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/outcome-coverage-20260630/evidence/logs-partial --profile balanced
 .venv/bin/python tools/console_simulator.py --scenario data/scenarios/tutorial_herb_quest_failure.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/outcome-coverage-20260630/evidence/logs-failure --profile balanced

@@ -23,12 +23,12 @@
 
 ## 3. 변경 파일
 
-- `src/fateweaver/gameplay_p0_objectives.py`
+- `src/fateweaver/quest_objectives.py`
 - `src/fateweaver/text_mud_log.py`
 - `data/scenarios/merchant_lost_pack_recovery_failure.yaml`
 - `data/scenarios/merchant_lost_pack_recovery_failure_health_zero.yaml`
-- `tests/test_gameplay_p0_failure_outcomes.py`
-- `tests/test_gameplay_p0_merchant_lost_pack.py`
+- `tests/test_gameplay_run_failure_outcomes.py`
+- `tests/test_gameplay_run_merchant_lost_pack.py`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
 - `docs/03_specs/13_Text_MUD_Gameplay_Simulator_Spec_v0.1.md`
@@ -125,13 +125,13 @@ Evidence(증거) 경로:
 ## 11. 실행한 명령
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_failure_outcomes tests.test_gameplay_p0_merchant_lost_pack
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_failure_outcomes tests.test_gameplay_run_merchant_lost_pack
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/merchant_lost_pack_recovery_failure.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/merchant_lost_pack_recovery_failure_health_zero.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check
-.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/gameplay_p0_objectives.py src/fateweaver/text_mud_log.py tests/test_gameplay_p0_failure_outcomes.py tests/test_gameplay_p0_merchant_lost_pack.py
+.venv/bin/python /Users/cheng80/.codex/plugins/cache/sisyphuslabs/omo/4.13.0/skills/programming/scripts/python/check-no-excuse-rules.py src/fateweaver/quest_objectives.py src/fateweaver/text_mud_log.py tests/test_gameplay_run_failure_outcomes.py tests/test_gameplay_run_merchant_lost_pack.py
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery_failure.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/failure-taxonomy-20260630/merchant-objective --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery_failure_health_zero.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/failure-taxonomy-20260630/merchant-health-zero --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/merchant_lost_pack_recovery.yaml --seed 42 --runs 1 --logs .omo/ulw-loop/evidence/failure-taxonomy-20260630/merchant-success --profile balanced

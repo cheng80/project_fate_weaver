@@ -31,9 +31,9 @@ Card Rules category split이 완료된 뒤, Bulk Fill 2차 전에 Quest data도 
 - `docs/07_reviews/38_Card_Rules_Category_Split_Migration_Result_v0.1.md`
 - `data/content/base/quests.yaml`
 - `data/content/card_rules/`
-- `src/fateweaver/gameplay_p0_data.py`
+- `src/fateweaver/gameplay_setup.py`
 - `src/fateweaver/data_loader.py`
-- `tests/test_gameplay_p0_split_card_rules.py`
+- `tests/test_gameplay_run_split_card_rules.py`
 
 ## 3. 변경 파일
 
@@ -50,12 +50,12 @@ Card Rules category split이 완료된 뒤, Bulk Fill 2차 전에 Quest data도 
 
 코드:
 
-- `src/fateweaver/gameplay_p0_data.py`
+- `src/fateweaver/gameplay_setup.py`
 
 테스트:
 
-- `tests/test_gameplay_p0_split_quests.py`
-- `tests/test_gameplay_p0_category_bulk_fill.py`
+- `tests/test_gameplay_run_split_quests.py`
+- `tests/test_gameplay_run_category_bulk_fill.py`
 
 문서:
 
@@ -121,7 +121,7 @@ Foundation Quest 4개는 기존 base 호환성을 위해 `data/content/base/ques
 
 검증:
 
-- `tests.test_gameplay_p0_split_quests.GameplayP0SplitQuestTests.test_duplicate_quest_id_raises_clear_error`
+- `tests.test_gameplay_run_split_quests.GameplayP0SplitQuestTests.test_duplicate_quest_id_raises_clear_error`
 
 ## 8. 불변성 확인
 
@@ -140,7 +140,7 @@ Foundation Quest 4개는 기존 base 호환성을 위해 `data/content/base/ques
 RED proof:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_quests
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_quests
 ```
 
 초기 결과:
@@ -151,14 +151,14 @@ FAILED (failures=2, errors=1)
 
 주요 실패:
 
-- split quest 미로드: `Unknown P0 quest: village_well_trouble`
+- split quest 미로드: `Unknown quest: village_well_trouble`
 - duplicate quest id: `ValueError not raised`
 - split quest file 부재
 
 Targeted GREEN:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_split_quests tests.test_gameplay_p0_split_card_rules tests.test_gameplay_p0_category_bulk_fill
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_split_quests tests.test_gameplay_run_split_card_rules tests.test_gameplay_run_category_bulk_fill
 ```
 
 결과:

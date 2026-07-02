@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal, assert_never
 
-from fateweaver.gameplay_p0_models import Quest, QuestObjective, RunState
-from fateweaver.gameplay_p0_scoring import ObjectiveStatus, objective_score_delta
+from fateweaver.gameplay_models import Quest, QuestObjective, RunState
+from fateweaver.objective_scoring import ObjectiveStatus, objective_score_delta
 from fateweaver.models import JsonMap, ProjectData
 
 ResultType = Literal["success", "partial_success", "failure"]

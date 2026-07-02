@@ -14,7 +14,7 @@
 
 ## 구현 요약
 
-수정 범위는 `src/fateweaver/gameplay_p0_rules.py`의 `select_cards`에 제한했다.
+수정 범위는 `src/fateweaver/gameplay_rules.py`의 `select_cards`에 제한했다.
 
 - Combo rule은 기존처럼 최우선으로 유지했다.
 - `balanced` profile에서 아직 ending 안정 구간에 들어가기 전이면:
@@ -30,7 +30,7 @@
 - money/reputation 보상이 붙은 `quest_progress`가 무조건 선택되지 않는다.
 - combo rule은 balance selection보다 우선한다.
 
-기존 `tests/test_gameplay_p0.py`의 `max_day_failure` 기대는 업데이트했다. 현재 objective evaluator는 `max_day_exceeded`와 함께 미완료 필수 목표의 실패 사유도 보존하므로, 테스트는 `max_day_exceeded` 포함과 `max_turn_exceeded` 제외를 확인하도록 정렬했다.
+기존 `tests/test_gameplay_run.py`의 `max_day_failure` 기대는 업데이트했다. 현재 objective evaluator는 `max_day_exceeded`와 함께 미완료 필수 목표의 실패 사유도 보존하므로, 테스트는 `max_day_exceeded` 포함과 `max_turn_exceeded` 제외를 확인하도록 정렬했다.
 
 ## Before / After
 
@@ -96,7 +96,7 @@ After run은 25턴, `prepared_frontier_route`, `success`를 유지했다.
 모두 PASS:
 
 ```text
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_balance_pass tests.test_gameplay_p0 tests.test_gameplay_p0_standard_run tests.test_gameplay_p0_card_repetition_gate
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_balance_pass tests.test_gameplay_run tests.test_gameplay_run_standard_run tests.test_gameplay_run_card_repetition_gate
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/standard_run_25_35_turn.yaml

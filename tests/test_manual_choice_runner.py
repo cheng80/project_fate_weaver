@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from typing import assert_never
 
-from fateweaver.gameplay_p0_models import CardRule, QuestObjective
+from fateweaver.gameplay_models import CardRule, QuestObjective
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -206,7 +206,7 @@ def _run_manual_file(output_dir: Path, choice_file: Path) -> subprocess.Complete
 
 def _stale_unscoped_quest_progress_turns(payload: dict) -> list[dict]:
     from fateweaver.data_loader import load_project_data
-    from fateweaver.gameplay_p0_data import load_foundation
+    from fateweaver.gameplay_setup import load_foundation
 
     loaded = load_project_data(PROJECT_ROOT, SCENARIO_PATH)
     foundation = load_foundation(PROJECT_ROOT, loaded.scenario.active_quest_id)

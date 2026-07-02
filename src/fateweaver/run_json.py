@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fateweaver.gameplay_p0_models import CardRule, ComboRule, RunClock
+from fateweaver.gameplay_models import CardRule, ComboRule, RunClock
 from fateweaver.models import JsonMap
 
 

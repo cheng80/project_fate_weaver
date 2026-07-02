@@ -60,7 +60,7 @@ Bulk Fill 2차를 같은 방식으로 진행하면 Quest, Card Rule, Event, Scen
 
 `quests.yaml`은 아직 Quest 22개지만 이미 1,648 LOC다. Catalog에는 non-deferred 후보 34개가 남아 있어 Bulk Fill 2차 이후에는 사람이 특정 Category Quest를 찾는 비용이 커진다.
 
-다만 `src/fateweaver/gameplay_p0_data.py`의 `load_foundation()`은 현재 `data/content/base/quests.yaml`을 고정 경로로 읽는다. 따라서 Quest split은 실행 자체보다 loader 지원이 선행되어야 한다.
+다만 `src/fateweaver/gameplay_setup.py`의 `load_foundation()`은 현재 `data/content/base/quests.yaml`을 고정 경로로 읽는다. 따라서 Quest split은 실행 자체보다 loader 지원이 선행되어야 한다.
 
 판정: **Needs Loader Support First**.
 
@@ -88,7 +88,7 @@ Slot 분포:
 
 Bulk Fill 2차가 같은 패턴으로 진행되면 Quest마다 3-5개 rule이 추가된다. 이 파일은 split 우선순위 1순위다.
 
-판정: **Split Before Bulk Fill 2**. 단, `gameplay_p0_data.py`가 아직 고정 경로로 읽으므로 실제 split 전 loader support가 필요하다.
+판정: **Split Before Bulk Fill 2**. 단, `gameplay_setup.py`가 아직 고정 경로로 읽으므로 실제 split 전 loader support가 필요하다.
 
 ### events.yaml
 
@@ -136,22 +136,22 @@ Quest별 scenario filename은 현재 일관성이 있다. naming issue는 발견
 | 파일 | LOC | 함수 | 클래스 | Any/type ignore/cast | Gate |
 |---|---:|---:|---:|---|---|
 | `src/fateweaver/data_loader.py` | 284 | 22 | 2 | 없음 | Keep As-Is |
-| `src/fateweaver/gameplay_p0_data.py` | 218 | 21 | 5 | ignore 1 | Needs Loader Support First |
-| `src/fateweaver/gameplay_p0_cards.py` | 284 | 21 | 1 | 없음 | Keep As-Is |
-| `src/fateweaver/gameplay_p0_card_selection.py` | 86 | 8 | 0 | 없음 | Keep As-Is |
-| `src/fateweaver/gameplay_p0_objectives.py` | 270 | 23 | 2 | 없음 | Keep As-Is |
-| `src/fateweaver/gameplay_p0_scoring.py` | 57 | 3 | 0 | 없음 | Keep As-Is |
+| `src/fateweaver/gameplay_setup.py` | 218 | 21 | 5 | ignore 1 | Needs Loader Support First |
+| `src/fateweaver/card_candidates.py` | 284 | 21 | 1 | 없음 | Keep As-Is |
+| `src/fateweaver/card_selection.py` | 86 | 8 | 0 | 없음 | Keep As-Is |
+| `src/fateweaver/quest_objectives.py` | 270 | 23 | 2 | 없음 | Keep As-Is |
+| `src/fateweaver/objective_scoring.py` | 57 | 3 | 0 | 없음 | Keep As-Is |
 | `src/fateweaver/text_mud_turns.py` | 192 | 21 | 0 | 없음 | Keep As-Is |
 | `src/fateweaver/text_mud_report.py` | 44 | 3 | 0 | 없음 | Keep As-Is |
 
-코드 파일은 현재 LOC warning의 주 원인이 아니다. 실제 split을 막는 핵심 지점은 `gameplay_p0_data.py`의 fixed-path 로딩이다.
+코드 파일은 현재 LOC warning의 주 원인이 아니다. 실제 split을 막는 핵심 지점은 `gameplay_setup.py`의 fixed-path 로딩이다.
 
 현재 로딩 구조:
 
 - `data_loader.py`: scenario `content_sources`를 통해 여러 content YAML을 순회한다.
-- `gameplay_p0_data.py`: `data/content/base/quests.yaml`, `data/core/card_rules.yaml`, `data/core/score_rules.yaml`을 직접 읽는다.
+- `gameplay_setup.py`: `data/content/base/quests.yaml`, `data/core/card_rules.yaml`, `data/core/score_rules.yaml`을 직접 읽는다.
 
-따라서 code refactor 우선순위는 대규모 분리가 아니라 `gameplay_p0_data.py`에 split-aware loading을 추가할지 결정하는 것이다.
+따라서 code refactor 우선순위는 대규모 분리가 아니라 `gameplay_setup.py`에 split-aware loading을 추가할지 결정하는 것이다.
 
 ## 7. quest_ids Gate 리스크
 
@@ -225,7 +225,7 @@ data/content/quests/survival_exploration.yaml
 
 필수 선행:
 
-- `gameplay_p0_data.py`가 `data/content/base/quests.yaml` 단일 파일과 `data/content/quests/*.yaml` 병합을 모두 지원해야 한다.
+- `gameplay_setup.py`가 `data/content/base/quests.yaml` 단일 파일과 `data/content/quests/*.yaml` 병합을 모두 지원해야 한다.
 - duplicate quest id check가 필요하다.
 
 ### Card Rule
@@ -290,18 +290,18 @@ data/scenarios/bulk/
 | `score_rules.yaml` | Keep As-Is | 24 LOC. 책임이 작고 안정적이다. |
 | `scenarios/` | Split Recommended Later | 51 files, naming consistent. 이동 전 validate/test path 전략 필요. |
 | `data_loader.py` | Keep As-Is | content source 순회가 이미 있어 event split 기반은 있다. |
-| `gameplay_p0_data.py` | Needs Loader Support First | Quest/Card split의 병목이다. |
-| `gameplay_p0_cards.py` | Keep As-Is | 284 LOC, 책임이 candidate scoring/presentation으로 명확하다. |
-| `gameplay_p0_card_selection.py` | Keep As-Is | 86 LOC, 책임 작음. |
-| `gameplay_p0_objectives.py` | Keep As-Is | 270 LOC, 현재 split gate의 병목은 아니다. |
-| `gameplay_p0_scoring.py` | Keep As-Is | 57 LOC. |
+| `gameplay_setup.py` | Needs Loader Support First | Quest/Card split의 병목이다. |
+| `card_candidates.py` | Keep As-Is | 284 LOC, 책임이 candidate scoring/presentation으로 명확하다. |
+| `card_selection.py` | Keep As-Is | 86 LOC, 책임 작음. |
+| `quest_objectives.py` | Keep As-Is | 270 LOC, 현재 split gate의 병목은 아니다. |
+| `objective_scoring.py` | Keep As-Is | 57 LOC. |
 | `text_mud_turns.py` / `text_mud_report.py` | Keep As-Is | 직전 refactor 이후 LOC와 책임이 안정적이다. |
 
 최종 판정:
 
 ```text
 Bulk Fill 2차 전에 실제 split을 바로 실행하지 않는다.
-먼저 gameplay_p0_data split loader support와 gate 검사를 설계/구현한 뒤,
+먼저 gameplay_setup split loader support와 gate 검사를 설계/구현한 뒤,
 card_rules.yaml부터 category split을 실행한다.
 ```
 
@@ -309,7 +309,7 @@ card_rules.yaml부터 category split을 실행한다.
 
 Bulk Fill 2차 전에 반드시 필요한 작업:
 
-1. `gameplay_p0_data.py`의 Quest/Card Rule split-aware loader 설계
+1. `gameplay_setup.py`의 Quest/Card Rule split-aware loader 설계
 2. `card_rules.yaml` split migration plan 작성
 3. duplicate quest id / card id 검증 기준 추가
 4. 새 Bulk Quest의 Card Rule `quest_ids` gate 필수 check 정의
@@ -347,7 +347,7 @@ Bulk Fill 2차 전에 아직 필수는 아닌 작업:
 - Event `quest_ids` 적용 수
 - Scenario filename consistency
 - Code file LOC / 함수 수 / 클래스 수 / Any 및 ignore 사용 여부
-- `data_loader.py`와 `gameplay_p0_data.py`의 loading 책임 차이
+- `data_loader.py`와 `gameplay_setup.py`의 loading 책임 차이
 
 Evidence:
 
@@ -356,7 +356,7 @@ Evidence:
 
 ## 14. 남은 문제
 
-- `gameplay_p0_data.py`가 split-aware loader를 아직 지원하지 않는다.
+- `gameplay_setup.py`가 split-aware loader를 아직 지원하지 않는다.
 - `card_rules.yaml`은 2,134 LOC로 Bulk Fill 2차 전에 가장 먼저 분리 계획이 필요하다.
 - Event `quest_ids` gate는 Bulk 쪽 중심으로 적용되어 있고 Foundation/Probe 쪽은 older/shared 구조가 남아 있다.
 - Scenario flat 구조는 지금은 유지 가능하지만 Bulk Fill이 한 번 더 진행되면 탐색성이 떨어질 수 있다.

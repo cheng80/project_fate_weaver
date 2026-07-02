@@ -38,7 +38,7 @@ Baseline evidence:
 
 ## 적용한 최소 보정
 
-`src/fateweaver/gameplay_p0_rules.py`의 `balanced` 선택 조건에서 food caution threshold만 `2 -> 3`으로 올렸다.
+`src/fateweaver/gameplay_rules.py`의 `balanced` 선택 조건에서 food caution threshold만 `2 -> 3`으로 올렸다.
 
 의미:
 

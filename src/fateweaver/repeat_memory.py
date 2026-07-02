@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fateweaver.gameplay_p0_models import CooldownCounter, RepeatMemory
+from fateweaver.gameplay_models import CooldownCounter, RepeatMemory
 from fateweaver.models import JsonMap, JsonValue
 
 

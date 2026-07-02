@@ -9,9 +9,9 @@ from dataclasses import replace
 from pathlib import Path
 
 from fateweaver.data_loader import load_project_data
-from fateweaver.gameplay_p0_cards import build_card_candidate_pool, cards_from_pool
-from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import (
+from fateweaver.card_candidates import build_card_candidate_pool, cards_from_pool
+from fateweaver.gameplay_setup import load_foundation
+from fateweaver.gameplay_models import (
     CardCandidate,
     CardCandidateContext,
     CardSelectionContext,
@@ -20,7 +20,7 @@ from fateweaver.gameplay_p0_models import (
     RepeatMemory,
     RunState,
 )
-from fateweaver.gameplay_p0_rules import initial_state
+from fateweaver.gameplay_rules import initial_state
 from fateweaver.models import Scenario
 
 

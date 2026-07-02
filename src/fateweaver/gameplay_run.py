@@ -4,14 +4,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from random import Random
 
-from fateweaver.gameplay_p0_card_selection import select_cards_from_pool
-from fateweaver.gameplay_p0_card_json import card_candidate_pool_json, card_json
-from fateweaver.gameplay_p0_cards import build_card_candidate_pool
-from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_lifecycle import complete_quest_lifecycle
-from fateweaver.gameplay_p0_models import CardCandidateContext, CardSelectionContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
-from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report, quest_completed
-from fateweaver.gameplay_p0_rules import (
+from fateweaver.card_selection import select_cards_from_pool
+from fateweaver.card_candidate_json import card_candidate_pool_json, card_json
+from fateweaver.card_candidates import build_card_candidate_pool
+from fateweaver.gameplay_setup import load_foundation
+from fateweaver.quest_lifecycle import complete_quest_lifecycle
+from fateweaver.gameplay_models import CardCandidateContext, CardSelectionContext, GameplayRunRequest, Quest, RunState, TurnLogRequest
+from fateweaver.quest_objectives import QuestReportRequest, build_quest_report, quest_completed
+from fateweaver.gameplay_rules import (
     advance_clock,
     apply_turn_result,
     clock_json,
@@ -25,7 +25,7 @@ from fateweaver.gameplay_p0_rules import (
     select_cards,
     select_storylet,
 )
-from fateweaver.gameplay_p0_sequence import load_next_foundation
+from fateweaver.quest_sequence import load_next_foundation
 from fateweaver.logger import save_run_log
 from fateweaver.models import Event, JsonMap
 from fateweaver.ontology_reasoner import OntologyReasonerContext, load_ontology_core, run_reasoner
@@ -33,7 +33,7 @@ from fateweaver.state_manager import is_failed
 from fateweaver.text_mud_log import save_text_mud_log
 
 
-def run_gameplay_p0(request: GameplayRunRequest) -> Path:
+def run_gameplay(request: GameplayRunRequest) -> Path:
     foundation = load_foundation(request.bundle.project_root, request.scenario.active_quest_id)
     ontology_core = load_ontology_core(request.bundle.project_root)
     rng = Random(request.seed + request.run_number - 1)
@@ -184,7 +184,7 @@ def _turn_log(request: TurnLogRequest) -> JsonMap:
         "presented_cards": [card_json(card) for card in request.cards],
         "selected_choice_id": request.selected[0].id,
         "selected_choice_type": "multi_select" if request.combo is not None else request.selected[0].slot_role,
-        "selected_choice_reason": "p0_foundation: selected combo" if request.combo is not None else "p0_foundation: selected quest progress",
+        "selected_choice_reason": "gameplay_run: selected combo" if request.combo is not None else "gameplay_run: selected quest progress",
         "selected_cards": selected_ids,
         "multi_select": multi_select_json(request.combo, selected_ids),
         "was_available": True,

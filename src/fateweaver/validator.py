@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fateweaver.gameplay_p0_data import validate_gameplay_p0_setup
+from fateweaver.gameplay_setup import validate_gameplay_setup
 from fateweaver.models import Choice, Event, JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.scenario_filter import filter_events_for_scenario
 
@@ -12,7 +12,7 @@ def validate_bundle(bundle: ProjectData, scenario: Scenario) -> list[str]:
     errors.extend(_validate_scenario_references(bundle, scenario))
     errors.extend(_validate_events(bundle, bundle.events))
     errors.extend(_validate_targets(bundle, scenario))
-    errors.extend(validate_gameplay_p0_setup(bundle.project_root, scenario, bundle))
+    errors.extend(validate_gameplay_setup(bundle.project_root, scenario, bundle))
     return errors
 
 

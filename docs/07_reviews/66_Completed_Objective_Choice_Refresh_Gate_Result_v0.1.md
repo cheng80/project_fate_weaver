@@ -14,15 +14,15 @@ Completed Objective Choice Refresh Gate는 PASS다.
 
 ## Implemented Change
 
-- `src/fateweaver/gameplay_p0_card_staleness.py` 추가
+- `src/fateweaver/card_staleness.py` 추가
   - `completed_objective_blocked(card, state, quest)` helper를 분리했다.
   - 기존 `progress_key > 0` completed-objective block을 보존했다.
   - `applies_to_quest_objectives`가 이미 satisfied된 objective만 가리키는 카드도 block한다.
   - active quest required objectives가 satisfaction 상태에 도달한 뒤, 최근 선택된 unscoped `quest_progress` 카드가 즉시 다시 노출되는 경로를 block한다.
   - `return_to_region` satisfaction은 report 최종 평가와 별개로 progress key가 이미 달성된 상태를 사용한다. 이는 min-turn 때문에 성공 조건 충족 후에도 runner가 계속 진행되는 기간의 stale refresh를 다루기 위한 presentation-surface 기준이다.
-- `src/fateweaver/gameplay_p0_cards.py`
+- `src/fateweaver/card_candidates.py`
   - `card_blocked_reason`이 quest id 문자열 대신 `Quest`를 받아 completed-objective helper를 사용한다.
-- `src/fateweaver/gameplay_p0_card_selection.py`
+- `src/fateweaver/card_selection.py`
   - stale filtering 이후 특정 slot 후보가 비면 non-blocked 후보에서 deterministic fallback을 사용해 3-card surface를 보충한다.
   - fallback은 이미 선택한 presentation 후보를 제외해 중복 card presentation을 막는다.
   - fallback window는 기존 `frequency_penalty`를 우선 반영해 resource/risk 카드 반복 쏠림을 줄인다.
@@ -88,7 +88,7 @@ Seed 42 Standard Run regression also remains within existing test thresholds:
 ## Verification Commands
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_manual_choice_runner tests.test_gameplay_p0_standard_run tests.test_gameplay_p0_card_candidates tests.test_gameplay_p0_optional_action_score tests.test_gameplay_balance_pass
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_manual_choice_runner tests.test_gameplay_run_standard_run tests.test_gameplay_run_card_candidates tests.test_gameplay_run_optional_action_score tests.test_gameplay_balance_pass
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall -q src tools tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/standard_run_25_35_turn.yaml

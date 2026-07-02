@@ -8,7 +8,7 @@ class MissingCardSlotError(Exception):
     slot: str
 
     def __str__(self) -> str:
-        return f"No P0 candidate for slot: {self.slot}"
+        return f"No card candidate for slot: {self.slot}"
 
 
 @dataclass(frozen=True, slots=True)

@@ -38,12 +38,12 @@
 - `data/content/events/*.yaml`
 - `data/content/base/items.yaml`
 - `data/content/base/endings.yaml`
-- `src/fateweaver/gameplay_p0.py`
-- `src/fateweaver/gameplay_p0_cards.py`
-- `src/fateweaver/gameplay_p0_card_selection.py`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_sources.py`
-- `src/fateweaver/gameplay_p0_objectives.py`
+- `src/fateweaver/gameplay_run.py`
+- `src/fateweaver/card_candidates.py`
+- `src/fateweaver/card_selection.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/gameplay_sources.py`
+- `src/fateweaver/quest_objectives.py`
 
 ## 3. 현재 Ontology 판정
 

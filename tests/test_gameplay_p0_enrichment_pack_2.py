@@ -6,10 +6,10 @@ from pathlib import Path
 import yaml
 
 from fateweaver.data_loader import load_project_data
-from fateweaver.gameplay_p0_cards import card_available
-from fateweaver.gameplay_p0_data import load_foundation
-from fateweaver.gameplay_p0_models import RepeatMemory, RunClock, RunState
-from fateweaver.gameplay_p0_objectives import QuestReportRequest, build_quest_report
+from fateweaver.card_candidates import card_available
+from fateweaver.gameplay_setup import load_foundation
+from fateweaver.gameplay_models import RepeatMemory, RunClock, RunState
+from fateweaver.quest_objectives import QuestReportRequest, build_quest_report
 from fateweaver.text_mud_report import format_quest_report
 from fateweaver.validator import validate_scenario_file
 

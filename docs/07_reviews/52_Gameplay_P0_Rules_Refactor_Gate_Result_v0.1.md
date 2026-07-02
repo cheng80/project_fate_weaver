@@ -1,10 +1,10 @@
 # [Current] Gameplay P0 Rules Refactor Gate Result v0.1
 
-> 상태: [Current] Director Tuning 2차 이후 warning band에 도달한 `gameplay_p0_rules.py`를 기능 변경 없이 분리한 결과 문서.
+> 상태: [Current] Director Tuning 2차 이후 warning band에 도달한 `gameplay_rules.py`를 기능 변경 없이 분리한 결과 문서.
 
 ## 1. 작업 목적
 
-다음 Gameplay Balance Pass 전에 `src/fateweaver/gameplay_p0_rules.py`의 Director scoring / trace helper 성격 로직을 작은 모듈로 분리했다.
+다음 Gameplay Balance Pass 전에 `src/fateweaver/gameplay_rules.py`의 Director scoring / trace helper 성격 로직을 작은 모듈로 분리했다.
 
 이번 작업은 behavior-preserving refactor로 진행했다.
 
@@ -32,38 +32,38 @@
 
 ## 3. 변경 요약
 
-- `src/fateweaver/gameplay_p0_rule_scoring.py`를 추가했다.
+- `src/fateweaver/director_scoring.py`를 추가했다.
   - `ontology_event_weight`
   - `director_event_score`
   - event tag aggregation helper
   - ontology modifier parsing helper
-- `src/fateweaver/gameplay_p0_run_json.py`를 추가했다.
+- `src/fateweaver/run_json.py`를 추가했다.
   - `clock_json`
   - `multi_select_json`
   - `influences`
-- `src/fateweaver/gameplay_p0_rules.py`는 기존 public API를 유지하도록 위 함수들을 import/re-export한다.
+- `src/fateweaver/gameplay_rules.py`는 기존 public API를 유지하도록 위 함수들을 import/re-export한다.
 
 ## 4. LOC 결과
 
 | File | Before pure LOC | After pure LOC |
 |---|---:|---:|
-| `src/fateweaver/gameplay_p0_rules.py` | 250 | 195 |
-| `src/fateweaver/gameplay_p0_rule_scoring.py` | n/a | 65 |
-| `src/fateweaver/gameplay_p0_run_json.py` | n/a | 33 |
+| `src/fateweaver/gameplay_rules.py` | 250 | 195 |
+| `src/fateweaver/director_scoring.py` | n/a | 65 |
+| `src/fateweaver/run_json.py` | n/a | 33 |
 
-목표였던 `gameplay_p0_rules.py` pure LOC 200 이하를 달성했다.
+목표였던 `gameplay_rules.py` pure LOC 200 이하를 달성했다.
 
 ## 5. Public API 호환
 
 기존 import surface는 유지했다.
 
 ```python
-from fateweaver.gameplay_p0_rules import director_event_score
-from fateweaver.gameplay_p0_rules import ontology_event_weight
-from fateweaver.gameplay_p0_rules import select_storylet
+from fateweaver.gameplay_rules import director_event_score
+from fateweaver.gameplay_rules import ontology_event_weight
+from fateweaver.gameplay_rules import select_storylet
 ```
 
-기존 `tests.test_director_tuning_second_pass`, `tests.test_situation_director_lite`, `tests.test_gameplay_p0_standard_run`가 리팩터 전후 모두 통과했다.
+기존 `tests.test_director_tuning_second_pass`, `tests.test_situation_director_lite`, `tests.test_gameplay_run_standard_run`가 리팩터 전후 모두 통과했다.
 
 ## 6. Standard Run 재검증
 
@@ -121,7 +121,7 @@ Key artifacts:
 Passed:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_director_tuning_second_pass tests.test_situation_director_lite tests.test_gameplay_p0_standard_run
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_director_tuning_second_pass tests.test_situation_director_lite tests.test_gameplay_run_standard_run
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/console_simulator.py --scenario data/scenarios/standard_run_25_35_turn.yaml --seed 202 --runs 1 --logs .omo/ulw-loop/evidence/gameplay-p0-rules-refactor-gate-20260701/standard-run-final --profile balanced
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
@@ -139,4 +139,4 @@ OK
 
 ## 9. 다음 작업 준비 상태
 
-Gameplay Balance Pass에서 money / reputation reward 반복, autoplayer quest_progress 편중, resource pressure, score / reward / penalty 수치 조정을 진행할 때 `gameplay_p0_rules.py` orchestration과 Director scoring helper diff가 분리되어 회귀 원인 추적이 쉬워졌다.
+Gameplay Balance Pass에서 money / reputation reward 반복, autoplayer quest_progress 편중, resource pressure, score / reward / penalty 수치 조정을 진행할 때 `gameplay_rules.py` orchestration과 Director scoring helper diff가 분리되어 회귀 원인 추적이 쉬워졌다.

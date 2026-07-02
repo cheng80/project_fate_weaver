@@ -84,7 +84,7 @@ second_witness_contradicts_merchant: 2
 
 ## 11. 기존 Scenario 회귀
 
-Standard Run은 25턴과 `prepared_frontier_route` ending을 유지했다. 기존 `test_gameplay_p0_standard_run`의 card repeat cap도 유지했다.
+Standard Run은 25턴과 `prepared_frontier_route` ending을 유지했다. 기존 `test_gameplay_run_standard_run`의 card repeat cap도 유지했다.
 
 ## 12. Evidence / Debug Trace
 
@@ -112,7 +112,7 @@ Key artifacts:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_director_tuning_second_pass
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_situation_director_lite
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_standard_run
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_standard_run
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/standard_run_25_35_turn.yaml
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --ontology
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
@@ -123,7 +123,7 @@ git diff --check
 ## 14. 남은 문제
 
 - `situation_intents` 자체의 distribution은 Reasoner-lite 출력 구조상 아직 넓게 반복된다. 이번 작업은 intent 출력을 바꾸지 않고 event scoring에만 반영했다.
-- `gameplay_p0_rules.py`는 pure LOC 250으로 warning band에 도달했다. 다음 코드 추가 전 분리가 필요하다.
+- `gameplay_rules.py`는 pure LOC 250으로 warning band에 도달했다. 다음 코드 추가 전 분리가 필요하다.
 
 ## 15. 다음 추천 작업
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Final, assert_never
 
-from fateweaver.gameplay_p0_models import CardCandidateContext, CardRule, CooldownCounter, RunState
+from fateweaver.gameplay_models import CardCandidateContext, CardRule, CooldownCounter, RunState
 
 
 DEFAULT_MODIFIERS: Final = {

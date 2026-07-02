@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from fateweaver.gameplay_p0_models import (
+from fateweaver.gameplay_models import (
     CardRule,
     CardRules,
     ComboRule,
@@ -13,7 +13,7 @@ from fateweaver.gameplay_p0_models import (
     Quest,
     QuestObjective,
 )
-from fateweaver.gameplay_p0_sources import load_card_rule_mapping, load_quest_mapping
+from fateweaver.gameplay_sources import load_card_rule_mapping, load_quest_mapping
 from fateweaver.models import JsonMap, JsonValue, ProjectData, Scenario
 from fateweaver.yaml_utils import as_mapping, list_at, mapping_at, optional_string, read_mapping, string_tuple
 
@@ -21,23 +21,23 @@ from fateweaver.yaml_utils import as_mapping, list_at, mapping_at, optional_stri
 @dataclass(frozen=True, slots=True)
 class MissingActiveQuestError(ValueError):
     def __str__(self) -> str:
-        return "P0 scenario requires active_quest_id"
+        return "Gameplay scenario requires active_quest_id"
 
 
 @dataclass(frozen=True, slots=True)
-class UnknownP0QuestError(ValueError):
+class UnknownQuestError(ValueError):
     quest_id: str
 
     def __str__(self) -> str:
-        return f"Unknown P0 quest: {self.quest_id}"
+        return f"Unknown quest: {self.quest_id}"
 
 
 @dataclass(frozen=True, slots=True)
-class UnknownP0ObjectiveTypeError(ValueError):
+class UnknownObjectiveTypeError(ValueError):
     objective_type: str
 
     def __str__(self) -> str:
-        return f"Unknown P0 objective type: {self.objective_type}"
+        return f"Unknown objective type: {self.objective_type}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,15 +62,15 @@ def load_foundation(root: Path, quest_id: str | None) -> Foundation:
     )
 
 
-def validate_gameplay_p0_setup(project_root: Path, scenario: Scenario, bundle: ProjectData) -> list[str]:
+def validate_gameplay_setup(project_root: Path, scenario: Scenario, bundle: ProjectData) -> list[str]:
     if scenario.gameplay_mode != "p0_foundation":
         return []
     errors: list[str] = []
     if scenario.active_quest_id is None:
-        errors.append("P0 scenario requires active_quest_id")
+        errors.append("Gameplay scenario requires active_quest_id")
         return errors
     if scenario.quest_sequence and scenario.quest_sequence[0] != scenario.active_quest_id:
-        errors.append("P0 quest_sequence must start with active_quest_id")
+        errors.append("Quest sequence must start with active_quest_id")
     try:
         foundation = load_foundation(project_root, scenario.active_quest_id)
     except (OSError, TypeError, ValueError, KeyError) as error:
@@ -82,11 +82,11 @@ def validate_gameplay_p0_setup(project_root: Path, scenario: Scenario, bundle: P
             errors.append(str(error))
     for card in foundation.card_rules.cards:
         if card.requires_item is not None and card.requires_item not in bundle.items:
-            errors.append(f"Unknown P0 card required item {card.requires_item} in {card.id}")
+            errors.append(f"Unknown card required item {card.requires_item} in {card.id}")
     if not foundation.card_rules.combos:
-        errors.append("P0 card rules require at least one combo rule")
+        errors.append("Card rules require at least one combo rule")
     if not foundation.card_rules.conflicts:
-        errors.append("P0 card rules require at least one conflict rule")
+        errors.append("Card rules require at least one conflict rule")
     return errors
 
 
@@ -103,7 +103,7 @@ def _load_quest(raw: JsonMap, quest_id: str) -> Quest:
                 objectives=_load_objectives(quest),
                 rewards=mapping_at(quest, "rewards"),
             )
-    raise UnknownP0QuestError(quest_id)
+    raise UnknownQuestError(quest_id)
 
 
 def _load_objectives(quest: JsonMap) -> tuple[QuestObjective, ...]:
@@ -135,7 +135,7 @@ def _objective_type(value: str) -> ObjectiveType:
         case "collect_item" | "return_to_region" | "survive_expedition" | "keep_resource_at_least" | "discover_clue" | "optional_action":
             return value
         case _:
-            raise UnknownP0ObjectiveTypeError(value)
+            raise UnknownObjectiveTypeError(value)
 
 
 def _load_card_rules(raw: JsonMap) -> CardRules:

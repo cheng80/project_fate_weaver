@@ -91,7 +91,7 @@ Loader 기준 inventory:
 추가한 focused test:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_enrichment_pack1
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_enrichment_pack1
 ```
 
 검증 기준:

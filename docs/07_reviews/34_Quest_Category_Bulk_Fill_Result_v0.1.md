@@ -85,7 +85,7 @@ Stable Category 전체에 lightweight coverage를 확보했다.
 
 ## 10. quest_ids Gate 검증
 
-`tests/test_gameplay_p0_category_bulk_fill.py`에서 다음을 검증했다.
+`tests/test_gameplay_run_category_bulk_fill.py`에서 다음을 검증했다.
 
 - 신규 Bulk Card Rule은 모두 `quest_ids == [quest_id]`를 가진다.
 - 신규 Bulk Event Hint는 모두 `quest_ids == [quest_id]`를 가진다.
@@ -118,7 +118,7 @@ Batch 테스트와 simulator evidence에서 다음을 확인했다.
 
 최종 검증 명령은 ULW evidence에 기록했다.
 
-- `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_category_bulk_fill`
+- `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_category_bulk_fill`
 - `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests`
 - `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools`
 - `git diff --check`

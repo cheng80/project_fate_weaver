@@ -48,7 +48,7 @@ Pure LOC는 246이었다. 다음 Quest나 `failure_kind` / `character_outcome` /
 - `save_text_mud_log(log, json_path)`
 - `render_text_mud_log(log)`
 
-`src/fateweaver/gameplay_p0.py`와 `src/fateweaver/simulator.py`의 import 경로는 변경하지 않았다.
+`src/fateweaver/gameplay_run.py`와 `src/fateweaver/simulator.py`의 import 경로는 변경하지 않았다.
 
 ## 7. Text MUD 출력 호환성
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fateweaver.gameplay_p0_models import CardCandidate, CardRule
+from fateweaver.gameplay_models import CardCandidate, CardRule
 from fateweaver.models import JsonMap
 
 

@@ -22,13 +22,13 @@
 ## 3. 변경 파일
 
 - `data/core/card_rules.yaml`
-- `src/fateweaver/gameplay_p0.py`
-- `src/fateweaver/gameplay_p0_cards.py`
-- `src/fateweaver/gameplay_p0_data.py`
-- `src/fateweaver/gameplay_p0_models.py`
-- `src/fateweaver/gameplay_p0_rules.py`
+- `src/fateweaver/gameplay_run.py`
+- `src/fateweaver/card_candidates.py`
+- `src/fateweaver/gameplay_setup.py`
+- `src/fateweaver/gameplay_models.py`
+- `src/fateweaver/gameplay_rules.py`
 - `src/fateweaver/text_mud_log.py`
-- `tests/test_gameplay_p0_optional_action_score.py`
+- `tests/test_gameplay_run_optional_action_score.py`
 - `docs/02_schema/12_Quest_Expedition_Card_Schema_v0.1.md`
 - `docs/00_index/README_Docs_Index.md`
 - `docs/07_reviews/22_Gameplay_P0_Optional_Action_Ontology_Link_Result_v0.1.md`
@@ -116,7 +116,7 @@ Text MUD completed log에는 다음이 표시됐다.
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_optional_completed.yaml
 .venv/bin/python tools/validate_data.py --scenario data/scenarios/tutorial_herb_quest_partial_optional_failed.yaml
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_optional_action_score
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_optional_action_score
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check

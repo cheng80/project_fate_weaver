@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from fateweaver.gameplay_p0_data import load_foundation
+from fateweaver.gameplay_setup import load_foundation
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

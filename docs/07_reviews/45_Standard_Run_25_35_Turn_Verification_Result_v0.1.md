@@ -20,7 +20,7 @@
 |---|---|
 | Scenario | `data/scenarios/standard_run_25_35_turn.yaml` 추가 |
 | Runtime | `run_clock.min_turns_before_completion`가 있을 때만 조기 quest success 종료를 최소 턴까지 지연 |
-| Test | `tests/test_gameplay_p0_standard_run.py` 추가 |
+| Test | `tests/test_gameplay_run_standard_run.py` 추가 |
 | Evidence | `.omo/ulw-loop/evidence/standard-run-25-35-20260701/` 생성 |
 
 `min_turns_before_completion` 기본값은 0이므로 기존 scenario의 조기 success 종료 동작은 유지된다.
@@ -111,7 +111,7 @@ Run Ending: prepared_frontier_route / 준비된 변경의 길
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python tools/validate_data.py --scenario data/scenarios/standard_run_25_35_turn.yaml
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_p0_standard_run
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_gameplay_run_standard_run
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src .venv/bin/python -m compileall src tests tools
 git diff --check

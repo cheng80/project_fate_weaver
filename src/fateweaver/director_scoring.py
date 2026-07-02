@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fateweaver.gameplay_p0_models import RunState
+from fateweaver.gameplay_models import RunState
 from fateweaver.models import Event, JsonMap, JsonValue
 
 

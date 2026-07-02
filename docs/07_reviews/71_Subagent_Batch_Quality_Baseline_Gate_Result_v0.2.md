@@ -240,7 +240,7 @@ PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_onbo
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_relevance.py
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_report.py
 PYTHONPATH=src .venv/bin/python -m unittest tests/test_manual_choice_runner_batch.py
-PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_p0_card_candidates.py
+PYTHONPATH=src .venv/bin/python -m unittest tests/test_gameplay_run_card_candidates.py
 ```
 
 - PASS: `8`, `3`, `2`, `2`, `3`, `12` tests.
